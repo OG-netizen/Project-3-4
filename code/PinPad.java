@@ -1,7 +1,7 @@
-// Dit is het Pin Pad pagina
+package pin;
 
 import javax.swing.*;
-
+import java.awt.Toolkit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,12 +16,10 @@ public class PinPad extends JFrame implements ActionListener{
 	JButton jbtNumber;
 	StringBuilder inputPin= new StringBuilder("");
 	Authentication auth = new Authentication();
-	private int breedte = 600 , lengte = 800;
-
+	
 	public PinPad() {
 		
-		setPreferredSize(new Dimension(breedte, lengte));
-		setVisible(true);
+		
 		jplLabelPanel.setLayout(new BorderLayout());
 		jplButtonPanel.setLayout(new GridLayout(4,3));
 		
@@ -54,9 +52,10 @@ public class PinPad extends JFrame implements ActionListener{
 		jplControlPanel.add(jplButtonPanel, BorderLayout.SOUTH);
 
 		add(jplControlPanel);
-
-	
-		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    setPreferredSize(new Dimension(screenSize.width, screenSize.height));
+	    setUndecorated(true);
+		setVisible(true);
 		pack();
 	}
 	
@@ -120,6 +119,27 @@ public class PinPad extends JFrame implements ActionListener{
 		}
 		
 	}
+	public static void main(String[] args) {
+		
+		
+		new PinPad();
+		
+
+	}
+	
+	public class Authentication {
+		
+		private String correctPIN="1234";
+		public boolean authenticate(String pin) {
+			return(pin.equals(correctPIN));
+		}
+	
+		public void setCorrectPIN(String correctPIN) {
+			this.correctPIN = correctPIN;
+		}
+
+	}
+
 	
 	
-	
+}
