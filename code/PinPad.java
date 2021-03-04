@@ -1,4 +1,4 @@
-
+// Dit is het Pin Pad pagina
 import javax.swing.*;
 
 import java.awt.*;
