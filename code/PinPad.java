@@ -1,4 +1,5 @@
 // pin pad pagina
+// pincode is 1234, je kunt die veranderen in die Authentication class
 
 import javax.swing.*;
 import java.awt.Toolkit;
@@ -21,20 +22,15 @@ public class PinPad extends JFrame implements ActionListener{
 		new PinPad();
 	}
 	
-	public PinPad() {
-		
-		
+	public PinPad() {	
 		jplLabelPanel.setLayout(new BorderLayout());
 		jplButtonPanel.setLayout(new GridLayout(4,3));
-		
-		jplLabelPanel.add(jlbPasscode, BorderLayout.CENTER);
+		jplLabelPanel.add(jlbPasscode, BorderLayout.CENTER); 
 		jplLabelPanel.add(jpwPasscode, BorderLayout.SOUTH);
-		
-	
-		
+
 		for (int i=1; i<10; i++) {
 			jbtNumber = new JButton(i+"");
-			jbtNumber.setPreferredSize(new Dimension(80,80));
+			jbtNumber.setPreferredSize(new Dimension(80,80)); // size van de buttons
 			jbtNumber.addActionListener(this);
 			jplButtonPanel.add(jbtNumber);
 		}
