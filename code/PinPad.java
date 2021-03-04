@@ -19,7 +19,7 @@ public class PinPad extends JFrame implements ActionListener{
 	Authentication auth = new Authentication();
 
 	public static void main(String[] args) {
-		new PinPad();
+		new PinPad(); // class methode om die programma te runnen
 	}
 	
 	public PinPad() {	
@@ -28,7 +28,7 @@ public class PinPad extends JFrame implements ActionListener{
 		jplLabelPanel.add(jlbPasscode, BorderLayout.CENTER); 
 		jplLabelPanel.add(jpwPasscode, BorderLayout.SOUTH);
 
-		for (int i=1; i<10; i++) {
+		for (int i=1; i<10; i++) { // Loop voor het maken de knoppen 1-9 op volgorde
 			jbtNumber = new JButton(i+"");
 			jbtNumber.setPreferredSize(new Dimension(80,80)); // size van de buttons
 			jbtNumber.addActionListener(this);
@@ -52,8 +52,8 @@ public class PinPad extends JFrame implements ActionListener{
 		jplControlPanel.add(jplButtonPanel, BorderLayout.SOUTH);
 
 		add(jplControlPanel);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // Zet de size van de frame naar fullscreen
-	        setPreferredSize(new Dimension(screenSize.width, screenSize.height));
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // Krijgt dimensie van je scherm 
+	        setPreferredSize(new Dimension(screenSize.width, screenSize.height)); // pas de dimensie op de programma zodat die fullscreen gaat.
 	        setUndecorated(true);
 		setVisible(true);
 		pack();
@@ -123,7 +123,7 @@ public class PinPad extends JFrame implements ActionListener{
 	
 	public class Authentication {
 		
-		private String correctPIN="1234"; // pincode is 1234
+		private String correctPIN="1234";
 		public boolean authenticate(String pin) {
 			return(pin.equals(correctPIN));
 		}
