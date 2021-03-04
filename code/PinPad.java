@@ -1,4 +1,3 @@
-package pin;
 
 import javax.swing.*;
 
