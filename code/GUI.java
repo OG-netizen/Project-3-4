@@ -59,13 +59,13 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[4] = new JButton("5");
         vensterRechts.add(knoppen[4]);
         knoppen[4].addActionListener(this);
-        knoppen[5] = new JButton("5");
+        knoppen[5] = new JButton("6");
         vensterRechts.add(knoppen[5]);
         knoppen[5].addActionListener(this);
-        knoppen[6] = new JButton("5");
+        knoppen[6] = new JButton("7");
         vensterRechts.add(knoppen[6]);
         knoppen[6].addActionListener(this);
-        knoppen[7] = new JButton("5");
+        knoppen[7] = new JButton("8");
         vensterRechts.add(knoppen[7]);
         knoppen[7].addActionListener(this);
 
