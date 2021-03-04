@@ -15,22 +15,17 @@ public class PinPad extends JFrame implements ActionListener{
 	StringBuilder inputPin= new StringBuilder("");
 	Authentication auth = new Authentication();
 	
-	
-	
-	
 	public PinPad() {
-		 setSize(600, 800);
-	     setExtendedState(JFrame.MAXIMIZED_BOTH);
-	     setUndecorated(true);
-	     setTitle("GUI");
+	     	setSize(600, 800);
+	   	setExtendedState(JFrame.MAXIMIZED_BOTH);
+	     	setUndecorated(true);
+	     	setTitle("GUI");
 		
 		jplLabelPanel.setLayout(new BorderLayout());
 		jplButtonPanel.setLayout(new GridLayout(4,3));
 		
 		jplLabelPanel.add(jlbPasscode, BorderLayout.CENTER);
 		jplLabelPanel.add(jpwPasscode, BorderLayout.SOUTH);
-		
-	
 		
 		for (int i=1; i<10; i++) {
 			jbtNumber = new JButton(i+"");
