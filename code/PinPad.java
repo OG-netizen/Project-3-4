@@ -1,4 +1,4 @@
-package pin;
+// pin pad pagina
 
 import javax.swing.*;
 import java.awt.Toolkit;
@@ -52,9 +52,9 @@ public class PinPad extends JFrame implements ActionListener{
 		jplControlPanel.add(jplButtonPanel, BorderLayout.SOUTH);
 
 		add(jplControlPanel);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	    setPreferredSize(new Dimension(screenSize.width, screenSize.height));
-	    setUndecorated(true);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // Zet de size van de frame naar fullscreen
+	        setPreferredSize(new Dimension(screenSize.width, screenSize.height));
+	        setUndecorated(true);
 		setVisible(true);
 		pack();
 	}
