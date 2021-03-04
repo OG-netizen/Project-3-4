@@ -1,4 +1,5 @@
 // Dit is het Pin Pad pagina
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -9,27 +10,29 @@ public class PinPad extends JFrame implements ActionListener{
 	JPanel jplControlPanel = new JPanel();
 	JPanel jplLabelPanel = new JPanel();
 	JPanel jplButtonPanel = new JPanel();
+	JFrame frame = new JFrame();
 	JLabel jlbPasscode = new JLabel("Enter Pin");
 	JPasswordField jpwPasscode = new JPasswordField(4);
 	JButton jbtNumber;
 	StringBuilder inputPin= new StringBuilder("");
 	Authentication auth = new Authentication();
-	
+	private int breedte = 600 , lengte = 800;
+
 	public PinPad() {
-	     	setSize(600, 800);
-	   	setExtendedState(JFrame.MAXIMIZED_BOTH);
-	     	setUndecorated(true);
-	     	setTitle("GUI");
 		
+		setPreferredSize(new Dimension(breedte, lengte));
+		setVisible(true);
 		jplLabelPanel.setLayout(new BorderLayout());
 		jplButtonPanel.setLayout(new GridLayout(4,3));
 		
 		jplLabelPanel.add(jlbPasscode, BorderLayout.CENTER);
 		jplLabelPanel.add(jpwPasscode, BorderLayout.SOUTH);
 		
+	
+		
 		for (int i=1; i<10; i++) {
 			jbtNumber = new JButton(i+"");
-			jbtNumber.setPreferredSize(new Dimension(40,40));
+			jbtNumber.setPreferredSize(new Dimension(80,80));
 			jbtNumber.addActionListener(this);
 			jplButtonPanel.add(jbtNumber);
 		}
@@ -52,12 +55,8 @@ public class PinPad extends JFrame implements ActionListener{
 
 		add(jplControlPanel);
 
-		/*// set application to full screen
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		int xSize = ((int) tk.getScreenSize().getWidth());
-		int ySize = ((int) tk.getScreenSize().getHeight());*/
-		setPreferredSize(new Dimension(160, 180));
-		setVisible(true);
+	
+		
 		pack();
 	}
 	
@@ -124,7 +123,3 @@ public class PinPad extends JFrame implements ActionListener{
 	
 	
 	
-	
-	
-	
-}
