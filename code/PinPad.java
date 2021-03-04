@@ -16,6 +16,10 @@ public class PinPad extends JFrame implements ActionListener{
 	JButton jbtNumber;
 	StringBuilder inputPin= new StringBuilder("");
 	Authentication auth = new Authentication();
+
+	public static void main(String[] args) {
+		new PinPad();
+	}
 	
 	public PinPad() {
 		
@@ -119,13 +123,11 @@ public class PinPad extends JFrame implements ActionListener{
 		}
 		
 	}
-	public static void main(String[] args) {
-		new PinPad();
-	}
+
 	
 	public class Authentication {
 		
-		private String correctPIN="1234";
+		private String correctPIN="1234"; // pincode is 1234
 		public boolean authenticate(String pin) {
 			return(pin.equals(correctPIN));
 		}
