@@ -1,4 +1,4 @@
-package pin;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,15 +20,15 @@ public class Opnemen extends JFrame implements ActionListener {
     	
     }
     
-    public static void main(String[] args) {
-        GUI frame = new GUI();
-        frame.createGUI();
-        frame.setVisible(true);
-        System.out.println("done");
-    }
+    //public static void main(String[] args) {
+    //    GUI frame = new GUI();
+    //    frame.createGUI();
+    //    frame.setVisible(true);
+   //     System.out.println("done");
+  //  }
 
     void createGUI() {
-    	JLabel label = new JLabel("Hello world");
+    	
     	
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         JPanel venster = new JPanel();
@@ -41,24 +41,24 @@ public class Opnemen extends JFrame implements ActionListener {
         vensterRechts.setLayout(new GridLayout(3, 1, 50, 50));
         vensterRechts.setPreferredSize(new Dimension(300, MAXIMIZED_VERT));
        
-        
-        knoppen[0] = new JButton("5");
+      
+        knoppen[0] = new JButton("€5");
         vensterLinks.add(knoppen[0]);
         knoppen[0].addActionListener(this);
-        knoppen[1] = new JButton("10");
+        knoppen[1] = new JButton("€10");
         vensterLinks.add(knoppen[1]);
         knoppen[1].addActionListener(this);
-        knoppen[2] = new JButton("20");
+        knoppen[2] = new JButton("€20");
         vensterLinks.add(knoppen[2]);
         knoppen[2].addActionListener(this);
-        knoppen[3] = new JButton("50");
+        knoppen[3] = new JButton("€50");
         vensterRechts.add(knoppen[3]);
         knoppen[3].addActionListener(this);
 
-        knoppen[4] = new JButton("100");
+        knoppen[4] = new JButton("€100");
         vensterRechts.add(knoppen[4]);
         knoppen[4].addActionListener(this);
-        knoppen[5] = new JButton("200");
+        knoppen[5] = new JButton("€200");
         vensterRechts.add(knoppen[5]);
         knoppen[5].addActionListener(this);
       

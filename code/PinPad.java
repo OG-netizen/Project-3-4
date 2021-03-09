@@ -1,3 +1,4 @@
+
 // pin pad pagina
 // pincode is 1234, je kunt die veranderen in die Authentication class
 
@@ -17,12 +18,14 @@ public class PinPad extends JFrame implements ActionListener{
 	JButton jbtNumber;
 	StringBuilder inputPin= new StringBuilder("");
 	Authentication auth = new Authentication();
-
+	JTextArea text = new JTextArea();
+	
 	public static void main(String[] args) {
-		new PinPad(); // class methode om die programma te runnen
+	 new PinPad(); // class methode om die programma te runnen
 	}
 	
 	public PinPad() {	
+		
 		jplLabelPanel.setLayout(new BorderLayout());
 		jplButtonPanel.setLayout(new GridLayout(4,3));
 		jplLabelPanel.add(jlbPasscode, BorderLayout.CENTER); 
@@ -46,15 +49,14 @@ public class PinPad extends JFrame implements ActionListener{
 		jbtNumber.addActionListener(this);
 		jplButtonPanel.add(jbtNumber);
 		
-		
 		jplControlPanel.setLayout(new BorderLayout());
 		jplControlPanel.add(jplLabelPanel, BorderLayout.CENTER);
 		jplControlPanel.add(jplButtonPanel, BorderLayout.SOUTH);
 
 		add(jplControlPanel);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // Krijgt dimensie van je scherm 
-	        setPreferredSize(new Dimension(screenSize.width, screenSize.height)); // pas de dimensie op de programma zodat die fullscreen gaat.
-	        setUndecorated(true);
+	    setPreferredSize(new Dimension(screenSize.width, screenSize.height)); // pas de dimensie op de programma zodat die fullscreen gaat.
+        setUndecorated(true);
 		setVisible(true);
 		pack();
 	}
@@ -114,10 +116,19 @@ public class PinPad extends JFrame implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			String message =(auth.authenticate(inputPin.toString()))?"Welcome":"WrongPin";
-			JOptionPane.showMessageDialog(null, message);
-		}
-		
+			//String message =(auth.authenticate(inputPin.toString()))?"Welcome":"WrongPin";
+			Boolean TRUE = true;
+			if(TRUE =(auth.authenticate(inputPin.toString()))) {
+				start FRAME = new start();
+				FRAME.setVisible(true);
+				FRAME.createGUI(); 
+				//setVisible(false);
+				JOptionPane.showMessageDialog(null, "Welcome");
+				
+			}else {
+				JOptionPane.showMessageDialog(null, "Wrong Pin");
+			}
+		}	
 	}
 
 	
@@ -127,13 +138,10 @@ public class PinPad extends JFrame implements ActionListener{
 		public boolean authenticate(String pin) {
 			return(pin.equals(correctPIN));
 		}
-	
 		public void setCorrectPIN(String correctPIN) {
 			this.correctPIN = correctPIN;
 		}
 
 	}
-
-	
 	
 }
