@@ -4,11 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-/*
-    na pas inserten -- meteen inloggen
-    na inloggen -- saldo, pinnen, snelkeuze 70eu, 
-    altijd taal kunnen veranderen en kunnen afbreken
-*/
 
 public class Opnemen extends JFrame implements ActionListener {
     private int breedte = 600, hoogte = 800;
