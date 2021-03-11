@@ -14,8 +14,17 @@ import java.awt.event.*;
 public class GUI extends JFrame implements ActionListener {
     private int breedte = 600, hoogte = 800;
     private JButton[] knoppen;
-    private JPanel blad;
-    private Graphics g;
+    private int logoHoogte = 150, knopBreedte = 300, onderkantHoogte = 100;
+
+    private JPanel venster = new JPanel();
+    private JPanel vensterLinks = new JPanel();
+    private JPanel vensterRechts = new JPanel();
+    private JPanel logo = new JPanel();
+    private JPanel onderkant = new JPanel();
+    private JLabel insertCardLabel = new JLabel();
+    private JLabel logoLabel = new JLabel();
+    private ImageIcon insertCardIcon = new ImageIcon("Images/insert card.png");
+    private ImageIcon logoIcon = new ImageIcon("Images/munt.png");
 
     GUI() {
         knoppen = new JButton[8];
@@ -23,65 +32,116 @@ public class GUI extends JFrame implements ActionListener {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setUndecorated(true);
         setTitle("GUI");
-    }
-    
-    public static void main(String[] args) {
-        GUI frame = new GUI();
-        frame.createGUI();
-        frame.setVisible(true);
-        System.out.println("done");
+        createGUI();
+        setVisible(true);
     }
 
     private void createGUI() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        JPanel venster = new JPanel();
-        JPanel vensterLinks = new JPanel();
-        JPanel vensterRechts = new JPanel();
+        setDefaultCloseOperation(EXIT_ON_CLOSE);        
         getContentPane().setLayout(new BorderLayout(50, 50));
+
+        venster.setBackground(Color.red);
+        venster.setFont(new Font("Calibri", Font.PLAIN, 50));
+        venster.setAlignmentX(CENTER_ALIGNMENT);
+
         vensterLinks.setLayout(new GridLayout(4 , 1, 50, 50));
-        vensterLinks.setPreferredSize(new Dimension(300, MAXIMIZED_VERT));
+        vensterLinks.setPreferredSize(new Dimension(knopBreedte, MAXIMIZED_VERT));
+
         vensterRechts.setLayout(new GridLayout(4, 1, 50, 50));
-        vensterRechts.setPreferredSize(new Dimension(300, MAXIMIZED_VERT));
+        vensterRechts.setPreferredSize(new Dimension(knopBreedte, MAXIMIZED_VERT));
 
-        knoppen[0] = new JButton("1");
-        vensterLinks.add(knoppen[0]);
-        knoppen[0].addActionListener(this);
-        knoppen[1] = new JButton("2");
-        vensterLinks.add(knoppen[1]);
-        knoppen[1].addActionListener(this);
-        knoppen[2] = new JButton("3");
-        vensterLinks.add(knoppen[2]);
-        knoppen[2].addActionListener(this);
-        knoppen[3] = new JButton("4");
-        vensterLinks.add(knoppen[3]);
-        knoppen[3].addActionListener(this);
+        logo.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, logoHoogte));
+        logo.setBackground(Color.blue);
 
-        knoppen[4] = new JButton("5");
-        vensterRechts.add(knoppen[4]);
-        knoppen[4].addActionListener(this);
-        knoppen[5] = new JButton("6");
-        vensterRechts.add(knoppen[5]);
-        knoppen[5].addActionListener(this);
-        knoppen[6] = new JButton("7");
-        vensterRechts.add(knoppen[6]);
-        knoppen[6].addActionListener(this);
-        knoppen[7] = new JButton("8");
-        vensterRechts.add(knoppen[7]);
-        knoppen[7].addActionListener(this);
+        onderkant.setBackground(Color.cyan);
+        onderkant.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, onderkantHoogte));
 
+        insertCardLabel.setIcon(insertCardIcon);
+        
+        logoLabel.setIcon(logoIcon);
 
+        for(int i = 0; i < 8; i++) {
+            knoppen[i] = new JButton(String.valueOf(i));
+            if(i < 4) {
+                vensterLinks.add(knoppen[i]);
+            } else {
+                vensterRechts.add(knoppen[i]);
+            }
+            knoppen[i].addActionListener(this);
+        }
+
+        hoofdscherm();
+
+        venster.add(insertCardLabel);
+        logo.add(logoLabel);
 
         getContentPane().add(vensterLinks, BorderLayout.WEST);
         getContentPane().add(vensterRechts, BorderLayout.EAST);
-        blad = new JPanel();
-        venster.add(blad, BorderLayout.CENTER);
+        getContentPane().add(venster, BorderLayout.CENTER);
+        getContentPane().add(logo, BorderLayout.NORTH);
+        getContentPane().add(onderkant, BorderLayout.SOUTH);
+    }
+
+    public void hoofdscherm() {
+        knoppen[0].setText("pinnen");
+        knoppen[3].setText("verander taal");
+        knoppen[7].setText("afbreken");
+
+        knoppen[0].setVisible(true);
+        knoppen[1].setVisible(false);
+        knoppen[2].setVisible(false);
+        knoppen[3].setVisible(true);
+        knoppen[4].setVisible(false);
+        knoppen[5].setVisible(false);
+        knoppen[6].setVisible(false);
+        knoppen[7].setVisible(true);
+    }
+
+    public void pinnen() {
+        knoppen[0].setText("pin 10");
+        knoppen[1].setText("pin 20");
+        knoppen[2].setText("pin 30");
+        knoppen[3].setText("verander taal");
+        knoppen[4].setText("pin 40");
+        knoppen[5].setText("pin 50");
+        knoppen[6].setText("pin 60");
+        knoppen[7].setText("afbreken");
+        for(int i = 0; i < 8; i++) {
+            knoppen[i].setVisible(true);
+        }
+    }
+
+    public void taal() {
+        knoppen[1].setText("Nederlands");
+        knoppen[5].setText("English");
+        knoppen[7].setText("afbreken");
+
+        knoppen[0].setVisible(false);
+        knoppen[1].setVisible(true);
+        knoppen[2].setVisible(false);
+        knoppen[3].setVisible(false);
+        knoppen[4].setVisible(false);
+        knoppen[5].setVisible(true);
+        knoppen[6].setVisible(false);
+        knoppen[7].setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {
         String text = e.getActionCommand();
-        g = blad.getGraphics();
-        g.drawString(text, 500, 500);
-        System.out.print("knop: ");
-        System.out.println(text);
+        String text2 = text.substring(4,6);
+        hoofdscherm();
+        if(text == "afbreken") {
+            hoofdscherm();
+        } else if(text == "pinnen") {
+            pinnen();
+            //venster.getGraphics().drawString("Welkom", venster.getWidth() / 2, venster.getHeight() / 2);
+        } else if(text2 == "pin") {
+            System.out.println("er word " + text.substring(0, 3) + "euro gepint");
+            hoofdscherm();
+        } else if(text == "verander taal") {
+            taal();
+        }
+        System.out.println(text2);
+        System.out.println("knop: " + text);
     }
 }
