@@ -1,5 +1,4 @@
 
-
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortException;
