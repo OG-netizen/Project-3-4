@@ -27,7 +27,10 @@ public class demo {
 					
 					try {
 						String s = port.readString();
-						System.out.print(s);
+
+						System.out.println(s);
+						
+					
 					} catch (SerialPortException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -45,6 +48,7 @@ public class demo {
 		
 	}
 
+
 	public static void main(String[] args) {
 		
 		String portlist[] = SerialPortList.getPortNames();
@@ -54,7 +58,10 @@ public class demo {
 		}
 		demo obj = new demo();
 		obj.connect(portlist[0]);
+	
 
+		
+		
 		
 		
 		
@@ -62,3 +69,4 @@ public class demo {
 	}
 
 }
+
