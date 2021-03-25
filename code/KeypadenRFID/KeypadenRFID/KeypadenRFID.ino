@@ -1,30 +1,26 @@
-/*
- * Initial Author: ryand1011 (https://github.com/ryand1011)
- *
- * Reads data written by a program such as "rfid_write_personal_data.ino"
- *
- * See: https://github.com/miguelbalboa/rfid/tree/master/examples/rfid_write_personal_data
- *
- * Uses MIFARE RFID card using RFID-RC522 reader
- * Uses MFRC522 - Library
- * -----------------------------------------------------------------------------------------
- *             MFRC522      Arduino       Arduino   Arduino    Arduino          Arduino
- *             Reader/PCD   Uno/101       Mega      Nano v3    Leonardo/Micro   Pro Micro
- * Signal      Pin          Pin           Pin       Pin        Pin              Pin
- * -----------------------------------------------------------------------------------------
- * RST/Reset   RST          9             5         D9         RESET/ICSP-5     RST
- * SPI SS      SDA(SS)      10            53        D10        10               10
- * SPI MOSI    MOSI         11 / ICSP-4   51        D11        ICSP-4           16
- * SPI MISO    MISO         12 / ICSP-1   50        D12        ICSP-1           14
- * SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
-*/
-
 #include <SPI.h>
 #include <MFRC522.h>
+#include <Keypad.h>
 
 #define RST_PIN         9           // Configurable, see typical pin layout above
 #define SS_PIN          10          // Configurable, see typical pin layout above
 
+const int ROW_NUM = 4; //four rows
+const int COLUMN_NUM = 4; //four columns
+
+char keyps[ROW_NUM][COLUMN_NUM] = {
+  {'1','2','3', 'A'},
+  {'4','5','6', 'B'},
+  {'7','8','9', 'C'},
+  {'*','0','#', 'D'}
+};
+string data[ROW][COLUMN] = {
+{"79 2C E9 C1","1234"
+};
+byte pin_rows[ROW_NUM] = {9, 8, 7, 6}; //connect to the row pinouts of the keypad
+byte pin_column[COLUMN_NUM] = {5, 4, 3, 2}; //connect to the column pinouts of the keypad
+
+Keypad keypad = Keypad( makeKeymap(keyps), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance
 
 //*****************************************************************************************//
@@ -37,6 +33,17 @@ void setup() {
 
 //*****************************************************************************************//
 void loop() {
+
+  //keypad--------------------------------------------------------
+  
+  char keyp = keypad.getKey();
+
+  if (keyp){
+    Serial.println(keyp);
+  }
+  else {
+  //----------------------------------------------------------------------
+
 
   // Prepare key - all keys are set to FFFFFFFFFFFFh at chip delivery from the factory.
   MFRC522::MIFARE_Key key;
@@ -117,7 +124,7 @@ void loop() {
   if (status != MFRC522::STATUS_OK) {
     Serial.print(F("Reading failed: "));
     Serial.println(mfrc522.GetStatusCodeName(status));
-    return;
+    return; 
   }
 
   //PRINT LAST NAME
@@ -134,5 +141,6 @@ void loop() {
 
   mfrc522.PICC_HaltA();
   mfrc522.PCD_StopCrypto1();
+}
 }
 //*****************************************************************************************//
