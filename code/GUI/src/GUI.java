@@ -103,38 +103,31 @@ public class GUI extends JFrame implements ActionListener {
    
 
     public void pinnen(String taal) {
+        if(taal == "Engels"){
 
-        if(taal == "Nederlands"){
-        
-        knoppen[0].setText("pin 10");
-        knoppen[1].setText("pin 20");
-        knoppen[2].setText("pin 30");
-        knoppen[3].setText("Verander taal");
-        knoppen[4].setText("pin 40");
-        knoppen[5].setText("pin 50");
-        knoppen[6].setText("pin 60");
-        knoppen[7].setText("afbreken");
-        for(int i = 0; i < 8; i++) {
-            knoppen[i].setVisible(true);
-        }
-    }
-
-    if(taal == "Engels"){
-        knoppen[0].setText("pin 10");
-        knoppen[1].setText("pin 20");
-        knoppen[2].setText("pin 30");
-        knoppen[3].setText("Change language");
-        knoppen[4].setText("pin 40");
-        knoppen[5].setText("pin 50");
-        knoppen[6].setText("pin 60");
-        knoppen[7].setText("Cancel");
-        for(int i = 0; i < 8; i++) {
-            knoppen[i].setVisible(true);
-        }
+            knoppen[1].setText("Dutch");
+            knoppen[5].setText("English");
+            knoppen[7].setText("Cancel");
+            }
+            else if(taal == "Nederlands"){
+    
+            knoppen[1].setText("Nederlands");
+            knoppen[5].setText("English");
+            knoppen[7].setText("afbreken");
+            }
+            
+            knoppen[0].setVisible(false);
+            knoppen[1].setVisible(true);
+            knoppen[2].setVisible(false);
+            knoppen[3].setVisible(false);
+            knoppen[4].setVisible(false);
+            knoppen[5].setVisible(true);
+            knoppen[6].setVisible(false);
+            knoppen[7].setVisible(true);
 
     }
     
-    }
+    
 
     public void taal(String taal) {
 
