@@ -97,7 +97,13 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[7].setVisible(true);
     }
 
-    public void pinnen() {
+  
+   
+
+    public void pinnen(String taal) {
+
+        if(taal == "Nederlands"){
+        
         knoppen[0].setText("pin 10");
         knoppen[1].setText("pin 20");
         knoppen[2].setText("pin 30");
@@ -111,7 +117,44 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    public void taal() {
+    if(taal == "Engels"){
+        knoppen[0].setText("pin 10");
+        knoppen[1].setText("pin 20");
+        knoppen[2].setText("pin 30");
+        knoppen[3].setText("Language");
+        knoppen[4].setText("pin 40");
+        knoppen[5].setText("pin 50");
+        knoppen[6].setText("pin 60");
+        knoppen[7].setText("Cancel");
+        for(int i = 0; i < 8; i++) {
+            knoppen[i].setVisible(true);
+        }
+
+    }
+    
+    }
+
+    public void taal(String taal) {
+
+        if(taal == "Engels"){
+
+        knoppen[1].setText("Dutch");
+        knoppen[5].setText("English");
+        knoppen[7].setText("Cancel");
+
+        knoppen[0].setVisible(false);
+        knoppen[1].setVisible(true);
+        knoppen[2].setVisible(false);
+        knoppen[3].setVisible(false);
+        knoppen[4].setVisible(false);
+        knoppen[5].setVisible(true);
+        knoppen[6].setVisible(false);
+        knoppen[7].setVisible(true);
+
+        }
+
+        if(taal == "Nederlands"){
+
         knoppen[1].setText("Nederlands");
         knoppen[5].setText("English");
         knoppen[7].setText("afbreken");
@@ -124,22 +167,30 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[5].setVisible(true);
         knoppen[6].setVisible(false);
         knoppen[7].setVisible(true);
+        }
     }
+
+    
 
     public void actionPerformed(ActionEvent e) {
         String text = e.getActionCommand();
         String text2 = text.substring(4,6);
         hoofdscherm();
-        if(text == "afbreken") {
+        if(text == "afbreken" ) {
             hoofdscherm();
         } else if(text == "pinnen") {
-            pinnen();
+            pinnen("Nederlands");
             //venster.getGraphics().drawString("Welkom", venster.getWidth() / 2, venster.getHeight() / 2);
         } else if(text2 == "pin") {
             System.out.println("er word " + text.substring(0, 3) + "euro gepint");
             hoofdscherm();
-        } else if(text == "verander taal") {
-            taal();
+        } else if(text == "verander taal" ) {
+            taal("Nederlands");
+        }else if (text == "English"){
+           taal("Engels");
+        }else if(text == "Get cash"){
+            pinnen("Engels");
+          
         }
         System.out.println(text2);
         System.out.println("knop: " + text);

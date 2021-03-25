@@ -3,7 +3,7 @@ import java.io.*; // IOException
 import java.util.*; // Scanner
 import jssc.*;
 
-public class ComPortSendReceive {
+public class demo {
 
     private static SerialPort serialPort;
     
