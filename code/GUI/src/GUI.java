@@ -14,7 +14,7 @@ import java.awt.event.*;
 public class GUI extends JFrame implements ActionListener {
     private int breedte = 600, hoogte = 800;
     private JButton[] knoppen;
-    private int logoHoogte = 150, knopBreedte = 300, onderkantHoogte = 100;
+    private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100;
 
     private JPanel venster = new JPanel();
     private JPanel vensterLinks = new JPanel();
@@ -23,8 +23,10 @@ public class GUI extends JFrame implements ActionListener {
     private JPanel onderkant = new JPanel();
     private JLabel insertCardLabel = new JLabel();
     private JLabel logoLabel = new JLabel();
-    private ImageIcon insertCardIcon = new ImageIcon("Images/insert card.png");
-    private ImageIcon logoIcon = new ImageIcon("Images/munt.png");
+    private ImageIcon insertCardIcon = new ImageIcon("code/GUI/Images/insert card.png");
+    private ImageIcon logoIcon = new ImageIcon("code/GUI/Images/logo_white_trans.png");
+
+    private String code = "";
 
     GUI() {
         knoppen = new JButton[8];
@@ -40,7 +42,7 @@ public class GUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);        
         getContentPane().setLayout(new BorderLayout(50, 50));
 
-        venster.setBackground(Color.red);
+        //venster.setBackground(Color.red);
         venster.setFont(new Font("Calibri", Font.PLAIN, 50));
         venster.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -51,9 +53,9 @@ public class GUI extends JFrame implements ActionListener {
         vensterRechts.setPreferredSize(new Dimension(knopBreedte, MAXIMIZED_VERT));
 
         logo.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, logoHoogte));
-        logo.setBackground(Color.blue);
+        logo.setBackground(Color.black);
 
-        onderkant.setBackground(Color.cyan);
+        onderkant.setBackground(Color.black);
         onderkant.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, onderkantHoogte));
 
         insertCardLabel.setIcon(insertCardIcon);
@@ -107,7 +109,7 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[0].setText("pin 10");
         knoppen[1].setText("pin 20");
         knoppen[2].setText("pin 30");
-        knoppen[3].setText("verander taal");
+        knoppen[3].setText("Verander taal");
         knoppen[4].setText("pin 40");
         knoppen[5].setText("pin 50");
         knoppen[6].setText("pin 60");
@@ -121,7 +123,7 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[0].setText("pin 10");
         knoppen[1].setText("pin 20");
         knoppen[2].setText("pin 30");
-        knoppen[3].setText("Language");
+        knoppen[3].setText("Change language");
         knoppen[4].setText("pin 40");
         knoppen[5].setText("pin 50");
         knoppen[6].setText("pin 60");
@@ -170,7 +172,36 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    
+    public void dataReceived(String data) {
+        String maskedCode = "";
+        if(data == "D") {
+            if(checkCode()) {
+                pinnen("Nederlands");
+            }
+            maskedCode = "";
+            code = "";
+        } else if(data == "C") {
+            code = "";
+            maskedCode = "";
+        } else {
+            code += data;
+            for(int i = 0; i < code.length(); i++) {
+                maskedCode += "*";
+            }
+        }
+        venster.getGraphics().clearRect(0, 0, venster.getWidth(), venster.getHeight());
+        venster.getGraphics().drawString(maskedCode, venster.getWidth() / 2, venster.getHeight() / 2);
+        System.out.println(code);
+
+    }
+
+    public boolean checkCode() {
+        if(code == "1234") {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public void actionPerformed(ActionEvent e) {
         String text = e.getActionCommand();

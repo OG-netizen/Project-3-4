@@ -5,11 +5,12 @@ import jssc.*;
 public class demo {
 
     private static SerialPort serialPort;
+    public String data;
     
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public demo() {
         String[] portNames = SerialPortList.getPortNames();
         
         if (portNames.length == 0) {
@@ -32,6 +33,7 @@ public class demo {
         System.out.println("Type port name, which you want to use, and press Enter...");
         Scanner in = new Scanner(System.in);
         String portName = in.next();
+        in.close();
         
         // writing to port
         serialPort = new SerialPort(portName);
@@ -56,20 +58,24 @@ public class demo {
         catch (SerialPortException ex) {
             System.out.println("Error in writing data to port: " + ex);
         }
- 
+        
+    }
+
+    protected void sendData() {
+        
     }
     
     // receiving response from port
-    private static class PortReader implements SerialPortEventListener {
+    public class PortReader implements SerialPortEventListener {
 
         @Override
         public void serialEvent(SerialPortEvent event) {
             if(event.isRXCHAR() && event.getEventValue() > 0) {
                 try {
                   
-                    String receivedData = serialPort.readString(event.getEventValue());
-                    System.out.println("Received response from port: " + receivedData);
-                   
+                    data = serialPort.readString(event.getEventValue());
+                    sendData();
+                    //System.out.println("Received response from port: " + receivedData);
                 }
                 catch (SerialPortException ex) {
                     System.out.println("Error in receiving response from port: " + ex);

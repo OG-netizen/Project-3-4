@@ -2,14 +2,19 @@ import java.io.*; // IOException
 import java.util.*; // Scanner
 import jssc.*;
 
-public class demo {
-
+public class App {
     private static SerialPort serialPort;
-    
-    /**
-     * @param args the command line arguments
-     */
+    private static App a;
+    private static GUI g;
+
     public static void main(String[] args) {
+        a = new App();
+        g = new GUI();
+        a.startSerial();
+        
+    }
+    
+    private void startSerial() {
         String[] portNames = SerialPortList.getPortNames();
         
         if (portNames.length == 0) {
@@ -32,6 +37,7 @@ public class demo {
         System.out.println("Type port name, which you want to use, and press Enter...");
         Scanner in = new Scanner(System.in);
         String portName = in.next();
+        in.close();
         
         // writing to port
         serialPort = new SerialPort(portName);
@@ -56,11 +62,15 @@ public class demo {
         catch (SerialPortException ex) {
             System.out.println("Error in writing data to port: " + ex);
         }
- 
+        
+    }
+
+    protected void sendData() {
+        
     }
     
     // receiving response from port
-    private static class PortReader implements SerialPortEventListener {
+    public static class PortReader implements SerialPortEventListener {
 
         @Override
         public void serialEvent(SerialPortEvent event) {
@@ -68,8 +78,8 @@ public class demo {
                 try {
                   
                     String receivedData = serialPort.readString(event.getEventValue());
-                    System.out.println("Received response from port: " + receivedData);
-                   
+                    //System.out.println("Received response from port: " + receivedData);
+                    g.dataReceived(receivedData);
                 }
                 catch (SerialPortException ex) {
                     System.out.println("Error in receiving response from port: " + ex);
@@ -77,4 +87,5 @@ public class demo {
             }
         }
     }
+
 }
