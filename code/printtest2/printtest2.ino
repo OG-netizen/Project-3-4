@@ -12,7 +12,7 @@
   ------------------------------------------------------------------------*/
 
 #include "Adafruit_Thermal.h"
-#include "adalogo.h"
+#include "ding.h"
 #include "adaqrcode.h"
 
 // Here's the new syntax when using SoftwareSerial (e.g. Arduino Uno) ----
@@ -49,68 +49,74 @@ void setup() {
   // anywhere!  They're just here so they run one time and are not printed
   // over and over (which would happen if they were in loop() instead).
   // Some functions will feed a line when called, this is normal.
-
-  printer.doubleHeightOn();
-  printer.inverseOn();
-  printer.println(F("AYY LMAO"));
-  printer.doubleHeightOff();
-  printer.inverseOff();
-
-//   Test inverse on & off
-  printer.inverseOn();
-  printer.println(F("Jia is gay"));
-  printer.inverseOff();
-
-//  // Test character double-height on & off
-  printer.doubleHeightOn();
-  printer.println(F("AYY LMAO"));
-  printer.doubleHeightOff();
-
-  // Set text justification (right, center, left) -- accepts 'L', 'C', 'R'
-  printer.justify('R');
-  printer.println(F("Right justified"));
-  printer.justify('C');
-  printer.println(F("Center justified"));
-  printer.justify('L');
-  printer.println(F("Left justified"));
-
-  // Test more styles
-  printer.boldOn();
-  printer.println(F("Bold text"));
-  printer.boldOff();
-
-  printer.underlineOn();
-  printer.println(F("Underlined text"));
-  printer.underlineOff();
-
-  printer.setSize('L');        // Set type size, accepts 'S', 'M', 'L'
-  printer.println(F("Large"));
-  printer.setSize('M');
-  printer.println(F("Medium"));
-  printer.setSize('S');
-  printer.println(F("Small"));
-
-  printer.justify('C');
-  printer.println(F("normal\nline\nspacing"));
-  printer.setLineHeight(50);
-  printer.println(F("Taller\nline\nspacing"));
-  printer.setLineHeight(); // Reset to default
-  printer.justify('L');
-
-  // Barcode examples:
+//  printer.justify('C');
+//for(int i = 0; i < 3; i++) {
+//  printer.boldOn();
+//  printer.setSize('L');
+//  printer.print(F("Fake"));
+//  printer.boldOff();
+//
+//////   Test inverse on & off
+//  printer.boldOn();
+//  printer.inverseOn();
+//  printer.setSize('L');
+//  printer.println(F("ATM"));
+//  printer.boldOff();
+//  printer.inverseOff();
+//}
+//    printer.setLineHeight(50);
+//    printer.println("");
+//
+////  // Test character double-height on & off
+//  printer.doubleHeightOn();
+//  printer.println(F("AYY LMAO"));
+//  printer.doubleHeightOff();
+//
+//  // Set text justification (right, center, left) -- accepts 'L', 'C', 'R'
+//  printer.justify('R');
+//  printer.println(F("Right justified"));
+//  printer.justify('C');
+//  printer.println(F("Center justified"));
+//  printer.justify('L');
+//  printer.println(F("Left justified"));
+//
+//  // Test more styles
+//  printer.boldOn();
+//  printer.println(F("Bold text"));
+//  printer.boldOff();
+//
+//  printer.underlineOn();
+//  printer.println(F("Underlined text"));
+//  printer.underlineOff();
+//
+//  printer.setSize('L');        // Set type size, accepts 'S', 'M', 'L'
+//  printer.println(F("Large"));
+//  printer.setSize('M');
+//  printer.println(F("Medium"));
+//  printer.setSize('S');
+//  printer.println(F("Small"));
+//
+//  printer.justify('C');
+//  printer.println(F("normal\nline\nspacing"));
+//  printer.setLineHeight(50);
+//  printer.println(F("Taller\nline\nspacing"));
+//  printer.setLineHeight(); // Reset to default
+//  printer.justify('L');
+//
+//  // Barcode examples:
   // CODE39 is the most common alphanumeric barcode:
-  printer.printBarcode("ADAFRUT", CODE39);
-  printer.setBarcodeHeight(100);
-  // Print UPC line on product barcodes:
-  printer.printBarcode("123456789123", UPC_A);
+//  printer.printBarcode("https://www.google.com", CODE39);
+//  printer.setBarcodeHeight(100);
+//   Print UPC line on product barcodes:
+//  printer.printBarcode("https://www.google.com", UPC_A);
 
-  // Print the 75x75 pixel logo in adalogo.h:
-  printer.printBitmap(adalogo_width, adalogo_height, adalogo_data);
+//  // Print the 75x75 pixel logo in adalogo.h:
+//  printer.printBitmap(ding_width, ding_height, ding_data);
 
-  // Print the 135x135 pixel QR code in adaqrcode.h:
-  printer.printBitmap(adaqrcode_width, adaqrcode_height, adaqrcode_data);
-  printer.println(F("Adafruit!"));
-  printer.feed(2);
+//  // Print the 135x135 pixel QR code in adaqrcode.h:
+//  printer.printBitmap(adaqrcode_width, adaqrcode_height, adaqrcode_data);
+//  printer.println(F("Adafruit!"));
+//  printer.feed(2);
 
   printer.sleep();      // Tell printer to sleep
   delay(3000L);         // Sleep for 3 seconds
