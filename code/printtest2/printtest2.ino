@@ -12,7 +12,7 @@
   ------------------------------------------------------------------------*/
 
 #include "Adafruit_Thermal.h"
-#include "adalogo.h"
+#include "ding.h"
 #include "adaqrcode.h"
 
 // Here's the new syntax when using SoftwareSerial (e.g. Arduino Uno) ----
@@ -31,7 +31,7 @@ Adafruit_Thermal printer(&mySerial);     // Pass addr to printer constructor
 
 //Adafruit_Thermal printer(&Serial1);      // Or Serial2, Serial3, etc.
 
-// -----------------------------------------------------------------------
+// ----------------------------------------------------------------------- 
 
 void setup() {
 
@@ -49,17 +49,23 @@ void setup() {
   // anywhere!  They're just here so they run one time and are not printed
   // over and over (which would happen if they were in loop() instead).
   // Some functions will feed a line when called, this is normal.
-
-  printer.doubleHeightOn();
-  printer.inverseOn();
-  printer.println(F("AYY LMAO"));
-  printer.doubleHeightOff();
-  printer.inverseOff();
-
-  // Test inverse on & off
+//  printer.justify('C');
+//for(int i = 0; i < 3; i++) {
+//  printer.boldOn();
+//  printer.setSize('L');
+//  printer.print(F("Fake"));
+//  printer.boldOff();
+//
+//////   Test inverse on & off
+//  printer.boldOn();
 //  printer.inverseOn();
-//  printer.println(F("Jia is gay"));
+//  printer.setSize('L');
+//  printer.println(F("ATM"));
+//  printer.boldOff();
 //  printer.inverseOff();
+//}
+//    printer.setLineHeight(50);
+//    printer.println("");
 //
 ////  // Test character double-height on & off
 //  printer.doubleHeightOn();
@@ -98,15 +104,15 @@ void setup() {
 //  printer.justify('L');
 //
 //  // Barcode examples:
-//  // CODE39 is the most common alphanumeric barcode:
-//  printer.printBarcode("ADAFRUT", CODE39);
+  // CODE39 is the most common alphanumeric barcode:
+//  printer.printBarcode("https://www.google.com", CODE39);
 //  printer.setBarcodeHeight(100);
-//  // Print UPC line on product barcodes:
-//  printer.printBarcode("123456789123", UPC_A);
-//
+//   Print UPC line on product barcodes:
+//  printer.printBarcode("https://www.google.com", UPC_A);
+
 //  // Print the 75x75 pixel logo in adalogo.h:
-//  printer.printBitmap(adalogo_width, adalogo_height, adalogo_data);
-//
+//  printer.printBitmap(ding_width, ding_height, ding_data);
+
 //  // Print the 135x135 pixel QR code in adaqrcode.h:
 //  printer.printBitmap(adaqrcode_width, adaqrcode_height, adaqrcode_data);
 //  printer.println(F("Adafruit!"));
