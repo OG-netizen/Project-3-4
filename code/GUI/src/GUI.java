@@ -12,6 +12,9 @@ import java.awt.event.*;
 */
 
 public class GUI extends JFrame implements ActionListener {
+    private final String Nederlands = "Nederlands";
+    private final String Engels = "Engels";
+    private Serial usedSerial;
     private int breedte = 600, hoogte = 800;
     private JButton[] knoppen;
     private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100;
@@ -28,7 +31,8 @@ public class GUI extends JFrame implements ActionListener {
 
     private String code = "";
 
-    GUI() {
+    public void startGUI(Serial s) {
+        usedSerial = s;
         knoppen = new JButton[8];
         setSize(breedte, hoogte);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -72,7 +76,7 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[i].addActionListener(this);
         }
 
-        hoofdscherm();
+        hoofdscherm(Nederlands);
 
         venster.add(insertCardLabel);
         logo.add(logoLabel);
@@ -84,10 +88,16 @@ public class GUI extends JFrame implements ActionListener {
         getContentPane().add(onderkant, BorderLayout.SOUTH);
     }
 
-    public void hoofdscherm() {
-        knoppen[0].setText("pinnen");
-        knoppen[3].setText("verander taal");
-        knoppen[7].setText("afbreken");
+    public void hoofdscherm(String taal) {
+        if(taal == Engels) {
+            knoppen[0].setText("draw money");
+            knoppen[3].setText("change language");
+            knoppen[7].setText("close");
+        } else if(taal == Nederlands) {
+            knoppen[0].setText("pinnen");
+            knoppen[3].setText("verander taal");
+            knoppen[7].setText("afsluiten");
+        }
 
         knoppen[0].setVisible(true);
         knoppen[1].setVisible(false);
@@ -103,16 +113,15 @@ public class GUI extends JFrame implements ActionListener {
    
 
     public void pinnen(String taal) {
-        if(taal == "Engels"){
+        if(taal == Engels){
 
-            knoppen[1].setText("Dutch");
-            knoppen[5].setText("English");
-            knoppen[7].setText("Cancel");
-            }
-            else if(taal == "Nederlands"){
+            knoppen[1].setText("pin 10");
+            knoppen[5].setText("pin 20");
+            knoppen[7].setText("cancel");
+        } else if(taal == Nederlands){
     
-            knoppen[1].setText("Nederlands");
-            knoppen[5].setText("English");
+            knoppen[1].setText("pin 10");
+            knoppen[5].setText("pin 20");
             knoppen[7].setText("afbreken");
             }
             
@@ -131,11 +140,11 @@ public class GUI extends JFrame implements ActionListener {
 
     public void taal(String taal) {
 
-        if(taal == "Engels"){
+        if(taal == Engels){
 
-        knoppen[1].setText("Dutch");
+        knoppen[1].setText("Nederlands");
         knoppen[5].setText("English");
-        knoppen[7].setText("Cancel");
+        knoppen[7].setText("cancel");
 
         knoppen[0].setVisible(false);
         knoppen[1].setVisible(true);
@@ -146,9 +155,7 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[6].setVisible(false);
         knoppen[7].setVisible(true);
 
-        }
-
-        if(taal == "Nederlands"){
+        } else if(taal == Nederlands){
 
         knoppen[1].setText("Nederlands");
         knoppen[5].setText("English");
@@ -167,20 +174,25 @@ public class GUI extends JFrame implements ActionListener {
 
     public void dataReceived(String data) {
         String maskedCode = "";
-        if(data == "D") {
-            if(checkCode()) {
-                pinnen("Nederlands");
+        code += data;
+        char checkLetter = 'l';
+        if(code.length() > 0) {
+            checkLetter = code.charAt(code.length() - 1);
+            if(checkLetter == 'D') {
+                code = code.substring(0, 4);
+                System.out.println("code die word gecheckt: " + code);
+                if(checkCode()) {
+                    pinnen("Nederlands");
+                }
+                code = "";
+            } else if(checkLetter == 'C') {
+                code = "";
             }
-            maskedCode = "";
-            code = "";
-        } else if(data == "C") {
-            code = "";
-            maskedCode = "";
-        } else {
-            code += data;
-            for(int i = 0; i < code.length(); i++) {
-                maskedCode += "*";
-            }
+        }
+        if(code.length() > 0) System.out.println(code.charAt(code.length() - 1));
+
+        for(int i = 0; i < code.length(); i++) {
+            maskedCode += "*";
         }
         venster.getGraphics().clearRect(0, 0, venster.getWidth(), venster.getHeight());
         venster.getGraphics().drawString(maskedCode, venster.getWidth() / 2, venster.getHeight() / 2);
@@ -189,34 +201,56 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public boolean checkCode() {
-        if(code == "1234") {
+        String checkCode = "1234";
+        if(code.substring(0,1) == checkCode.substring(0,1)) {
+            System.out.println("code goedgekeurd! doorgestuurd om te pinnen");
             return true;
         } else {
+            System.out.println("code foutgekeurd!");
             return false;
         }
     }
 
     public void actionPerformed(ActionEvent e) {
         String text = e.getActionCommand();
-        String text2 = text.substring(4,6);
-        hoofdscherm();
-        if(text == "afbreken" ) {
-            hoofdscherm();
-        } else if(text == "pinnen") {
-            pinnen("Nederlands");
-            //venster.getGraphics().drawString("Welkom", venster.getWidth() / 2, venster.getHeight() / 2);
-        } else if(text2 == "pin") {
-            System.out.println("er word " + text.substring(0, 3) + "euro gepint");
-            hoofdscherm();
-        } else if(text == "verander taal" ) {
-            taal("Nederlands");
-        }else if (text == "English"){
-           taal("Engels");
-        }else if(text == "Get cash"){
-            pinnen("Engels");
-          
+
+        switch (text) {
+            case "afsluiten":
+                System.exit(0);
+                break;
+            case "close":
+                System.exit(0);
+                break;
+            case "pinnen":
+                pinnen(Nederlands);
+                break;
+            case "draw money":
+                pinnen(Engels);
+                break;
+            case "verander taal":
+                taal(Nederlands);
+                break;
+            case "change language":
+                taal(Engels);
+                break;
+            case "English":
+                hoofdscherm(Engels);
+                break;
+            case "Nederlands":
+                hoofdscherm(Nederlands);
+                break;
+            case "afbreken":
+                hoofdscherm(Nederlands);
+                break;
+            case "cancel":
+                hoofdscherm(Engels);
+                break;
+            default:
+                System.out.println("weet niet wat te doen!" + text);
+                break;
         }
-        System.out.println(text2);
+
+
         System.out.println("knop: " + text);
     }
 }
