@@ -14,13 +14,14 @@
 #include "Adafruit_Thermal.h"
 #include "ding.h"
 #include "adaqrcode.h"
+#include <TimeLib.h>
 
 // Here's the new syntax when using SoftwareSerial (e.g. Arduino Uno) ----
 // If using hardware serial instead, comment out or remove these lines:
 
 #include "SoftwareSerial.h"
-#define TX_PIN 6 // Arduino transmit  YELLOW WIRE  labeled RX on printer
-#define RX_PIN 5 // Arduino receive   GREEN WIRE   labeled TX on printer
+#define TX_PIN 6 // Arduino transmit  BLAUW WIRE  labeled RX on printer
+#define RX_PIN 5 // Arduino receive   GROEN WIRE   labeled TX on printer
 
 SoftwareSerial mySerial(RX_PIN, TX_PIN); // Declare SoftwareSerial obj first
 Adafruit_Thermal printer(&mySerial);     // Pass addr to printer constructor
@@ -34,7 +35,13 @@ Adafruit_Thermal printer(&mySerial);     // Pass addr to printer constructor
 // ----------------------------------------------------------------------- 
 
 void setup() {
+  int pinaantal = 20;
+  int donatieaantal = 10;
+  int totaalpin = pinaantal+donatieaantal;
 
+
+  // setTime(hr,min,sec,day,mnth,yr);
+  setTime(15,44,0,8,4,2021);
   // This line is for compatibility with the Adafruit IotP project pack,
   // which uses pin 7 as a spare grounding point.  You only need this if
   // wired up the same way (w/3-pin header into pins 5/6/7):
@@ -51,22 +58,70 @@ void setup() {
   // Some functions will feed a line when called, this is normal.
 //  printer.justify('C');
 //for(int i = 0; i < 3; i++) {
-//  printer.boldOn();
-//  printer.setSize('L');
-//  printer.print(F("Fake"));
-//  printer.boldOff();
+  printer.justify('C');
+  printer.boldOn();
+  printer.setSize('L');
+  printer.print(F("Fake"));
+  printer.boldOff();
 //
 //////   Test inverse on & off
-//  printer.boldOn();
-//  printer.inverseOn();
-//  printer.setSize('L');
-//  printer.println(F("ATM"));
-//  printer.boldOff();
-//  printer.inverseOff();
-//}
-//    printer.setLineHeight(50);
-//    printer.println("");
-//
+  printer.boldOn();
+  printer.inverseOn();
+  printer.setSize('L');
+  printer.println(F("ATM"));
+  printer.boldOff();
+  printer.inverseOff();
+
+  printer.setLineHeight(64);
+  printer.justify('L');
+  printer.setSize('S');
+  printer.print(F("Aantal gepint               "));
+  printer.boldOn();
+  printer.setSize('S');
+  printer.println(pinaantal);
+  printer.boldOff();
+
+
+  printer.setLineHeight(32);
+  printer.justify('L');
+  printer.setSize('S');
+  printer.print(F("Donatie                     "));
+  printer.boldOn();
+  printer.setSize('S');
+  printer.println(donatieaantal);
+  printer.boldOff();
+
+  printer.setLineHeight(64);
+  printer.justify('L');
+  printer.setSize('S');
+  printer.print(F("Totaal                      "));
+  printer.boldOn();
+  printer.setSize('S');
+  printer.println(totaalpin);
+  printer.boldOff();
+
+
+  printer.setLineHeight(256);
+  printer.justify('C');
+  printer.setSize('S');
+  printer.print(day());
+  printer.print("|");
+  printer.print(month());
+  printer.print("|");
+  printer.println(year());
+
+ printer.setLineHeight(48);
+  printer.justify('C');
+  printer.setSize('S');
+  printer.println("fakeATM");
+
+  printer.setLineHeight(256);
+    printer.setLineHeight(50);
+    printer.println(F(""));
+    printer.println(F(""));
+    printer.println(F(""));
+    
+
 ////  // Test character double-height on & off
 //  printer.doubleHeightOn();
 //  printer.println(F("AYY LMAO"));
