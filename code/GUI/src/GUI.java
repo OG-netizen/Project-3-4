@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 /*
     na pas inserten -- meteen inloggen
@@ -29,7 +30,7 @@ public class GUI extends JFrame implements ActionListener {
     private ImageIcon insertCardIcon = new ImageIcon("code/GUI/Images/insert card.png");
     private ImageIcon logoIcon = new ImageIcon("code/GUI/Images/logo_white_trans.png");
 
-    private String code = "";
+    private ArrayList<String> code = new ArrayList<String>();
 
     public void startGUI(Serial s) {
         usedSerial = s;
@@ -175,24 +176,18 @@ public class GUI extends JFrame implements ActionListener {
 
     public void dataReceived(String data) {
         String maskedCode = "";
-        code += data;
-        char checkLetter = 'l';
-        if(code.length() > 0) {
-            checkLetter = code.charAt(code.length() - 1);
-            if(checkLetter == 'D') {
-                code = code.substring(0, 4);
-                System.out.println("code die word gecheckt: " + code);
-                if(checkCode()) {
-                    pinnen("Nederlands");
-                }
-                code = "";
-            } else if(checkLetter == 'C') {
-                code = "";
+        if(data.contains("D")) {
+            if(checkCode()) {
+                pinnen(Nederlands);
             }
+            code.clear();
+        } else if(data.contains("C")) {
+            code.clear();
+        } else {
+            code.add(data);
         }
-        if(code.length() > 0) System.out.println(code.charAt(code.length() - 1));
 
-        for(int i = 0; i < code.length(); i++) {
+        for(int i = 0; i < code.size(); i++) {
             maskedCode += "*";
         }
         venster.getGraphics().clearRect(0, 0, venster.getWidth(), venster.getHeight());
@@ -203,11 +198,13 @@ public class GUI extends JFrame implements ActionListener {
 
     public boolean checkCode() {
         String checkCode = "1234";
-        if(code.substring(0,1) == checkCode.substring(0,1)) {
-            System.out.println("code goedgekeurd! doorgestuurd om te pinnen");
+        String newCode = String.join("", code);
+        System.out.println(newCode);
+        if(newCode.contains(checkCode)) {
+            System.out.println("code goedgekeurd");
             return true;
         } else {
-            System.out.println("code foutgekeurd!");
+            System.out.println("code foutgekeurd");
             return false;
         }
     }
