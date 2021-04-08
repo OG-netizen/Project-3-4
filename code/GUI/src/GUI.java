@@ -68,6 +68,7 @@ public class GUI extends JFrame implements ActionListener {
 
         for(int i = 0; i < 8; i++) {
             knoppen[i] = new JButton(String.valueOf(i));
+            knoppen[i].setBackground(Color.LIGHT_GRAY);
             if(i < 4) {
                 vensterLinks.add(knoppen[i]);
             } else {
@@ -123,7 +124,7 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[1].setText("pin 10");
             knoppen[5].setText("pin 20");
             knoppen[7].setText("afbreken");
-            }
+        }
             
             knoppen[0].setVisible(false);
             knoppen[1].setVisible(true);
@@ -246,7 +247,7 @@ public class GUI extends JFrame implements ActionListener {
                 hoofdscherm(Engels);
                 break;
             default:
-                System.out.println("weet niet wat te doen!" + text);
+                System.out.println("weet niet wat te doen! " + text);
                 break;
         }
 
