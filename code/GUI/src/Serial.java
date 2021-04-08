@@ -34,7 +34,7 @@ public class Serial {
         //Scanner in = new Scanner(System.in);
         //String portName = in.next();
         //in.close();
-        String portName = "com5";
+        String portName = portNames[0];
         
         // writing to port
         serialPort = new SerialPort(portName);
@@ -58,6 +58,7 @@ public class Serial {
         }
         catch (SerialPortException ex) {
             System.out.println("Error in writing data to port: " + ex);
+            System.exit(0);
         }
         
     }

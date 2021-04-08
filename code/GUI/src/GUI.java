@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class GUI extends JFrame implements ActionListener {
     private final String Nederlands = "Nederlands";
     private final String Engels = "Engels";
+    private String currentLanguage = Nederlands;
     private Serial usedSerial;
     private int breedte = 600, hoogte = 800;
     private JButton[] knoppen;
@@ -178,7 +179,7 @@ public class GUI extends JFrame implements ActionListener {
         String maskedCode = "";
         if(data.contains("D")) {
             if(checkCode()) {
-                pinnen(Nederlands);
+                pinnen(currentLanguage);
             }
             code.clear();
         } else if(data.contains("C")) {
@@ -232,9 +233,11 @@ public class GUI extends JFrame implements ActionListener {
                 taal(Engels);
                 break;
             case "English":
+                currentLanguage = Engels;
                 hoofdscherm(Engels);
                 break;
             case "Nederlands":
+                currentLanguage = Nederlands;
                 hoofdscherm(Nederlands);
                 break;
             case "afbreken":
