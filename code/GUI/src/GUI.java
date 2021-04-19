@@ -17,6 +17,7 @@ public class GUI extends JFrame implements ActionListener {
     private final String Engels = "Engels";
     private String currentLanguage = Nederlands;
     private Serial usedSerial;
+    private SQLConnection SQLconnection;
     private int breedte = 600, hoogte = 800;
     private JButton[] knoppen;
     private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100;
@@ -34,8 +35,9 @@ public class GUI extends JFrame implements ActionListener {
 
     private ArrayList<String> code = new ArrayList<String>();
 
-    public void startGUI(Serial s) {
+    public void startGUI(Serial s, SQLConnection c) {
         usedSerial = s;
+        SQLconnection = c;
         knoppen = new JButton[8];
         setSize(breedte, hoogte);
         setExtendedState(JFrame.MAXIMIZED_BOTH);

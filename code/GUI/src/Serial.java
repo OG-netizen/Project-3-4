@@ -6,12 +6,12 @@ public class Serial {
     private static SerialPort serialPort;
     private static GUI usedGUI;
 
-    public Serial(GUI g) {
+    public Serial(GUI g) throws SerialPortException{
         usedGUI = g;
         startSerial();
     }
 
-    private void startSerial() {
+    private void startSerial() throws SerialPortException{
         String[] portNames = SerialPortList.getPortNames();
         
         if (portNames.length == 0) {
@@ -22,6 +22,7 @@ public class Serial {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            System.exit(0);;
             return;
         }
         
@@ -58,12 +59,8 @@ public class Serial {
         }
         catch (SerialPortException ex) {
             System.out.println("Error in writing data to port: " + ex);
-            System.exit(0);
+            throw ex;
         }
-        
-    }
-
-    protected void sendData() {
         
     }
     

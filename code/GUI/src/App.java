@@ -6,14 +6,14 @@ public class App {
     private static SQLConnection SQLconnection;
 
     public static void main(String[] args) {
+        gui = new GUI();
         try {
-            gui = new GUI();
             serialConnection = new Serial(gui);
-            SQLconnection = new SQLConnection();
-            TimeUnit.SECONDS.sleep(5);
-            gui.startGUI(serialConnection);
+            SQLconnection = new SQLConnection(gui);
         } catch(Exception e) {
-            System.out.println(e.toString());
+            System.out.println(e);
+            System.exit(0);
         }
+        gui.startGUI(serialConnection, SQLconnection);
     }
 }

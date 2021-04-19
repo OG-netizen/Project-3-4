@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts` (
   `Accounts_id` int NOT NULL AUTO_INCREMENT,
   `Customer_id` int NOT NULL,
-  `Debitcard_id` varchar(255) NOT NULL,
+  `Debitcard_id` int NOT NULL,
   `Transactions_id` int NOT NULL,
   `Balance` float DEFAULT NULL,
   PRIMARY KEY (`Accounts_id`),
@@ -85,10 +85,10 @@ DROP TABLE IF EXISTS `debitcard`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `debitcard` (
-  `Debitcard_id` varchar(255) NOT NULL,
-  `Pincode` int NOT NULL,
+  `Debitcard_id` int NOT NULL,
+  `Pincode` varchar(4) NOT NULL,
   `Attemps` int NOT NULL,
-  `Blocked` varchar(255) DEFAULT NULL,
+  `Blocked` bit DEFAULT NULL,
   PRIMARY KEY (`Debitcard_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -99,7 +99,7 @@ CREATE TABLE `debitcard` (
 
 LOCK TABLES `debitcard` WRITE;
 /*!40000 ALTER TABLE `debitcard` DISABLE KEYS */;
-INSERT INTO `debitcard` VALUES ('1',2332,0,'0'),('2',4921,0,'0'),('3',9291,0,'0'),('4',8226,0,'0'),('5',9482,0,'0');
+INSERT INTO `debitcard` VALUES (1,'2332',0,false),(2,'4921',0,false),(3,'9291',0,true),(4,'8226',0,0),(5,'9482',0,false);
 /*!40000 ALTER TABLE `debitcard` ENABLE KEYS */;
 UNLOCK TABLES;
 

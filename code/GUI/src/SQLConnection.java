@@ -1,7 +1,13 @@
 import java.sql.*;
 
 public class SQLConnection {
-    public void startConnection(){
+    private GUI gui;
+    public SQLConnection(GUI gui) throws Exception{
+        this.gui = gui;
+        startConnection();
+    }
+
+    public void startConnection() throws Exception{
         String url = "jdbc:mysql://127.0.0.1:3306/bank";
         String user = "root";
         String password = "0000";
@@ -15,8 +21,9 @@ public class SQLConnection {
             while(rs.next())
                 System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));
             con.close();*/
-        }catch(Exception e) { System.out.println("Not connected, " + e.getMessage() +", "+ e.getStackTrace() +", "+ e.getCause());
-            e.printStackTrace();
+        }catch(Exception e) { 
+            System.out.println("Not connected");
+            throw e;
         }
     }
 }
