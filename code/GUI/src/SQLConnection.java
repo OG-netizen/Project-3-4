@@ -27,7 +27,7 @@ public class SQLConnection {
         }
     }
 
-    public void uidRecieved(Long uid) {
+    public void uidRecieved(String uid) {
         System.out.println(uid);
     }
 }

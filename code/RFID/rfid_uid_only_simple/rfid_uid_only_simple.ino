@@ -40,7 +40,7 @@ void printKey() {
   Serial.print("uid:");
   for (byte i = 0; i < rfid.uid.size; i++) {
     Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
-    Serial.print(rfid.uid.uidByte[i], DEC);
+    Serial.print(rfid.uid.uidByte[i], HEX);
   }
   Serial.println();
 

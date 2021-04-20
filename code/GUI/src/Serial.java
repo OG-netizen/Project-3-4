@@ -84,9 +84,7 @@ public class Serial {
                         for(int i = 1; i < dataArray.length - 1; i++) {
                             uidString += dataArray[i];
                         }
-                        System.out.println(uidString);
-                        long uid = Long.parseLong(uidString);
-                        SQLconnection.uidRecieved(uid);
+                        SQLconnection.uidRecieved(uidString);
                     }
                 }
                 catch (SerialPortException ex) {
