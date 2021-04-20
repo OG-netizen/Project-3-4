@@ -179,7 +179,7 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    public void dataReceived(String data) {
+    public void recievedKey(String data) {
         String maskedCode = "";
         if(data.contains("D")) {
             if(checkCode()) {
@@ -205,7 +205,7 @@ public class GUI extends JFrame implements ActionListener {
         String checkCode = "1234";
         String newCode = String.join("", code);
         System.out.println(newCode);
-        if(newCode.contains(checkCode)) {
+        if(newCode.equals(checkCode)) {
             System.out.println("code goedgekeurd");
             return true;
         } else {

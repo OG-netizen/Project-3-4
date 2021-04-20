@@ -4,10 +4,12 @@ import jssc.*;
 
 public class Serial {
     private static SerialPort serialPort;
-    private static GUI usedGUI;
+    private static GUI gui;
+    private static SQLConnection SQLconnection;
 
-    public Serial(GUI g) throws SerialPortException{
-        usedGUI = g;
+    public Serial(GUI g, SQLConnection s) throws SerialPortException{
+        gui = g;
+        SQLconnection = s;
         startSerial();
     }
 
@@ -74,7 +76,18 @@ public class Serial {
                   
                     String receivedData = serialPort.readString(event.getEventValue());
                     //System.out.println("Received response from port: " + receivedData);
-                    usedGUI.dataReceived(receivedData);
+                    String[] dataArray = receivedData.split(" ");
+                    if(dataArray[0].equals("key:")) {
+                        gui.recievedKey(dataArray[1]);
+                    } else if(dataArray[0].equals("uid:")) {
+                        String uidString = "";
+                        for(int i = 1; i < dataArray.length - 1; i++) {
+                            uidString += dataArray[i];
+                        }
+                        System.out.println(uidString);
+                        long uid = Long.parseLong(uidString);
+                        SQLconnection.uidRecieved(uid);
+                    }
                 }
                 catch (SerialPortException ex) {
                     System.out.println("Error in receiving response from port: " + ex);

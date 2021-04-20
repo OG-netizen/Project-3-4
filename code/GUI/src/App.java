@@ -1,5 +1,3 @@
-import java.util.concurrent.TimeUnit;
-
 public class App {
     private static Serial serialConnection;
     private static GUI gui;
@@ -8,8 +6,8 @@ public class App {
     public static void main(String[] args) {
         gui = new GUI();
         try {
-            serialConnection = new Serial(gui);
             SQLconnection = new SQLConnection(gui);
+            serialConnection = new Serial(gui, SQLconnection);
         } catch(Exception e) {
             System.out.println(e);
             System.exit(0);

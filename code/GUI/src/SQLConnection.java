@@ -26,4 +26,8 @@ public class SQLConnection {
             throw e;
         }
     }
+
+    public void uidRecieved(Long uid) {
+        System.out.println(uid);
+    }
 }

@@ -40,18 +40,19 @@ void loop() {
   char key = keypad.getKey();
   if(key) {
     Serial.print("key: ");
-    Serial.println(key);
+    Serial.print(key);
+    Serial.println(" ");
   }
 }
 
 void printKey() {
-  MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
-  if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI &&  
-    piccType != MFRC522::PICC_TYPE_MIFARE_1K &&
-    piccType != MFRC522::PICC_TYPE_MIFARE_4K) {
-    //Serial.println(F("Your tag is not of type MIFARE Classic."));
-    return;
-  }
+//  MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
+//  if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI &&  
+//    piccType != MFRC522::PICC_TYPE_MIFARE_1K &&
+//    piccType != MFRC522::PICC_TYPE_MIFARE_4K) {
+//    //Serial.println(F("Your tag is not of type MIFARE Classic."));
+//    return;
+//  }
 
   // Store NUID into nuidPICC array
   for (byte i = 0; i < 4; i++) {
@@ -63,7 +64,7 @@ void printKey() {
     Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
     Serial.print(rfid.uid.uidByte[i], DEC);
   }
-  Serial.println();
+  Serial.print(" \n");
 
   // Halt PICC
   rfid.PICC_HaltA();
