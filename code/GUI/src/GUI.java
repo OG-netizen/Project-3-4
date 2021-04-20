@@ -18,7 +18,7 @@ public class GUI extends JFrame implements ActionListener {
     private String currentLanguage = Nederlands;
     private Serial usedSerial;
     private SQLConnection SQLconnection;
-    private int breedte = 600, hoogte = 800;
+    private int breedte = 600, hoogte = 800, aantalPoging =0,resterendePoging =2;
     private JButton[] knoppen;
     private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100;
     //final Font font = new Font("Arial", Font.BOLD, 20);
@@ -34,6 +34,10 @@ public class GUI extends JFrame implements ActionListener {
     private ImageIcon logoIcon = new ImageIcon("code/GUI/Images/logo_white_trans.png");
 
     private ArrayList<String> code = new ArrayList<String>();
+
+    JLabel test1 = new JLabel("Nog 2 pogingen");
+    JLabel test2 = new JLabel("Nog 1 poging");
+    JLabel test3 = new JLabel("Nog 0 pogingen");
 
     public void startGUI(Serial s, SQLConnection c) {
         usedSerial = s;
@@ -93,6 +97,19 @@ public class GUI extends JFrame implements ActionListener {
         getContentPane().add(venster, BorderLayout.CENTER);
         getContentPane().add(logo, BorderLayout.NORTH);
         getContentPane().add(onderkant, BorderLayout.SOUTH);
+
+        test1.setFont((new Font("Calibri",1,20)));
+        test1.setForeground(Color.red);
+        venster.add(test1);	
+        test2.setFont((new Font("Calibri",1,20)));
+    	test2.setForeground(Color.red);
+    	venster.add(test2);
+    	test3.setFont((new Font("Calibri",1,20)));
+    	test3.setForeground(Color.red);
+    	venster.add(test3);
+    	test3.setVisible(false);
+    	test2.setVisible(false);
+    	test1.setVisible(false);
     }
 
     public void hoofdscherm(String taal) {
@@ -179,13 +196,38 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    public void recievedKey(String data) {
-        String maskedCode = "";
+    public void dataReceived(String data) {
+
+    	String maskedCode = "";
+    	resterendePoging = 2 - aantalPoging;
         if(data.contains("D")) {
             if(checkCode()) {
-                pinnen(currentLanguage);
+                pinnen(Nederlands);
+                code.clear();
+                test3.setVisible(false);
+            	test2.setVisible(false);
+            	test1.setVisible(false);
+            }else {
+            System.out.println("Nog "+ resterendePoging+ " pogingen");
+            if(resterendePoging == 2) {
+            	test3.setVisible(false);
+            	test2.setVisible(false);
+            	test1.setVisible(true);
+            	insertCardLabel.setVisible(false);
+            }else if(resterendePoging == 1) {
+            	test3.setVisible(false);
+            	test2.setVisible(true);
+            	test1.setVisible(false);
+            	insertCardLabel.setVisible(false);
+            }else if(resterendePoging <= 0) {
+            	test2.setVisible(false);
+            	test1.setVisible(false);
+            	test3.setVisible(true);
+            	insertCardLabel.setVisible(false);
             }
             code.clear();
+            }
+//            code.clear();
         } else if(data.contains("C")) {
             code.clear();
         } else {
@@ -198,7 +240,6 @@ public class GUI extends JFrame implements ActionListener {
         venster.getGraphics().clearRect(0, 0, venster.getWidth(), venster.getHeight());
         venster.getGraphics().drawString(maskedCode, venster.getWidth() / 2, venster.getHeight() / 2);
         System.out.println(code);
-
     }
 
     public boolean checkCode() {
@@ -207,9 +248,11 @@ public class GUI extends JFrame implements ActionListener {
         System.out.println(newCode);
         if(newCode.equals(checkCode)) {
             System.out.println("code goedgekeurd");
+            aantalPoging = 0;
             return true;
         } else {
             System.out.println("code foutgekeurd");
+            aantalPoging++;
             return false;
         }
     }
@@ -245,6 +288,7 @@ public class GUI extends JFrame implements ActionListener {
                 hoofdscherm(currentLanguage);
                 break;
             case "afbreken":
+                insertCardLabel.setVisible(true);
                 hoofdscherm(Nederlands);
                 break;
             case "cancel":
