@@ -238,11 +238,11 @@ public class GUI extends JFrame implements ActionListener {
                 break;
             case "English":
                 currentLanguage = Engels;
-                hoofdscherm(Engels);
+                hoofdscherm(currentLanguage);
                 break;
             case "Nederlands":
                 currentLanguage = Nederlands;
-                hoofdscherm(Nederlands);
+                hoofdscherm(currentLanguage);
                 break;
             case "afbreken":
                 hoofdscherm(Nederlands);
