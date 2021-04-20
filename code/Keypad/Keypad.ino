@@ -17,6 +17,7 @@ Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_
 
 void setup(){
   Serial.begin(9600);
+ 
 }
 
 void loop(){
@@ -24,5 +25,6 @@ void loop(){
 
   if (key){
     Serial.print(key);
+    
   }
 }

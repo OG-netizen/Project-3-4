@@ -21,7 +21,7 @@ public class GUI extends JFrame implements ActionListener {
     private int breedte = 600, hoogte = 800;
     private JButton[] knoppen;
     private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100;
-    final Font font = new Font("Arial", Font.BOLD, 20);
+    //final Font font = new Font("Arial", Font.BOLD, 20);
 
     private JPanel venster = new JPanel();
     private JPanel vensterLinks = new JPanel();
@@ -73,7 +73,7 @@ public class GUI extends JFrame implements ActionListener {
 
         for(int i = 0; i < 8; i++) {
             knoppen[i] = new JButton(String.valueOf(i));
-            knoppen[i].setFont(font);
+            knoppen[i].setFont(new Font("Calibri", Font.BOLD, 20));
             knoppen[i].setBackground(Color.LIGHT_GRAY);
             if(i < 4) {
                 vensterLinks.add(knoppen[i]);
