@@ -84,7 +84,9 @@ public class Serial {
                         for(int i = 1; i < dataArray.length - 1; i++) {
                             uidString += dataArray[i];
                         }
-                        SQLconnection.uidRecieved(uidString);
+                        gui.uidInUse(uidString);
+                    } else if(dataArray[0].equals("removed_card")) {
+                        gui.cardRemoved();
                     }
                 }
                 catch (SerialPortException ex) {

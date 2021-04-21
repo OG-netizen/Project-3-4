@@ -1,7 +1,10 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /*
     na pas inserten -- meteen inloggen
@@ -15,10 +18,12 @@ import java.util.ArrayList;
 public class GUI extends JFrame implements ActionListener {
     private final String Nederlands = "Nederlands";
     private final String Engels = "Engels";
-    private String currentLanguage = Nederlands;
+    private String currentLanguage = Nederlands, currentUid;
     private Serial usedSerial;
     private SQLConnection SQLconnection;
-    private int breedte = 600, hoogte = 800, aantalPoging =0,resterendePoging =2;
+
+
+    private int breedte = 600, hoogte = 800, aantalPoging =0, resterendePoging =2;
     private JButton[] knoppen;
     private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100;
     //final Font font = new Font("Arial", Font.BOLD, 20);
@@ -27,6 +32,7 @@ public class GUI extends JFrame implements ActionListener {
     private JPanel vensterLinks = new JPanel();
     private JPanel vensterRechts = new JPanel();
     private JPanel logo = new JPanel();
+    private JPanel textPanel = new JPanel();
     private JPanel onderkant = new JPanel();
     private JLabel insertCardLabel = new JLabel();
     private JLabel logoLabel = new JLabel();
@@ -38,6 +44,10 @@ public class GUI extends JFrame implements ActionListener {
     JLabel test1 = new JLabel("Nog 2 pogingen");
     JLabel test2 = new JLabel("Nog 1 poging");
     JLabel test3 = new JLabel("Nog 0 pogingen");
+    JLabel text1 = new JLabel("");
+    JLabel text2 = new JLabel("");
+    JLabel text3 = new JLabel("");
+    JLabel codeText = new JLabel("");
 
     public void startGUI(Serial s, SQLConnection c) {
         usedSerial = s;
@@ -68,8 +78,11 @@ public class GUI extends JFrame implements ActionListener {
         logo.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, logoHoogte));
         logo.setBackground(Color.black);
 
-        onderkant.setBackground(Color.black);
+        textPanel.setLayout(new GridLayout(10, 1, venster.getWidth(), venster.getHeight()));
+        venster.add(textPanel);
+
         onderkant.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, onderkantHoogte));
+        onderkant.setBackground(Color.black);
 
         insertCardLabel.setIcon(insertCardIcon);
         
@@ -110,6 +123,17 @@ public class GUI extends JFrame implements ActionListener {
     	test3.setVisible(false);
     	test2.setVisible(false);
     	test1.setVisible(false);
+
+        text1.setFont(new Font("Calibri", Font.PLAIN, 40));
+        text2.setFont(new Font("Calibri", Font.PLAIN, 40));
+        text3.setFont(new Font("Calibri", Font.PLAIN, 40));
+        codeText.setFont(new Font("Calibri", Font.BOLD, 40));
+        codeText.setVerticalTextPosition(SwingConstants.BOTTOM);
+        textPanel.add(text1);
+        textPanel.add(text2);
+        textPanel.add(text3);
+        textPanel.add(codeText);
+
     }
 
     public void hoofdscherm(String taal) {
@@ -133,10 +157,27 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[7].setVisible(true);
     }
 
-  
-   
+    public void inlogScherm(String taal) {
+        for(int i = 0; i < knoppen.length; i++) {
+            knoppen[i].setVisible(false);
+        }
+        knoppen[3].setVisible(true);
+        insertCardLabel.setVisible(false);
+        String[] details = SQLconnection.getDetails(currentUid);
+        if(taal == Engels) {
+            text1.setText("Iban: " + currentUid);
+            text2.setText("Balance: " + details[0]);
+            text3.setText("insert pin");
+        } else if(taal == Nederlands) {
+            text1.setText("Iban: " + currentUid);
+            text2.setText("Saldo: " + details[0]);
+            text3.setText("voer uw pincode in");
+        }
+        text3.setVisible(true);
+    }
 
     public void pinnen(String taal) {
+        text3.setVisible(false);
         if(taal == Engels){
 
             knoppen[1].setText("pin 10");
@@ -196,7 +237,23 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    public void dataReceived(String data) {
+    private void kaartVerwijderdScherm(String taal) {
+        for(int i = 0; i < knoppen.length; i++) {
+            knoppen[i].setVisible(false);
+        }
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+
+        } finally {
+            hoofdscherm(taal);
+        }
+    }
+
+    public void recievedKey(String data) {
+        if(currentUid == null) {
+            return;
+        }
 
     	String maskedCode = "";
     	resterendePoging = 2 - aantalPoging;
@@ -207,45 +264,42 @@ public class GUI extends JFrame implements ActionListener {
                 test3.setVisible(false);
             	test2.setVisible(false);
             	test1.setVisible(false);
-            }else {
-            System.out.println("Nog "+ resterendePoging+ " pogingen");
-            if(resterendePoging == 2) {
-            	test3.setVisible(false);
-            	test2.setVisible(false);
-            	test1.setVisible(true);
-            	insertCardLabel.setVisible(false);
-            }else if(resterendePoging == 1) {
-            	test3.setVisible(false);
-            	test2.setVisible(true);
-            	test1.setVisible(false);
-            	insertCardLabel.setVisible(false);
-            }else if(resterendePoging <= 0) {
-            	test2.setVisible(false);
-            	test1.setVisible(false);
-            	test3.setVisible(true);
-            	insertCardLabel.setVisible(false);
+            } else {
+                System.out.println("Nog "+ resterendePoging+ " pogingen");
+                if(resterendePoging == 2) {
+                    test3.setVisible(false);
+                    test2.setVisible(false);
+                    test1.setVisible(true);
+                    insertCardLabel.setVisible(false);
+                }else if(resterendePoging == 1) {
+                    test3.setVisible(false);
+                    test2.setVisible(true);
+                    test1.setVisible(false);
+                    insertCardLabel.setVisible(false);
+                }else if(resterendePoging <= 0) {
+                    test2.setVisible(false);
+                    test1.setVisible(false);
+                    test3.setVisible(true);
+                    insertCardLabel.setVisible(false);
+                }
+                code.clear();
             }
-            code.clear();
-            }
-//            code.clear();
         } else if(data.contains("C")) {
             code.clear();
-        } else {
+        } else if(code.size() < 6) {
             code.add(data);
         }
 
         for(int i = 0; i < code.size(); i++) {
             maskedCode += "*";
         }
-        venster.getGraphics().clearRect(0, 0, venster.getWidth(), venster.getHeight());
-        venster.getGraphics().drawString(maskedCode, venster.getWidth() / 2, venster.getHeight() / 2);
-        System.out.println(code);
+        codeText.setText(maskedCode);
     }
 
     public boolean checkCode() {
-        String checkCode = "1234";
+        String checkCode = SQLconnection.getCode(currentUid);
         String newCode = String.join("", code);
-        System.out.println(newCode);
+        //System.out.println(newCode);
         if(newCode.equals(checkCode)) {
             System.out.println("code goedgekeurd");
             aantalPoging = 0;
@@ -255,6 +309,16 @@ public class GUI extends JFrame implements ActionListener {
             aantalPoging++;
             return false;
         }
+    }
+
+    public void cardRemoved() {
+        currentUid = null;
+        kaartVerwijderdScherm(currentLanguage);
+    }
+
+    public void uidInUse(String uid) {
+        currentUid = uid;
+        inlogScherm(currentLanguage);
     }
 
     public void actionPerformed(ActionEvent e) {

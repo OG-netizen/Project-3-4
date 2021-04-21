@@ -10,6 +10,8 @@ MFRC522::MIFARE_Key key;
 
 // Init array that will store new NUID 
 byte nuidPICC[4];
+int count = 3;
+bool newCard = true;
 
 #define ROW_NUM 4
 #define COLUMN_NUM 4
@@ -33,9 +35,25 @@ void setup() {
 }
 
 void loop() {
-  if(rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
-    printKey();
+  bool readCard = rfid.PICC_ReadCardSerial();
+  bool trash = rfid.PICC_IsNewCardPresent();
+  
+  if(readCard) {
+    if(newCard) {
+      printUid();
+      newCard = false;
+    }
+    count = 0;
+  } else {
+    count++;
+    if(count == 2) {
+      newCard = true;
+      Serial.println("removed_card ");
+    } else if(count > 2) {
+      count = 3;
+    }
   }
+
   
   char key = keypad.getKey();
   if(key) {
@@ -45,7 +63,7 @@ void loop() {
   }
 }
 
-void printKey() {
+void printUid() {
 //  MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
 //  if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI &&  
 //    piccType != MFRC522::PICC_TYPE_MIFARE_1K &&
@@ -64,8 +82,8 @@ void printKey() {
     Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
     Serial.print(rfid.uid.uidByte[i], HEX);
   }
-  Serial.print(" \n");
-
+  Serial.println(" ");
+  
   // Halt PICC
   rfid.PICC_HaltA();
 
