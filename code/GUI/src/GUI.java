@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ public class GUI extends JFrame implements ActionListener {
     private SQLConnection SQLconnection;
 
 
-    private int breedte = 600, hoogte = 800, aantalPoging =0, resterendePoging =2;
+    private int breedte = 600, hoogte = 800, aantalPogingen = 0, resterendePogingen = 2;
     private JButton[] knoppen;
     private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100;
     //final Font font = new Font("Arial", Font.BOLD, 20);
@@ -41,13 +39,11 @@ public class GUI extends JFrame implements ActionListener {
 
     private ArrayList<String> code = new ArrayList<String>();
 
-    JLabel test1 = new JLabel("Nog 2 pogingen");
-    JLabel test2 = new JLabel("Nog 1 poging");
-    JLabel test3 = new JLabel("Nog 0 pogingen");
-    JLabel text1 = new JLabel("");
-    JLabel text2 = new JLabel("");
-    JLabel text3 = new JLabel("");
-    JLabel codeText = new JLabel("");
+    JLabel text1 = new JLabel("", SwingConstants.CENTER);
+    JLabel text2 = new JLabel("", SwingConstants.CENTER);
+    JLabel text3 = new JLabel("", SwingConstants.CENTER);
+    JLabel text4 = new JLabel("", SwingConstants.CENTER);
+    JLabel codeText = new JLabel("", SwingConstants.CENTER);
 
     public void startGUI(Serial s, SQLConnection c) {
         usedSerial = s;
@@ -111,32 +107,24 @@ public class GUI extends JFrame implements ActionListener {
         getContentPane().add(logo, BorderLayout.NORTH);
         getContentPane().add(onderkant, BorderLayout.SOUTH);
 
-        test1.setFont((new Font("Calibri",1,20)));
-        test1.setForeground(Color.red);
-        venster.add(test1);	
-        test2.setFont((new Font("Calibri",1,20)));
-    	test2.setForeground(Color.red);
-    	venster.add(test2);
-    	test3.setFont((new Font("Calibri",1,20)));
-    	test3.setForeground(Color.red);
-    	venster.add(test3);
-    	test3.setVisible(false);
-    	test2.setVisible(false);
-    	test1.setVisible(false);
-
         text1.setFont(new Font("Calibri", Font.PLAIN, 40));
         text2.setFont(new Font("Calibri", Font.PLAIN, 40));
         text3.setFont(new Font("Calibri", Font.PLAIN, 40));
+        text4.setFont(new Font("Calibri", Font.BOLD, 35));
+        text4.setForeground(Color.red);
         codeText.setFont(new Font("Calibri", Font.BOLD, 40));
-        codeText.setVerticalTextPosition(SwingConstants.BOTTOM);
         textPanel.add(text1);
         textPanel.add(text2);
         textPanel.add(text3);
+        textPanel.add(text4);
         textPanel.add(codeText);
 
     }
 
     public void hoofdscherm(String taal) {
+        text1.setVisible(false);
+        text2.setVisible(false);
+        text3.setVisible(false);
         if(taal == Engels) {
             knoppen[0].setText("draw money");
             knoppen[3].setText("change language");
@@ -173,6 +161,8 @@ public class GUI extends JFrame implements ActionListener {
             text2.setText("Saldo: " + details[0]);
             text3.setText("voer uw pincode in");
         }
+        text1.setVisible(true);
+        text2.setVisible(true);
         text3.setVisible(true);
     }
 
@@ -200,10 +190,12 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[7].setVisible(true);
 
     }
-    
-    
 
     public void taal(String taal) {
+        text1.setVisible(false);
+        text2.setVisible(false);
+        text3.setVisible(false);
+        text4.setVisible(false);
 
         if(taal == Engels){
 
@@ -238,6 +230,11 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void kaartVerwijderdScherm(String taal) {
+        text1.setVisible(false);
+        text2.setVisible(false);
+        text3.setVisible(false);
+        text4.setVisible(false);
+
         for(int i = 0; i < knoppen.length; i++) {
             knoppen[i].setVisible(false);
         }
@@ -251,36 +248,30 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public void recievedKey(String data) {
-        if(currentUid == null) {
+        resterendePogingen = 2 - aantalPogingen;
+        if(currentUid == null || SQLconnection.isBlocked(currentUid)) {
             return;
         }
 
     	String maskedCode = "";
-    	resterendePoging = 2 - aantalPoging;
         if(data.contains("D")) {
+            text4.setVisible(true);
             if(checkCode()) {
                 pinnen(Nederlands);
                 code.clear();
-                test3.setVisible(false);
-            	test2.setVisible(false);
-            	test1.setVisible(false);
+                text4.setForeground(Color.green);
+                text4.setText("succesvol ingelogd");
             } else {
-                System.out.println("Nog "+ resterendePoging+ " pogingen");
-                if(resterendePoging == 2) {
-                    test3.setVisible(false);
-                    test2.setVisible(false);
-                    test1.setVisible(true);
-                    insertCardLabel.setVisible(false);
-                }else if(resterendePoging == 1) {
-                    test3.setVisible(false);
-                    test2.setVisible(true);
-                    test1.setVisible(false);
-                    insertCardLabel.setVisible(false);
-                }else if(resterendePoging <= 0) {
-                    test2.setVisible(false);
-                    test1.setVisible(false);
-                    test3.setVisible(true);
-                    insertCardLabel.setVisible(false);
+                insertCardLabel.setVisible(false);
+                text4.setForeground(Color.red);
+                System.out.println("Nog " + resterendePogingen + " pogingen");
+                if(resterendePogingen == 2) {
+                    text4.setText("Nog 2 resterende pogingen"); 
+                }else if(resterendePogingen == 1) {
+                    text4.setText("nog 1 resterende poging");
+                }else if(resterendePogingen <= 0) {
+                    SQLconnection.blokkeerKaart(currentUid, true);
+                    text4.setText("geen pogingen meer over. Uw kaart is geblokkeerd");
                 }
                 code.clear();
             }
@@ -296,22 +287,22 @@ public class GUI extends JFrame implements ActionListener {
         codeText.setText(maskedCode);
     }
 
-    public boolean checkCode() {
+    private boolean checkCode() {
         String checkCode = SQLconnection.getCode(currentUid);
         String newCode = String.join("", code);
-        //System.out.println(newCode);
         if(newCode.equals(checkCode)) {
             System.out.println("code goedgekeurd");
-            aantalPoging = 0;
+            aantalPogingen = 0;
             return true;
         } else {
             System.out.println("code foutgekeurd");
-            aantalPoging++;
+            aantalPogingen++;
             return false;
         }
     }
 
     public void cardRemoved() {
+        recievedKey("C");
         currentUid = null;
         kaartVerwijderdScherm(currentLanguage);
     }
@@ -319,6 +310,10 @@ public class GUI extends JFrame implements ActionListener {
     public void uidInUse(String uid) {
         currentUid = uid;
         inlogScherm(currentLanguage);
+        if(SQLconnection.isBlocked(currentUid)) {
+            text4.setText("deze kaart is geblokkeerd");
+            text4.setVisible(true);
+        }
     }
 
     public void actionPerformed(ActionEvent e) {

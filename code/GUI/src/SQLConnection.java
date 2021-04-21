@@ -3,6 +3,7 @@ import java.sql.*;
 public class SQLConnection {
     private GUI gui;
     private Connection connection;
+
     public SQLConnection(GUI gui) throws Exception{
         this.gui = gui;
         startConnection();
@@ -16,30 +17,9 @@ public class SQLConnection {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, user, password);
             System.out.println("Connected");
-            //here test is database name, root is username and password
-            /*Statement stmt=con.createStatement();
-            ResultSet rs=stmt.executeQuery("select * from accounts");
-            while(rs.next())
-                System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));
-            con.close();*/
         }catch(Exception e) { 
             System.out.println("Not connected");
             throw e;
-        }
-    }
-
-    public void uidRecieved(String uid) {
-        try {
-            Statement stmt = connection.createStatement();
-            String statement = "select * from debitcard where debitcard_id = '" + uid + "';";
-            //String statement = "select * from debitcard";
-            ResultSet rs = stmt.executeQuery(statement);
-            while(rs.next()) {
-                //System.out.println(rs.getString(1) + "  " + rs.getString(2) + "  " + rs.getInt(3) + "  " + rs.getByte(4));
-                System.out.println(rs.getString(2));
-            }
-        } catch(SQLException e) {
-
         }
     }
 
@@ -49,7 +29,11 @@ public class SQLConnection {
             String statement = "select * from debitcard where debitcard_id = '" + uid + "';";
             ResultSet rs = stmt.executeQuery(statement);
             rs.next();
-            return rs.getString(2);
+            if(rs.getBoolean(4) == true) {
+                return "geblokkeerd!";
+            } else {
+                return rs.getString(2);
+            }
         } catch (SQLException e) {
 
         }
@@ -68,5 +52,33 @@ public class SQLConnection {
 
         }
         return result;
+    }
+
+    public void blokkeerKaart(String uid, boolean block) {
+        try {
+            Statement stmt = connection.createStatement();
+            String statement = "";
+            if(block) {
+                statement = "update debitcard set Blocked = true where debitcard_id = '" + uid + "';";
+            } else {
+                statement = "update debitcard set Blocked = false where debitcard_id = '" + uid + "';";
+            }
+            ResultSet rs = stmt.executeQuery(statement);
+        } catch (SQLException e) {
+            
+        }
+    }
+
+    public boolean isBlocked(String uid) {
+        try {
+            Statement stmt = connection.createStatement();
+            String statement = "select * from debitcard where debitcard_id = '" + uid + "';";
+            ResultSet rs = stmt.executeQuery(statement);
+            rs.next();
+            return rs.getBoolean(4);
+        } catch (SQLException e) {
+
+        }
+        return true;
     }
 }
