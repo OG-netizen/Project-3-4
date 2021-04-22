@@ -44,7 +44,7 @@ CREATE TABLE `accounts` (
 
 LOCK TABLES `accounts` WRITE;
 /*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
-INSERT INTO `accounts` VALUES (1,1,'AAAAAAAA',1,300),(2,2,'BBBBBBBB',2,400),(3,3,'CCCCCCCC',3,500),(4,4,'DDDDDDDD',4,1000),(5,5,'EEEEEEEE',5,30),(6,6,'6937E7C1',6,300),(7,7,'24558E2B',7,999),(8,8,'E423D02A',8,42069);
+INSERT INTO `accounts` VALUES (1,1,'AAAAAAAA',1,300),(2,2,'BBBBBBBB',2,400),(3,3,'CCCCCCCC',3,500),(4,4,'DDDDDDDD',4,1000),(5,5,'EEEEEEEE',5,30),(6,7,'6937E7C1',6,300),(7,7,'24558E2B',7,999),(8,8,'E423D02A',8,42069),(9,8,'792CE9C1',9,200),(10,6,'221FD534',10,10),(11,6,'D93AEAC2',11,0);
 /*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -73,7 +73,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (1,'Harry','Potter','Kelder 1','Hel','6666 HE','Nederland'),(2,'Naruto','Iets','Hidden leaves 69','Bos','2915 NO','Nederland'),(3,'Cody','Martin','Chewsday 129','Boston','7328 BO','Amerika'),(4,'Zack','Martin','Chewsday 129','Boston','7328 BO','Amerika'),(5,'Joe','Lipton','Bruisel 38','Astana','1623 KJ','Kazachstan'),(6,'Jia-Jie','Yeh','Wijnhaven 107','Rotterdam','3011 WN','Nederland'),(7,'Jurgen','van den Berg','vn Hogendorplaan 7','Maasdam','3299 AR','Nederland');
+INSERT INTO `customer` VALUES (1,'Harry','Potter','Kelder 1','Hel','6666 HE','Nederland'),(2,'Naruto','Iets','Hidden leaves 69','Bos','2915 NO','Nederland'),(3,'Cody','Martin','Chewsday 129','Boston','7328 BO','Amerika'),(4,'Zack','Martin','Chewsday 129','Boston','7328 BO','Amerika'),(5,'Joe','Lipton','Bruisel 38','Astana','1623 KJ','Kazachstan'),(6,'Jia-Jie','Yeh','Paggaslaan 123','Oud-Beijerland','1269 SM','Nederland'),(7,'Jurgen','van den Berg','vn Hogendorplaan 7','Maasdam','3299 AR','Nederland'),(8,'Wouter','van Huut','Albert Schweitzererf 36','Oud-Beijerland','3263 SL','Nederland');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,7 +99,7 @@ CREATE TABLE `debitcard` (
 
 LOCK TABLES `debitcard` WRITE;
 /*!40000 ALTER TABLE `debitcard` DISABLE KEYS */;
-INSERT INTO `debitcard` VALUES ('AAAAAAAA','2332',0,false),('BBBBBBBB','4921',0,false),('CCCCCCCC','9291',0,true),('DDDDDDDD','8226',0,0),('EEEEEEEE','9482',0,false),('6937E7C1','1863',0,false),('24558E2B','5555',0,false);
+INSERT INTO `debitcard` VALUES ('AAAAAAAA','2332',0,false),('BBBBBBBB','4921',0,false),('CCCCCCCC','9291',0,true),('DDDDDDDD','8226',0,0),('EEEEEEEE','9482',0,false),('6937E7C1','1863',0,false),('24558E2B','5555',0,false),('E423D02A','0001',0,false),('792CE9C1','0002',0,false),('221FD534','1234',0,false),('D93AEAC2','696969',0,false);
 /*!40000 ALTER TABLE `debitcard` ENABLE KEYS */;
 UNLOCK TABLES;
 
