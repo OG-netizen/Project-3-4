@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 public class GUI extends JFrame implements ActionListener {
     private final String Nederlands = "Nederlands", Engels = "Engels";
-    private final String Hoofdscherm = "hoofd", Inlogscherm = "Inlog", Pinscherm = "Pin", Taalscherm = "Taal", KaartVerwijderdScherm = "kaartVerwijderd";
-    private final String hoofdschermActie = "hoofdschermActie", InlogActie = "inlogActie", PinActie = "pinActie", TaalActie = "taalActie", KaartVerwijderdActie = "kaartVerwijderdActie", TerugActie = "terugActie", AfsluitActie = "afsluitActie", TaalEngelsActie = "taalEngelsActie", TaalNederlandsActie = "taalNederlandsActie";
+    private final String Hoofdscherm = "hoofd", Inlogscherm = "Inlog", Pinscherm = "Pin", Taalscherm = "Taal", KaartVerwijderdScherm = "kaartVerwijderd", InvulScherm = "invulScherm";
+    private final String hoofdschermActie = "hoofdschermActie", InlogActie = "inlogActie", PinActie = "pinActie", TaalActie = "taalActie", KaartVerwijderdActie = "kaartVerwijderdActie", TerugActie = "terugActie", AfsluitActie = "afsluitActie", TaalEngelsActie = "taalEngelsActie", TaalNederlandsActie = "taalNederlandsActie", BedragInvoerActie = "bedragInvoerActie";
     private String huidigeTaal = Nederlands, huidigeUid;
     private ArrayList<String> laatsteSchermen = new ArrayList<String>();
     private Serial SerieleConnectie;
@@ -191,15 +191,18 @@ public class GUI extends JFrame implements ActionListener {
         if(huidigeTaal == Engels){
             knoppen[1].setText("pin 10");
             knoppen[3].setText("change language");
-            knoppen[5].setText("pin 20");
+            knoppen[4].setText("pin 20");
+            knoppen[5].setText("enter amount");
             knoppen[7].setText("cancel");
         } else if(huidigeTaal == Nederlands){
             knoppen[1].setText("pin 10");
             knoppen[3].setText("verander taal");
-            knoppen[5].setText("pin 20");
+            knoppen[4].setText("pin 20");
+            knoppen[5].setText("bedrag invoeren");
             knoppen[7].setText("afbreken");
         }
         knoppen[3].setActionCommand(TaalActie);
+        knoppen[5].setActionCommand(BedragInvoerActie);
         knoppen[7].setActionCommand(TerugActie);
 
         knoppen[0].setVisible(false);
@@ -210,6 +213,22 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[5].setVisible(true);
         knoppen[6].setVisible(false);
         knoppen[7].setVisible(true);
+    }
+
+    private void bedragInvulScherm() {
+        laatsteSchermen.add(InvulScherm);
+        for(int i = 0; i < knoppen.length; i++) {
+            knoppen[i].setVisible(false);
+        }
+        knoppen[5].setText("gereed");
+        knoppen[3].setVisible(true);
+        knoppen[5].setVisible(true);
+        knoppen[7].setVisible(true);
+        knoppen[3].setActionCommand(TaalActie);
+        knoppen[7].setActionCommand(TerugActie);
+        tekst4.setForeground(Color.black);
+        tekst4.setText("voer uw gewenste bedrag in");
+        tekst4.setVisible(true);
     }
 
     private void veranderTaalScherm() {
@@ -270,6 +289,15 @@ public class GUI extends JFrame implements ActionListener {
         boolean invulScherm = huidigeScherm == Inlogscherm;
         if(huidigeUid == null || SQLconnectie.isBlocked(huidigeUid) || !invulScherm) {
             return;
+        }
+        if(huidigeScherm == InvulScherm) {
+            if(!data.contains("A") && !data.contains("B") && !data.contains("C") && !data.contains("D")) {
+                if(!(data.contains("0") && codeTekst.getText().length() < 1)) {
+                    codeTekst.setText(codeTekst.getText() + data);
+                }
+            } else if(data.contains("C")) {
+                codeTekst.setText("");
+            }
         }
 
     	String gemaskerdeCode = "";
@@ -383,6 +411,9 @@ public class GUI extends JFrame implements ActionListener {
             case TaalNederlandsActie:
                 huidigeTaal = Nederlands;
                 laatsteScherm();
+                break;
+            case BedragInvoerActie:
+                bedragInvulScherm();
                 break;
             case TerugActie:
                 laatsteScherm();
