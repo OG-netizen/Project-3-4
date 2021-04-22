@@ -86,7 +86,7 @@ public class Serial {
                         }
                     }
                     if(ontvangenDataGesplit[0].equals("key:")) {
-                        gui.recievedKey(ontvangenDataGesplit[1]);
+                        gui.ontvangenToets(ontvangenDataGesplit[1]);
                     } else if(kaartVerwijderd) {
                         gui.kaartVerwijderd();
                     } else if(ontvangenDataGesplit[0].equals("uid:")) {
