@@ -14,9 +14,10 @@ import java.util.concurrent.TimeUnit;
 */
 
 public class GUI extends JFrame implements ActionListener {
-    private final String Nederlands = "Nederlands";
-    private final String Engels = "Engels";
+    private final String Nederlands = "Nederlands", Engels = "Engels";
+    private final String Hoofdscherm = "hoofd", Inlogscherm = "Inlog", Pinscherm = "Pin", Taalscherm = "Taal", KaartVerwijderdScherm = "kaartVerwijderd";
     private String currentLanguage = Nederlands, currentUid;
+    private ArrayList<String> lastScreens = new ArrayList<String>();
     private Serial usedSerial;
     private SQLConnection SQLconnection;
 
@@ -122,6 +123,7 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public void hoofdscherm(String taal) {
+        lastScreens.clear();
         text1.setVisible(false);
         text2.setVisible(false);
         text3.setVisible(false);
@@ -146,6 +148,7 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public void inlogScherm(String taal) {
+        lastScreens.add(Inlogscherm);
         for(int i = 0; i < knoppen.length; i++) {
             knoppen[i].setVisible(false);
         }
@@ -161,12 +164,17 @@ public class GUI extends JFrame implements ActionListener {
             text2.setText("Saldo: " + details[0]);
             text3.setText("voer uw pincode in");
         }
+        if(SQLconnection.isBlocked(currentUid)) {
+            text4.setText("deze kaart is geblokkeerd");
+            text4.setVisible(true);
+        }
         text1.setVisible(true);
         text2.setVisible(true);
         text3.setVisible(true);
     }
 
     public void pinnen(String taal) {
+        lastScreens.add(Pinscherm);
         text3.setVisible(false);
         if(taal == Engels){
 
@@ -192,6 +200,7 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public void taal(String taal) {
+        lastScreens.add(Taalscherm);
         text1.setVisible(false);
         text2.setVisible(false);
         text3.setVisible(false);
@@ -230,6 +239,7 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void kaartVerwijderdScherm(String taal) {
+        lastScreens.add(KaartVerwijderdScherm);
         text1.setVisible(false);
         text2.setVisible(false);
         text3.setVisible(false);
@@ -255,7 +265,6 @@ public class GUI extends JFrame implements ActionListener {
 
     	String maskedCode = "";
         if(data.contains("D")) {
-            text4.setVisible(true);
             if(checkCode()) {
                 pinnen(Nederlands);
                 code.clear();
@@ -275,6 +284,7 @@ public class GUI extends JFrame implements ActionListener {
                 }
                 code.clear();
             }
+            text4.setVisible(true);
         } else if(data.contains("C")) {
             code.clear();
         } else if(code.size() < 6) {
@@ -310,9 +320,34 @@ public class GUI extends JFrame implements ActionListener {
     public void uidInUse(String uid) {
         currentUid = uid;
         inlogScherm(currentLanguage);
-        if(SQLconnection.isBlocked(currentUid)) {
-            text4.setText("deze kaart is geblokkeerd");
-            text4.setVisible(true);
+    }
+
+    private void lastScreen() {
+        System.out.println(lastScreens);
+        String lastScreen;
+        if(lastScreens.size() > 1) {
+            lastScreen = lastScreens.get(lastScreens.size() - 2);
+            lastScreens.remove(lastScreens.size() - 1);
+        } else {
+            lastScreen = Hoofdscherm;
+            lastScreens.clear();
+        }
+        switch(lastScreen) {
+            case Hoofdscherm:
+                hoofdscherm(currentLanguage);
+                break;
+            case Inlogscherm:
+                inlogScherm(currentLanguage);
+                break;
+            case Pinscherm:
+                pinnen(currentLanguage);
+                break;
+            case Taalscherm:
+                taal(currentLanguage);
+                break;
+            default:
+                kaartVerwijderdScherm(currentLanguage);
+                break;
         }
     }
 
@@ -327,31 +362,30 @@ public class GUI extends JFrame implements ActionListener {
                 System.exit(0);
                 break;
             case "pinnen":
-                pinnen(Nederlands);
+                pinnen(currentLanguage);
                 break;
             case "draw money":
-                pinnen(Engels);
+                pinnen(currentLanguage);
                 break;
             case "verander taal":
-                taal(Nederlands);
+                taal(currentLanguage);
                 break;
             case "change language":
-                taal(Engels);
+                taal(currentLanguage);
                 break;
             case "English":
                 currentLanguage = Engels;
-                hoofdscherm(currentLanguage);
+                lastScreen();
                 break;
             case "Nederlands":
                 currentLanguage = Nederlands;
-                hoofdscherm(currentLanguage);
+                lastScreen();
                 break;
             case "afbreken":
-                insertCardLabel.setVisible(true);
-                hoofdscherm(Nederlands);
+                lastScreen();
                 break;
             case "cancel":
-                hoofdscherm(Engels);
+                lastScreen();
                 break;
             default:
                 System.out.println("weet niet wat te doen! " + text);

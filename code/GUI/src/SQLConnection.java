@@ -41,10 +41,10 @@ public class SQLConnection {
     }
 
     public String[] getDetails(String uid) {
-        String[] result = new String[1];
+        String[] result = {"0"};
         try {
             Statement stmt = connection.createStatement();
-            String statement = "select * from accounts";
+            String statement = "select * from accounts where Debitcard_id = '" + uid + "'";
             ResultSet rs = stmt.executeQuery(statement);
             rs.next();
             result[0] = String.valueOf(rs.getInt(5));
