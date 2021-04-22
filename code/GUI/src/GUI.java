@@ -6,9 +6,9 @@ import java.util.concurrent.TimeUnit;
 
 /*
     na pas inserten -- meteen inloggen
-    na inloggen -- saldo, pinnen, snelkeuze 70eu, 
+    na inloggen -- saldo, pinScherm, snelkeuze 70eu, 
 
-    altijd taal kunnen veranderen en kunnen afbreken
+    altijd veranderTaalScherm kunnen veranderen en kunnen afbreken
 
 
 */
@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class GUI extends JFrame implements ActionListener {
     private final String Nederlands = "Nederlands", Engels = "Engels";
     private final String Hoofdscherm = "hoofd", Inlogscherm = "Inlog", Pinscherm = "Pin", Taalscherm = "Taal", KaartVerwijderdScherm = "kaartVerwijderd";
+    private final String hoofdschermActie = "hoofdschermActie", InlogActie = "inlogActie", PinActie = "pinActie", TaalActie = "taalActie", KaartVerwijderdActie = "kaartVerwijderdActie", TerugActie = "terugActie", AfsluitActie = "afsluitActie", TaalEngelsActie = "taalEngelsActie", TaalNederlandsActie = "taalNederlandsActie";
     private String huidigeTaal = Nederlands, huidigeUid;
     private ArrayList<String> laatsteSchermen = new ArrayList<String>();
     private Serial SerieleConnectie;
@@ -62,7 +63,6 @@ public class GUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);        
         getContentPane().setLayout(new BorderLayout(50, 50));
 
-        //venster.setBackground(Color.red);
         venster.setFont(new Font("Calibri", Font.PLAIN, 50));
         venster.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -124,6 +124,7 @@ public class GUI extends JFrame implements ActionListener {
 
     public void hoofdscherm() {
         laatsteSchermen.clear();
+        plaatsKaart.setVisible(true);
         tekst1.setVisible(false);
         tekst2.setVisible(false);
         tekst3.setVisible(false);
@@ -133,10 +134,13 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[3].setText("change language");
             knoppen[7].setText("exit");
         } else if(huidigeTaal == Nederlands) {
-            knoppen[0].setText("pinnen");
+            knoppen[0].setText("pinScherm");
             knoppen[3].setText("verander taal");
             knoppen[7].setText("afsluiten");
         }
+        knoppen[0].setActionCommand(PinActie);
+        knoppen[3].setActionCommand(TaalActie);
+        knoppen[7].setActionCommand(AfsluitActie);;
 
         knoppen[0].setVisible(true);
         knoppen[1].setVisible(false);
@@ -154,6 +158,10 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[i].setVisible(false);
         }
         knoppen[3].setVisible(true);
+        knoppen[7].setVisible(true);
+        knoppen[3].setActionCommand(TaalActie);
+        knoppen[7].setActionCommand(TerugActie);
+
         plaatsKaart.setVisible(false);
         String[] details = SQLconnectie.getDetails(huidigeUid);
         if(huidigeTaal == Engels) {
@@ -174,7 +182,7 @@ public class GUI extends JFrame implements ActionListener {
         tekst3.setVisible(true);
     }
 
-    public void pinnen() {
+    public void pinScherm() {
         laatsteSchermen.add(Pinscherm);
         tekst1.setVisible(true);
         tekst2.setVisible(true);
@@ -191,6 +199,9 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[5].setText("pin 20");
             knoppen[7].setText("afbreken");
         }
+        knoppen[3].setActionCommand(TaalActie);
+        knoppen[7].setActionCommand(TerugActie);
+
         knoppen[0].setVisible(false);
         knoppen[1].setVisible(true);
         knoppen[2].setVisible(false);
@@ -201,7 +212,7 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[7].setVisible(true);
     }
 
-    public void taal() {
+    public void veranderTaalScherm() {
         laatsteSchermen.add(Taalscherm);
         tekst1.setVisible(false);
         tekst2.setVisible(false);
@@ -210,12 +221,15 @@ public class GUI extends JFrame implements ActionListener {
 
         knoppen[1].setText("Nederlands");
         knoppen[5].setText("English");
+        knoppen[1].setActionCommand(TaalNederlandsActie);
+        knoppen[5].setActionCommand(TaalEngelsActie);
 
         if(huidigeTaal == Engels) {
-            knoppen[7].setText("cancel");
+            knoppen[7].setText("back");
         } else if(huidigeTaal == Nederlands) {
-            knoppen[7].setText("afbreken");
+            knoppen[7].setText("terug");
         }
+        knoppen[7].setActionCommand(TerugActie);
 
         knoppen[0].setVisible(false);
         knoppen[1].setVisible(true);
@@ -252,10 +266,10 @@ public class GUI extends JFrame implements ActionListener {
             return;
         }
 
-    	String maskedCode = "";
+    	String gemaskerdeCode = "";
         if(data.contains("D")) {
             if(checkCode()) {
-                pinnen();
+                pinScherm();
                 code.clear();
                 tekst4.setForeground(Color.green);
                 tekst4.setText("succesvol ingelogd");
@@ -281,9 +295,9 @@ public class GUI extends JFrame implements ActionListener {
         }
 
         for(int i = 0; i < code.size(); i++) {
-            maskedCode += "*";
+            gemaskerdeCode += "*";
         }
-        codeTekst.setText(maskedCode);
+        codeTekst.setText(gemaskerdeCode);
     }
 
     private boolean checkCode() {
@@ -300,29 +314,29 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    public void cardRemoved() {
+    public void kaartVerwijderd() {
         code.clear();
         huidigeUid = null;
         kaartVerwijderdScherm();
     }
 
-    public void uidInUse(String uid) {
+    public void uidInGebruik(String uid) {
         huidigeUid = uid;
         inlogScherm();
     }
 
-    private void lastScreen() {
-        String lastScreen;
+    private void laatsteScherm() {
+        String laatsteScherm;
         if(laatsteSchermen.size() > 1) {
-            lastScreen = laatsteSchermen.get(laatsteSchermen.size() - 2);
+            laatsteScherm = laatsteSchermen.get(laatsteSchermen.size() - 2);
             if(laatsteSchermen.get(laatsteSchermen.size() - 1) == Taalscherm) {
                 laatsteSchermen.remove(laatsteSchermen.size() - 1);
             }
             laatsteSchermen.remove(laatsteSchermen.size() - 1);
         } else {
-            lastScreen = Hoofdscherm;
+            laatsteScherm = Hoofdscherm;
         }
-        switch(lastScreen) {
+        switch(laatsteScherm) {
             case Hoofdscherm:
                 hoofdscherm();
                 break;
@@ -330,10 +344,10 @@ public class GUI extends JFrame implements ActionListener {
                 hoofdscherm();
                 break;
             case Pinscherm:
-                pinnen();
+                pinScherm();
                 break;
             case Taalscherm:
-                taal();
+                veranderTaalScherm();
                 break;
             default:
                 kaartVerwijderdScherm();
@@ -345,37 +359,25 @@ public class GUI extends JFrame implements ActionListener {
         String text = e.getActionCommand();
 
         switch (text) {
-            case "afsluiten":
+            case AfsluitActie:
                 System.exit(0);
                 break;
-            case "exit":
-                System.exit(0);
+            case PinActie:
+                pinScherm();
                 break;
-            case "pinnen":
-                pinnen();
+            case TaalActie:
+                veranderTaalScherm();
                 break;
-            case "draw money":
-                pinnen();
-                break;
-            case "verander taal":
-                taal();
-                break;
-            case "change language":
-                taal();
-                break;
-            case "Engels":
+            case TaalEngelsActie:
                 huidigeTaal = Engels;
-                lastScreen();
+                laatsteScherm();
                 break;
-            case "Nederlands":
+            case TaalNederlandsActie:
                 huidigeTaal = Nederlands;
-                lastScreen();
+                laatsteScherm();
                 break;
-            case "afbreken":
-                lastScreen();
-                break;
-            case "cancel":
-                lastScreen();
+            case TerugActie:
+                laatsteScherm();
                 break;
             default:
                 System.out.println("weet niet wat te doen! " + text);

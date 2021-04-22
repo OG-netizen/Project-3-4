@@ -10,10 +10,10 @@ public class Serial {
     public Serial(GUI g, SQLConnection s) throws SerialPortException{
         gui = g;
         SQLconnectie = s;
-        startSerial();
+        startConnectie();
     }
 
-    private void startSerial() throws SerialPortException{
+    private void startConnectie() throws SerialPortException{
         String[] beschikbarePoorten = SerialPortList.getPortNames();
         
         if (beschikbarePoorten.length == 0) {
@@ -59,10 +59,10 @@ public class Serial {
             
             serielePoort.addEventListener(new PortReader(), SerialPort.MASK_RXCHAR);
 
-            System.out.println("Verbinding met de seriele poort " + geselecteerdePoort + " gemaakt");
+            System.out.println("Verbinding met de seriele poort " + geselecteerdePoort + " gemaakt.");
         }
         catch (SerialPortException e) {
-            System.out.println("fout tijdens het verbinden met poort " + geselecteerdePoort + ": " + e);
+            System.out.println("Fout tijdens het verbinden met poort " + geselecteerdePoort + ": " + e);
             throw e;
         }
         
@@ -88,17 +88,17 @@ public class Serial {
                     if(ontvangenDataGesplit[0].equals("key:")) {
                         gui.recievedKey(ontvangenDataGesplit[1]);
                     } else if(kaartVerwijderd) {
-                        gui.cardRemoved();
+                        gui.kaartVerwijderd();
                     } else if(ontvangenDataGesplit[0].equals("uid:")) {
                         String uidString = "";
                         for(int i = 1; i < ontvangenDataGesplit.length - 1; i++) {
                             uidString += ontvangenDataGesplit[i];
                         }
-                        gui.uidInUse(uidString);
+                        gui.uidInGebruik(uidString);
                     }
                 }
                 catch (SerialPortException e) {
-                    System.out.println("fout tijdens het ontvangen van data: " + e);
+                    System.out.println("Fout tijdens het ontvangen van data: " + e);
                 }
             }
         }

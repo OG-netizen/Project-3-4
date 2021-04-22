@@ -42,6 +42,7 @@ void loop() {
     if(newCard) {
       printUid();
       newCard = false;
+      delay(500);
     }
     count = 0;
   } else {
