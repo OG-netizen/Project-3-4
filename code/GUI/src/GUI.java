@@ -260,7 +260,7 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    public void recievedKey(String data) {
+    public void ontvangenToets(String data) {
         resterendePogingen = 2 - aantalPogingen;
         String huidigeScherm = Hoofdscherm;
         if(laatsteSchermen.size() > 0) {
