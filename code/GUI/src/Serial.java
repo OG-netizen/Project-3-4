@@ -77,16 +77,22 @@ public class Serial {
                     String receivedData = serialPort.readString(event.getEventValue());
                     //System.out.println("Received response from port: " + receivedData);
                     String[] dataArray = receivedData.split(" ");
+                    boolean removedCard = false;
+                    for(int i = 0; i < dataArray.length; i++) {
+                        if(dataArray[i].contains("removed_card")) {
+                            removedCard = true;
+                        }
+                    }
                     if(dataArray[0].equals("key:")) {
                         gui.recievedKey(dataArray[1]);
+                    } else if(removedCard) {
+                        gui.cardRemoved();
                     } else if(dataArray[0].equals("uid:")) {
                         String uidString = "";
                         for(int i = 1; i < dataArray.length - 1; i++) {
                             uidString += dataArray[i];
                         }
                         gui.uidInUse(uidString);
-                    } else if(dataArray[0].equals("removed_card")) {
-                        gui.cardRemoved();
                     }
                 }
                 catch (SerialPortException ex) {

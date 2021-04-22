@@ -127,10 +127,11 @@ public class GUI extends JFrame implements ActionListener {
         text1.setVisible(false);
         text2.setVisible(false);
         text3.setVisible(false);
+        text4.setVisible(false);
         if(taal == Engels) {
             knoppen[0].setText("draw money");
             knoppen[3].setText("change language");
-            knoppen[7].setText("close");
+            knoppen[7].setText("exit");
         } else if(taal == Nederlands) {
             knoppen[0].setText("pinnen");
             knoppen[3].setText("verander taal");
@@ -175,7 +176,10 @@ public class GUI extends JFrame implements ActionListener {
 
     public void pinnen(String taal) {
         lastScreens.add(Pinscherm);
+        text1.setVisible(true);
+        text2.setVisible(true);
         text3.setVisible(false);
+        text4.setVisible(true);
         if(taal == Engels){
 
             knoppen[1].setText("pin 10");
@@ -208,36 +212,23 @@ public class GUI extends JFrame implements ActionListener {
         text3.setVisible(false);
         text4.setVisible(false);
 
-        if(taal == Engels){
-
         knoppen[1].setText("Nederlands");
         knoppen[5].setText("English");
-        knoppen[7].setText("cancel");
 
-        knoppen[0].setVisible(false);
-        knoppen[1].setVisible(true);
-        knoppen[2].setVisible(false);
-        knoppen[3].setVisible(false);
-        knoppen[4].setVisible(false);
-        knoppen[5].setVisible(true);
-        knoppen[6].setVisible(false);
-        knoppen[7].setVisible(true);
-
-        } else if(taal == Nederlands){
-
-        knoppen[1].setText("Nederlands");
-        knoppen[5].setText("English");
-        knoppen[7].setText("afbreken");
-
-        knoppen[0].setVisible(false);
-        knoppen[1].setVisible(true);
-        knoppen[2].setVisible(false);
-        knoppen[3].setVisible(false);
-        knoppen[4].setVisible(false);
-        knoppen[5].setVisible(true);
-        knoppen[6].setVisible(false);
-        knoppen[7].setVisible(true);
+        if(currentLanguage == Engels) {
+            knoppen[7].setText("cancel");
+        } else if(currentLanguage == Nederlands) {
+            knoppen[7].setText("afbreken");
         }
+
+        knoppen[0].setVisible(false);
+        knoppen[1].setVisible(true);
+        knoppen[2].setVisible(false);
+        knoppen[3].setVisible(false);
+        knoppen[4].setVisible(false);
+        knoppen[5].setVisible(true);
+        knoppen[6].setVisible(false);
+        knoppen[7].setVisible(true);
     }
 
     private void kaartVerwijderdScherm(String taal) {
@@ -314,7 +305,7 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public void cardRemoved() {
-        recievedKey("C");
+        code.clear();
         currentUid = null;
         kaartVerwijderdScherm(currentLanguage);
     }
@@ -325,8 +316,6 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void lastScreen() {
-        System.out.println(lastScreens);
-        System.out.println(lastScreens.size());
         String lastScreen;
         if(lastScreens.size() > 1) {
             lastScreen = lastScreens.get(lastScreens.size() - 2);
@@ -363,7 +352,7 @@ public class GUI extends JFrame implements ActionListener {
             case "afsluiten":
                 System.exit(0);
                 break;
-            case "close":
+            case "exit":
                 System.exit(0);
                 break;
             case "pinnen":
@@ -378,7 +367,7 @@ public class GUI extends JFrame implements ActionListener {
             case "change language":
                 taal(currentLanguage);
                 break;
-            case "English":
+            case "Engels":
                 currentLanguage = Engels;
                 lastScreen();
                 break;
