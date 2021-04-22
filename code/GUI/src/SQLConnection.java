@@ -34,7 +34,7 @@ public class SQLConnection {
             } else {
                 return resultaat.getString(2);
             }
-        } catch (SQLException e) {
+        } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
         }
         return null;
@@ -48,7 +48,7 @@ public class SQLConnection {
             ResultSet resultaat = stmt.executeQuery(statement);
             resultaat.next();
             result[0] = String.valueOf(resultaat.getInt(5));
-        } catch (SQLException e) {
+        } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
         }
         return result;
@@ -64,7 +64,7 @@ public class SQLConnection {
                 statement = "update debitcard set Blocked = false where debitcard_id = '" + uid + "';";
             }
             ResultSet resultaat = stmt.executeQuery(statement);
-        } catch (SQLException e) {
+        } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
         }
     }
@@ -77,8 +77,31 @@ public class SQLConnection {
             resultaat.next();
             return resultaat.getBoolean(4);
         } catch (SQLException e) {
-
+            System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
         }
         return true;
+    }
+
+    public int aantalPogingen(String uid) {
+        try {
+            Statement stmt = connectie.createStatement();
+            String statement = "select * from debitcard where debitcard_id = '" + uid + "';";
+            ResultSet resultaat = stmt.executeQuery(statement);
+            resultaat.next();
+            return resultaat.getInt(3);
+        } catch(SQLException e) {
+            System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
+        }
+        return 3;
+    }
+
+    public void setAantalPogingen(String uid, int aantal) {
+        try {
+            Statement stmt = connectie.createStatement();
+            String statement = "update debitcard set Attemps = " + aantal + " where debitcard_id = '" + uid + "';";
+            ResultSet resultaat = stmt.executeQuery(statement);
+        } catch(SQLException e) {
+            System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
+        }
     }
 }

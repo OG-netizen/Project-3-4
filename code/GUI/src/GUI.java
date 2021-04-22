@@ -122,7 +122,7 @@ public class GUI extends JFrame implements ActionListener {
 
     }
 
-    public void hoofdscherm() {
+    private void hoofdscherm() {
         laatsteSchermen.clear();
         plaatsKaart.setVisible(true);
         tekst1.setVisible(false);
@@ -152,7 +152,7 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[7].setVisible(true);
     }
 
-    public void inlogScherm() {
+    private void inlogScherm() {
         laatsteSchermen.add(Inlogscherm);
         for(int i = 0; i < knoppen.length; i++) {
             knoppen[i].setVisible(false);
@@ -182,7 +182,7 @@ public class GUI extends JFrame implements ActionListener {
         tekst3.setVisible(true);
     }
 
-    public void pinScherm() {
+    private void pinScherm() {
         laatsteSchermen.add(Pinscherm);
         tekst1.setVisible(true);
         tekst2.setVisible(true);
@@ -212,7 +212,7 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[7].setVisible(true);
     }
 
-    public void veranderTaalScherm() {
+    private void veranderTaalScherm() {
         laatsteSchermen.add(Taalscherm);
         tekst1.setVisible(false);
         tekst2.setVisible(false);
@@ -262,13 +262,20 @@ public class GUI extends JFrame implements ActionListener {
 
     public void recievedKey(String data) {
         resterendePogingen = 2 - aantalPogingen;
-        if(huidigeUid == null || SQLconnectie.isBlocked(huidigeUid)) {
+        String huidigeScherm = Hoofdscherm;
+        if(laatsteSchermen.size() > 0) {
+            huidigeScherm = laatsteSchermen.get(laatsteSchermen.size() - 1);
+        }
+
+        boolean invulScherm = huidigeScherm == Inlogscherm;
+        if(huidigeUid == null || SQLconnectie.isBlocked(huidigeUid) || !invulScherm) {
             return;
         }
 
     	String gemaskerdeCode = "";
         if(data.contains("D")) {
             if(checkCode()) {
+                SQLconnectie.setAantalPogingen(huidigeUid, 0);
                 pinScherm();
                 code.clear();
                 tekst4.setForeground(Color.green);
@@ -316,6 +323,7 @@ public class GUI extends JFrame implements ActionListener {
 
     public void kaartVerwijderd() {
         code.clear();
+        codeTekst.setVisible(false);
         huidigeUid = null;
         kaartVerwijderdScherm();
     }
@@ -356,9 +364,9 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        String text = e.getActionCommand();
+        String uitgevoerdeActie = e.getActionCommand();
 
-        switch (text) {
+        switch (uitgevoerdeActie) {
             case AfsluitActie:
                 System.exit(0);
                 break;
@@ -380,11 +388,10 @@ public class GUI extends JFrame implements ActionListener {
                 laatsteScherm();
                 break;
             default:
-                System.out.println("weet niet wat te doen! " + text);
+                System.out.println("weet niet wat te doen! " + uitgevoerdeActie);
                 break;
         }
 
-
-        System.out.println("knop: " + text);
+        System.out.println("knop: " + uitgevoerdeActie);
     }
 }
