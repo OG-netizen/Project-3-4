@@ -179,11 +179,13 @@ public class GUI extends JFrame implements ActionListener {
         if(taal == Engels){
 
             knoppen[1].setText("pin 10");
+            knoppen[3].setText("change language");
             knoppen[5].setText("pin 20");
             knoppen[7].setText("cancel");
         } else if(taal == Nederlands){
     
             knoppen[1].setText("pin 10");
+            knoppen[3].setText("verander taal");
             knoppen[5].setText("pin 20");
             knoppen[7].setText("afbreken");
         }
@@ -191,7 +193,7 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[0].setVisible(false);
             knoppen[1].setVisible(true);
             knoppen[2].setVisible(false);
-            knoppen[3].setVisible(false);
+            knoppen[3].setVisible(true);
             knoppen[4].setVisible(false);
             knoppen[5].setVisible(true);
             knoppen[6].setVisible(false);
@@ -324,20 +326,23 @@ public class GUI extends JFrame implements ActionListener {
 
     private void lastScreen() {
         System.out.println(lastScreens);
+        System.out.println(lastScreens.size());
         String lastScreen;
         if(lastScreens.size() > 1) {
             lastScreen = lastScreens.get(lastScreens.size() - 2);
+            if(lastScreens.get(lastScreens.size() - 1) == Taalscherm) {
+                lastScreens.remove(lastScreens.size() - 1);
+            }
             lastScreens.remove(lastScreens.size() - 1);
         } else {
             lastScreen = Hoofdscherm;
-            lastScreens.clear();
         }
         switch(lastScreen) {
             case Hoofdscherm:
                 hoofdscherm(currentLanguage);
                 break;
             case Inlogscherm:
-                inlogScherm(currentLanguage);
+                hoofdscherm(currentLanguage);
                 break;
             case Pinscherm:
                 pinnen(currentLanguage);
