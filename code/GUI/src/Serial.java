@@ -3,22 +3,22 @@ import java.util.*; // Scanner
 import jssc.*;
 
 public class Serial {
-    private static SerialPort serialPort;
+    private static SerialPort serielePoort;
     private static GUI gui;
-    private static SQLConnection SQLconnection;
+    private static SQLConnection SQLconnectie;
 
     public Serial(GUI g, SQLConnection s) throws SerialPortException{
         gui = g;
-        SQLconnection = s;
+        SQLconnectie = s;
         startSerial();
     }
 
     private void startSerial() throws SerialPortException{
-        String[] portNames = SerialPortList.getPortNames();
+        String[] beschikbarePoorten = SerialPortList.getPortNames();
         
-        if (portNames.length == 0) {
-            System.out.println("There are no serial-ports :( You can use an emulator, such ad VSPE, to create a virtual serial port.");
-            System.out.println("Press Enter to exit...");
+        if (beschikbarePoorten.length == 0) {
+            System.out.println("Geen com-poorten beschikbaar :( ");
+            System.out.println("Druk op enter om af te sluiten...");
             try {
                 System.in.read();
             } catch (IOException e) {
@@ -28,40 +28,42 @@ public class Serial {
             return;
         }
         
-        
-        System.out.println("Available com-ports:");
-        for (int i = 0; i < portNames.length; i++){
-            System.out.println(portNames[i]);
+        System.out.println("Beschikbare com-poorten:");
+        for (int i = 0; i < beschikbarePoorten.length; i++){
+            System.out.println(beschikbarePoorten[i]);
         }
-        System.out.println("Type port name, which you want to use, and press Enter...");
-        //Scanner in = new Scanner(System.in);
-        //String portName = in.next();
-        //in.close();
-        String portName = portNames[0];
+
+        String geselecteerdePoort;
+        if(beschikbarePoorten.length == 1) {
+            geselecteerdePoort = beschikbarePoorten[0];
+        } else {
+            System.out.println("Type de poort die je wilt gebruiken en druk op enter...");
+            Scanner in = new Scanner(System.in);
+            geselecteerdePoort = in.next();
+            in.close();
+        }
         
         // writing to port
-        serialPort = new SerialPort(portName);
+        serielePoort = new SerialPort(geselecteerdePoort);
         try {
             // opening port
-            serialPort.openPort();
+            serielePoort.openPort();
             
-            serialPort.setParams(SerialPort.BAUDRATE_9600,
+            serielePoort.setParams(SerialPort.BAUDRATE_9600,
                                  SerialPort.DATABITS_8,
                                  SerialPort.STOPBITS_1,
                                  SerialPort.PARITY_NONE);
             
-            serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | 
+            serielePoort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | 
                                           SerialPort.FLOWCONTROL_RTSCTS_OUT);
             
-            serialPort.addEventListener(new PortReader(), SerialPort.MASK_RXCHAR);
-            // writing string to port
-            serialPort.writeString("led aan");
-            
-            System.out.println("String wrote to port, waiting for response..");
+            serielePoort.addEventListener(new PortReader(), SerialPort.MASK_RXCHAR);
+
+            System.out.println("Verbinding met de seriele poort " + geselecteerdePoort + " gemaakt");
         }
-        catch (SerialPortException ex) {
-            System.out.println("Error in writing data to port: " + ex);
-            throw ex;
+        catch (SerialPortException e) {
+            System.out.println("fout tijdens het verbinden met poort " + geselecteerdePoort + ": " + e);
+            throw e;
         }
         
     }
@@ -74,29 +76,29 @@ public class Serial {
             if(event.isRXCHAR() && event.getEventValue() > 0) {
                 try {
                   
-                    String receivedData = serialPort.readString(event.getEventValue());
-                    //System.out.println("Received response from port: " + receivedData);
-                    String[] dataArray = receivedData.split(" ");
-                    boolean removedCard = false;
-                    for(int i = 0; i < dataArray.length; i++) {
-                        if(dataArray[i].contains("removed_card")) {
-                            removedCard = true;
+                    String ontvangenData = serielePoort.readString(event.getEventValue());
+                    //System.out.println("Received response from port: " + ontvangenData);
+                    String[] ontvangenDataGesplit = ontvangenData.split(" ");
+                    boolean kaartVerwijderd = false;
+                    for(int i = 0; i < ontvangenDataGesplit.length; i++) {
+                        if(ontvangenDataGesplit[i].contains("removed_card")) {
+                            kaartVerwijderd = true;
                         }
                     }
-                    if(dataArray[0].equals("key:")) {
-                        gui.recievedKey(dataArray[1]);
-                    } else if(removedCard) {
+                    if(ontvangenDataGesplit[0].equals("key:")) {
+                        gui.recievedKey(ontvangenDataGesplit[1]);
+                    } else if(kaartVerwijderd) {
                         gui.cardRemoved();
-                    } else if(dataArray[0].equals("uid:")) {
+                    } else if(ontvangenDataGesplit[0].equals("uid:")) {
                         String uidString = "";
-                        for(int i = 1; i < dataArray.length - 1; i++) {
-                            uidString += dataArray[i];
+                        for(int i = 1; i < ontvangenDataGesplit.length - 1; i++) {
+                            uidString += ontvangenDataGesplit[i];
                         }
                         gui.uidInUse(uidString);
                     }
                 }
-                catch (SerialPortException ex) {
-                    System.out.println("Error in receiving response from port: " + ex);
+                catch (SerialPortException e) {
+                    System.out.println("fout tijdens het ontvangen van data: " + e);
                 }
             }
         }

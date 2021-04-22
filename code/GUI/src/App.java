@@ -1,17 +1,17 @@
 public class App {
-    private static Serial serialConnection;
+    private static Serial serieleConnectie;
     private static GUI gui;
-    private static SQLConnection SQLconnection;
+    private static SQLConnection SQLconnectie;
 
     public static void main(String[] args) {
         gui = new GUI();
         try {
-            SQLconnection = new SQLConnection(gui);
-            serialConnection = new Serial(gui, SQLconnection);
+            SQLconnectie = new SQLConnection(gui);
+            serieleConnectie = new Serial(gui, SQLconnectie);
         } catch(Exception e) {
-            System.out.println(e);
+            System.out.println("Fout tijdens het aanmaken van de klasses: " + e);
             System.exit(0);
         }
-        gui.startGUI(serialConnection, SQLconnection);
+        gui.startGUI(serieleConnectie, SQLconnectie);
     }
 }
