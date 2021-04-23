@@ -55,6 +55,7 @@ void handleSerial() {
       int aantal10 = Serial.readStringUntil(',').toInt();
       werpGeldUit(aantal50, aantal20, aantal10);
     }
+    Serial.println(recieved);
   }
 }
 

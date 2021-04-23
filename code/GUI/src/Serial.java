@@ -1,5 +1,7 @@
 import java.io.*; // IOException
 import java.util.*; // Scanner
+import java.util.concurrent.TimeUnit;
+
 import jssc.*;
 
 public class Serial {
@@ -56,6 +58,13 @@ public class Serial {
                                           SerialPort.FLOWCONTROL_RTSCTS_OUT);
             
             serielePoort.addEventListener(new PortReader(), SerialPort.MASK_RXCHAR);
+
+            try {
+                TimeUnit.SECONDS.sleep(5);
+                serielePoort.writeInt(2);
+            } catch (Exception e) {
+                System.out.println("oeps");
+            }
 
             System.out.println("Verbinding met de seriele poort " + geselecteerdePoort + " gemaakt.");
         }
