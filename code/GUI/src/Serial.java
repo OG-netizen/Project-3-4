@@ -1,5 +1,7 @@
 import java.io.*; // IOException
 import java.util.*; // Scanner
+import java.util.concurrent.TimeUnit;
+
 import jssc.*;
 
 public class Serial {
@@ -60,6 +62,12 @@ public class Serial {
             serielePoort.addEventListener(new PortReader(), SerialPort.MASK_RXCHAR);
 
             System.out.println("Verbinding met de seriele poort " + geselecteerdePoort + " gemaakt.");
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                
+            }
+            serielePoort.writeString("hello world");
         }
         catch (SerialPortException e) {
             System.out.println("Fout tijdens het verbinden met poort " + geselecteerdePoort + ": " + e);

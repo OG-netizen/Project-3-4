@@ -23,7 +23,7 @@ public class GUI extends JFrame implements ActionListener {
     private SQLConnection SQLconnectie;
 
 
-    private int breedte = 600, hoogte = 800, aantalPogingen = 0, resterendePogingen = 2;
+    private int breedte = 600, hoogte = 800;
     private JButton[] knoppen;
     private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100;
     //final Font font = new Font("Arial", Font.BOLD, 20);
@@ -129,6 +129,7 @@ public class GUI extends JFrame implements ActionListener {
         tekst2.setVisible(false);
         tekst3.setVisible(false);
         tekst4.setVisible(false);
+        codeTekst.setVisible(false);
         if(huidigeTaal == Engels) {
             knoppen[0].setText("draw money");
             knoppen[3].setText("change language");
@@ -157,10 +158,6 @@ public class GUI extends JFrame implements ActionListener {
         for(int i = 0; i < knoppen.length; i++) {
             knoppen[i].setVisible(false);
         }
-        knoppen[3].setVisible(true);
-        knoppen[7].setVisible(true);
-        knoppen[3].setActionCommand(TaalActie);
-        knoppen[7].setActionCommand(TerugActie);
 
         plaatsKaart.setVisible(false);
         String[] details = SQLconnectie.getDetails(huidigeUid);
@@ -168,11 +165,20 @@ public class GUI extends JFrame implements ActionListener {
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Balance: " + details[0]);
             tekst3.setText("insert pin");
+            knoppen[3].setText("change language");
+            knoppen[7].setText("cancel");
         } else if(huidigeTaal == Nederlands) {
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Saldo: " + details[0]);
             tekst3.setText("voer uw pincode in");
+            knoppen[3].setText("verander taal");
+            knoppen[7].setText("afbreken");
         }
+        knoppen[3].setVisible(true);
+        knoppen[7].setVisible(true);
+        knoppen[3].setActionCommand(TaalActie);
+        knoppen[7].setActionCommand(TerugActie);
+
         if(SQLconnectie.isBlocked(huidigeUid)) {
             tekst4.setText("deze kaart is geblokkeerd");
             tekst4.setVisible(true);
@@ -280,59 +286,60 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public void ontvangenToets(String data) {
-        resterendePogingen = 2 - aantalPogingen;
         String huidigeScherm = Hoofdscherm;
         if(laatsteSchermen.size() > 0) {
             huidigeScherm = laatsteSchermen.get(laatsteSchermen.size() - 1);
         }
 
-        boolean invulScherm = huidigeScherm == Inlogscherm;
-        if(huidigeUid == null || SQLconnectie.isBlocked(huidigeUid) || !invulScherm) {
+        boolean toetsActief = huidigeScherm == Inlogscherm || huidigeScherm == InvulScherm;
+        if(huidigeUid == null || SQLconnectie.isBlocked(huidigeUid)) {
             return;
         }
         if(huidigeScherm == InvulScherm) {
             if(!data.contains("A") && !data.contains("B") && !data.contains("C") && !data.contains("D")) {
-                if(!(data.contains("0") && codeTekst.getText().length() < 1)) {
+                if(!(data.contains("0") && codeTekst.getText().length() == 0)) {
                     codeTekst.setText(codeTekst.getText() + data);
                 }
             } else if(data.contains("C")) {
                 codeTekst.setText("");
             }
-        }
-
-    	String gemaskerdeCode = "";
-        if(data.contains("D")) {
-            if(checkCode()) {
-                SQLconnectie.setAantalPogingen(huidigeUid, 0);
-                pinScherm();
-                code.clear();
-                tekst4.setForeground(Color.green);
-                tekst4.setText("succesvol ingelogd");
-            } else {
-                plaatsKaart.setVisible(false);
-                tekst4.setForeground(Color.red);
-                System.out.println("Nog " + resterendePogingen + " pogingen");
-                if(resterendePogingen == 2) {
-                    tekst4.setText("Nog 2 resterende pogingen"); 
-                }else if(resterendePogingen == 1) {
-                    tekst4.setText("nog 1 resterende poging");
-                }else if(resterendePogingen <= 0) {
-                    SQLconnectie.blokkeerKaart(huidigeUid, true);
-                    tekst4.setText("geen pogingen meer over. Uw kaart is geblokkeerd");
+        } else if(huidigeScherm == Inlogscherm) {
+            String gemaskerdeCode = "";
+            if(data.contains("D")) {
+                if(checkCode()) {
+                    SQLconnectie.setAantalPogingen(huidigeUid, 0);
+                    pinScherm();
+                    code.clear();
+                    tekst4.setForeground(Color.green);
+                    tekst4.setText("succesvol ingelogd");
+                } else {
+                    tekst4.setForeground(Color.red);
+                    int resterendePogingen = 3 - SQLconnectie.aantalPogingen(huidigeUid) - 1;
+                    SQLconnectie.setAantalPogingen(huidigeUid, 3 - resterendePogingen);
+                    System.out.println("Nog " + resterendePogingen + " pogingen");
+                    if(resterendePogingen == 2) {
+                        tekst4.setText("Nog 2 resterende pogingen"); 
+                    }else if(resterendePogingen == 1) {
+                        tekst4.setText("nog 1 resterende poging");
+                    }else if(resterendePogingen <= 0) {
+                        SQLconnectie.blokkeerKaart(huidigeUid, true);
+                        tekst4.setText("geen pogingen meer over. Uw kaart is geblokkeerd");
+                    }
+                    code.clear();
                 }
+                tekst4.setVisible(true);
+            } else if(data.contains("C")) {
                 code.clear();
+            } else if(code.size() < 6) {
+                code.add(data);
             }
-            tekst4.setVisible(true);
-        } else if(data.contains("C")) {
-            code.clear();
-        } else if(code.size() < 6) {
-            code.add(data);
-        }
 
-        for(int i = 0; i < code.size(); i++) {
-            gemaskerdeCode += "*";
+            for(int i = 0; i < code.size(); i++) {
+                gemaskerdeCode += "*";
+            }
+            codeTekst.setText(gemaskerdeCode);
         }
-        codeTekst.setText(gemaskerdeCode);
+        codeTekst.setVisible(true);
     }
 
     private boolean checkCode() {
@@ -340,11 +347,9 @@ public class GUI extends JFrame implements ActionListener {
         String newCode = String.join("", code);
         if(newCode.equals(checkCode)) {
             System.out.println("code goedgekeurd");
-            aantalPogingen = 0;
             return true;
         } else {
             System.out.println("code foutgekeurd");
-            aantalPogingen++;
             return false;
         }
     }
@@ -362,12 +367,11 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void laatsteScherm() {
+        System.out.println(laatsteSchermen);
         String laatsteScherm;
         if(laatsteSchermen.size() > 1) {
             laatsteScherm = laatsteSchermen.get(laatsteSchermen.size() - 2);
-            if(laatsteSchermen.get(laatsteSchermen.size() - 1) == Taalscherm) {
-                laatsteSchermen.remove(laatsteSchermen.size() - 1);
-            }
+            laatsteSchermen.remove(laatsteSchermen.size() - 1);
             laatsteSchermen.remove(laatsteSchermen.size() - 1);
         } else {
             laatsteScherm = Hoofdscherm;

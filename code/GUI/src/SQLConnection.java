@@ -63,7 +63,8 @@ public class SQLConnection {
             } else {
                 statement = "update debitcard set Blocked = false where debitcard_id = '" + uid + "';";
             }
-            ResultSet resultaat = stmt.executeQuery(statement);
+            stmt.executeUpdate(statement);
+            setAantalPogingen(uid, 0);
         } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
         }
@@ -98,8 +99,8 @@ public class SQLConnection {
     public void setAantalPogingen(String uid, int aantal) {
         try {
             Statement stmt = connectie.createStatement();
-            String statement = "update debitcard set Attemps = " + aantal + " where debitcard_id = '" + uid + "';";
-            ResultSet resultaat = stmt.executeQuery(statement);
+            String statement = "update debitcard set Attemps = " + aantal + " where Debitcard_id = '" + uid + "';";
+            stmt.executeUpdate(statement);
         } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
         }

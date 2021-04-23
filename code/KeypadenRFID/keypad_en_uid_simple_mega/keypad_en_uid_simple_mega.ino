@@ -2,8 +2,8 @@
 #include <MFRC522.h>
 #include <Keypad.h>
 
-#define SS_PIN 10
-#define RST_PIN 9
+#define SS_PIN 53
+#define RST_PIN 5
 
 MFRC522 rfid(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key key;
@@ -23,8 +23,8 @@ char keys[ROW_NUM][COLUMN_NUM] = {
   {'*','0','#', 'D'}
 };
 
-byte pin_rows[ROW_NUM] = {9, 8, 7 , 6};
-byte pin_column[COLUMN_NUM] = {5, 4, 3, 2};
+byte pin_rows[ROW_NUM] = {42, 44, 46 , 48};
+byte pin_column[COLUMN_NUM] = {43, 45, 47, 49};
 
 Keypad keypad = Keypad(makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM);
 
@@ -32,23 +32,11 @@ void setup() {
   Serial.begin(9600);
   SPI.begin();
   rfid.PCD_Init();
-  pinMode(1, OUTPUT);
-  digitalWrite(1, LOW);
 }
 
 void loop() {
   bool readCard = rfid.PICC_ReadCardSerial();
   bool trash = rfid.PICC_IsNewCardPresent();
-
-  while(Serial.available() > 0) {
-    String recieved = Serial.readString();
-    if(recieved == "hello world") {
-      digitalWrite(1, HIGH);
-      delay(1000);
-      digitalWrite(1, LOW);
-    }
-    Serial.println(recieved);
-  }
   
   if(readCard) {
     if(newCard) {
