@@ -6,8 +6,8 @@ public class App {
     public static void main(String[] args) {
         gui = new GUI();
         try {
-            SQLconnectie = new SQLConnection(gui);
-            serieleConnectie = new Serial(gui, SQLconnectie);
+            SQLconnectie = new SQLConnection();
+            serieleConnectie = new Serial(gui);
         } catch(Exception e) {
             System.out.println("Fout tijdens het aanmaken van de klasses: " + e);
             System.exit(0);

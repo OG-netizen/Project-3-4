@@ -32,9 +32,33 @@ void setup() {
   Serial.begin(9600);
   SPI.begin();
   rfid.PCD_Init();
+  pinMode(2, OUTPUT);
+  digitalWrite(2, LOW);
+  //werpGeldUit(2,3,4);
 }
 
 void loop() {
+  handleSerial();
+  handleCard();
+  handleKey();
+}
+
+void handleSerial() {
+  while(Serial.available() > 0) {
+    digitalWrite(2, HIGH);
+    delay(1000);
+    digitalWrite(2, LOW);
+    String recieved = Serial.readStringUntil(':');
+    if(recieved == "dispense") {
+      int aantal50 = Serial.readStringUntil(',').toInt();
+      int aantal20 = Serial.readStringUntil(',').toInt();
+      int aantal10 = Serial.readStringUntil(',').toInt();
+      werpGeldUit(aantal50, aantal20, aantal10);
+    }
+  }
+}
+
+void handleCard() {
   bool readCard = rfid.PICC_ReadCardSerial();
   bool trash = rfid.PICC_IsNewCardPresent();
   
@@ -54,14 +78,58 @@ void loop() {
       count = 3;
     }
   }
+}
 
-  
+void handleKey() {
   char key = keypad.getKey();
   if(key) {
     Serial.print("key: ");
     Serial.print(key);
     Serial.println(" ");
   }
+}
+
+void werpGeldUit(int aantal50, int aantal20, int aantal10) {
+  for(int i = 0; i < aantal50; i++) {
+    Serial.println("briefje van 50 aan het printen.....");
+    digitalWrite(2, HIGH);
+    delay(200);
+    digitalWrite(2, LOW);
+    delay(200);
+
+    //TO-DO
+
+  }
+  delay(500);
+  for(int i = 0; i < aantal20; i++) {
+    Serial.println("briefje van 20 aan het printen.....");
+    digitalWrite(2, HIGH);
+    delay(200);
+    digitalWrite(2, LOW);
+    delay(200);
+
+    //TO-DO
+
+  }
+  delay(500);
+  for(int i = 0; i < aantal10; i++) {
+    Serial.println("briefje van 10 aan het printen.....");
+    digitalWrite(2, HIGH);
+    delay(200);
+    digitalWrite(2, LOW);
+    delay(200);
+
+    //TO-DO
+
+  }
+
+  Serial.println("klaar met het printen van geld:");
+  Serial.print("50: ");
+  Serial.println(aantal50);
+  Serial.print("20: ");
+  Serial.println(aantal20);
+  Serial.print("10: ");
+  Serial.println(aantal10);
 }
 
 void printUid() {

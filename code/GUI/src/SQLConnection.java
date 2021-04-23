@@ -1,11 +1,9 @@
 import java.sql.*;
 
 public class SQLConnection {
-    private GUI gui;
     private Connection connectie;
 
-    public SQLConnection(GUI gui) throws Exception{
-        this.gui = gui;
+    public SQLConnection() throws Exception{
         startConnection();
     }
 

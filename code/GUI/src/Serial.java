@@ -1,17 +1,13 @@
 import java.io.*; // IOException
 import java.util.*; // Scanner
-import java.util.concurrent.TimeUnit;
-
 import jssc.*;
 
 public class Serial {
     private static SerialPort serielePoort;
     private static GUI gui;
-    private static SQLConnection SQLconnectie;
 
-    public Serial(GUI g, SQLConnection s) throws SerialPortException{
+    public Serial(GUI g) throws SerialPortException{
         gui = g;
-        SQLconnectie = s;
         startConnectie();
     }
 
@@ -62,18 +58,27 @@ public class Serial {
             serielePoort.addEventListener(new PortReader(), SerialPort.MASK_RXCHAR);
 
             System.out.println("Verbinding met de seriele poort " + geselecteerdePoort + " gemaakt.");
-            try {
-                TimeUnit.SECONDS.sleep(5);
-            } catch (InterruptedException e) {
-                
-            }
-            serielePoort.writeString("hello world");
         }
         catch (SerialPortException e) {
             System.out.println("Fout tijdens het verbinden met poort " + geselecteerdePoort + ": " + e);
             throw e;
         }
-        
+    }
+
+    public void werpGeldUit(int[] aantalBiljetten) {
+        String command = "dispense:";
+        for(int i = 0; i < aantalBiljetten.length; i++) {
+            command += aantalBiljetten[i];
+            if(i < aantalBiljetten.length - 1) {
+                command += ",";
+            }
+        }
+        try {
+            System.out.println(command);
+            serielePoort.writeString(command);
+        } catch (SerialPortException e) {
+            System.out.println("Er ging iets mis tijdens het schrijven naar de compoort: " + e);
+        }
     }
     
     // receiving response from port
@@ -85,6 +90,7 @@ public class Serial {
                 try {
                   
                     String ontvangenData = serielePoort.readString(event.getEventValue());
+                    System.out.println(ontvangenData);
                     //System.out.println("Received response from port: " + ontvangenData);
                     String[] ontvangenDataGesplit = ontvangenData.split(" ");
                     boolean kaartVerwijderd = false;
