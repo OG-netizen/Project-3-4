@@ -1,14 +1,41 @@
+#include <SPI.h>
+#include <MFRC522.h>
+#include <Keypad.h>
 #include "Adafruit_Thermal.h"
 #include "SoftwareSerial.h"
 #include <Stepper.h>
-#define TX_PIN 53 // BLAUWE WIRE   RX op printer
-#define RX_PIN 51 // GROENE WIRE   TX op printer
+#define TX_PIN 50 // BLAUWE WIRE   RX op printer
+#define RX_PIN 52 // GROENE WIRE   TX op printer
+#define SS_PIN 53 // ?
+#define RST_PIN 5 // ?
+#define ROW_NUM 4
+#define COLUMN_NUM 4
+
+//Keypad
+char keys[ROW_NUM][COLUMN_NUM] = {
+  {'1','2','3', 'A'},
+  {'4','5','6', 'B'},
+  {'7','8','9', 'C'},
+  {'*','0','#', 'D'}
+};
+byte pin_rows[ROW_NUM] = {42, 44, 46 , 48};
+byte pin_column[COLUMN_NUM] = {43, 45, 47, 49};
+
+// RFID
+byte nuidPICC[4];
+int count = 3;
+bool newCard = true;
+
+MFRC522 rfid(SS_PIN, RST_PIN);
+MFRC522::MIFARE_Key key;
+
+Keypad keypad = Keypad(makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM);
 
 // Motoren
 const int stepsPerRevolution = 2048;
 Stepper myStepper1 = Stepper(stepsPerRevolution, 26, 30, 28, 32); // Maak stepper opject aan | Pin 26 = IN1 | Pin 30 = IN3 | Pin 28 = IN2 | Pin 32 = IN4 |
-Stepper myStepper2 = Stepper(stepsPerRevolution, 34, 38, 36, 40); // Maak stepper opject aan | Pin 26 = IN1 | Pin 30 = IN3 | Pin 28 = IN2 | Pin 32 = IN4 |
-//Stepper myStepper3 = Stepper(stepsPerRevolution, ?, ?, ?, ?); // Maak stepper opject aan | Pin 26 = IN1 | Pin 30 = IN3 | Pin 28 = IN2 | Pin 32 = IN4 |
+Stepper myStepper2 = Stepper(stepsPerRevolution, 34, 38, 36, 40); // Maak stepper opject aan | Pin 34 = IN1 | Pin 38 = IN3 | Pin 36 = IN2 | Pin 40 = IN4 |
+Stepper myStepper3 = Stepper(stepsPerRevolution, 23, 27, 25, 29); // Maak stepper opject aan | Pin 42 = IN1 | Pin 46 = IN3 | Pin 44 = IN2 | Pin 48 = IN4 |
 
 //Themal Pinter
 SoftwareSerial mySerial(RX_PIN, TX_PIN); // Declare SoftwareSerial obj first
@@ -17,36 +44,34 @@ Adafruit_Thermal printer(&mySerial);     // Pass addr to printer constructor
 
 void setup(){
   Serial.begin(9600);
-  myStepper1.setSpeed(15);     // Zet snelheid in RPM
+  // Zet de snelheden voor de motoren in rpm
+  myStepper1.setSpeed(15);
   myStepper2.setSpeed(15);
-  //myStepper3.setSpeed(15);
-  //myStepper.step(stepsPerRevolution);
-  //bonprint(20, 10);
-  // motordraai(2);
+  myStepper3.setSpeed(15);
+  SPI.begin();
+  rfid.PCD_Init();
+  pinMode(2, OUTPUT);
+  digitalWrite(2, LOW);
 }
 
 
 
 void loop() {
-
-
   int i = Serial.parseInt();
   motordraai(i);
-  Serial.println(i);
+  handleSerial();
+  handleCard();
+  handleKey();
 }
 
 void bonprint(int pinaantal, int donatieaantal) {
   int totaalpin = pinaantal+donatieaantal;
 
-
-  pinMode(7, OUTPUT);
-  digitalWrite(7, LOW);
-
   mySerial.begin(9600);  // Begin resial voor printer
   printer.begin();        // Begin printer
 
 
-// Print logo bovenaan
+  // Print logo bovenaan
   printer.justify('C');
   printer.boldOn();
   printer.setSize('L');
@@ -59,9 +84,9 @@ void bonprint(int pinaantal, int donatieaantal) {
   printer.println(F("ATM"));
   printer.boldOff();
   printer.inverseOff();
-// ----------------------------------
+  // ----------------------------------
 
-// Print pin amount
+  // Print pin amount
   printer.setLineHeight(64);
   printer.justify('L');
   printer.setSize('S');
@@ -70,9 +95,9 @@ void bonprint(int pinaantal, int donatieaantal) {
   printer.setSize('S');
   printer.println(pinaantal);
   printer.boldOff();
-// ----------------------------------
+  // ----------------------------------
 
-// Print donatie aantal
+  // Print donatie aantal
   printer.setLineHeight(32);
   printer.justify('L');
   printer.setSize('S');
@@ -81,9 +106,9 @@ void bonprint(int pinaantal, int donatieaantal) {
   printer.setSize('S');
   printer.println(donatieaantal);
   printer.boldOff();
-// ----------------------------------
+  // ----------------------------------
 
-// Print totaal aantal
+  // Print totaal aantal
   printer.setLineHeight(64);
   printer.justify('L');
   printer.setSize('S');
@@ -92,9 +117,9 @@ void bonprint(int pinaantal, int donatieaantal) {
   printer.setSize('S');
   printer.println(totaalpin);
   printer.boldOff();
-// ----------------------------------
+  // ----------------------------------
 
-/* 
+  /* 
   Tijd printen
   printer.setLineHeight(256);
   printer.justify('C');
@@ -104,30 +129,30 @@ void bonprint(int pinaantal, int donatieaantal) {
   printer.print(month());
   printer.print("|");
   printer.println(year());
-*/
-// ----------------------------------
+  */
+  // ----------------------------------
 
-// Locatie printen
+  // Locatie printen
   printer.setLineHeight(48);
   printer.justify('C');
   printer.setSize('S');
   printer.println("fakeATM");
-// ----------------------------------
+  // ----------------------------------
 
-// laat wat plek onderaan zodat de bon makkelijk uitneembaar is zonder dat er worden vergaan
+  // laat wat plek onderaan zodat de bon makkelijk uitneembaar is zonder dat er worden vergaan
    printer.setLineHeight(256);
    printer.setLineHeight(50);
    printer.println(F(""));
    printer.println(F(""));
    printer.println(F(""));
-// ----------------------------------
+  // ----------------------------------
 
-// Reset de printer
+  // Reset de printer
   printer.sleep();      
-//  delay(5);         
+  //  delay(5);         
   printer.wake();       
   printer.setDefault(); 
-// ----------------------------------
+  // ----------------------------------
 }
 void motordraai(int motornr){
   if (motornr == 1) {
@@ -139,4 +164,121 @@ void motordraai(int motornr){
   else {
     //myStepper3.step(stepsPerRevolution);
   }
+}
+void handleSerial() {
+  while(Serial.available() > 0) {
+    digitalWrite(2, HIGH);
+    delay(1000);
+    digitalWrite(2, LOW);
+    String recieved = Serial.readStringUntil(':');
+    if(recieved == "dispense") {
+      int aantal50 = Serial.readStringUntil(',').toInt();
+      int aantal20 = Serial.readStringUntil(',').toInt();
+      int aantal10 = Serial.readStringUntil(',').toInt();
+      werpGeldUit(aantal50, aantal20, aantal10);
+    }
+    Serial.println(recieved);
+  }
+}
+
+void handleCard() {
+  bool readCard = rfid.PICC_ReadCardSerial();
+  bool trash = rfid.PICC_IsNewCardPresent();
+  
+  if(readCard) {
+    if(newCard) {
+      printUid();
+      newCard = false;
+      delay(500);
+    }
+    count = 0;
+  } else {
+    count++;
+    if(count == 2) {
+      newCard = true;
+      Serial.println("removed_card ");
+    } else if(count > 2) {
+      count = 3;
+    }
+  }
+}
+
+void handleKey() {
+  char key = keypad.getKey();
+  if(key) {
+    Serial.print("key: ");
+    Serial.print(key);
+    Serial.println(" ");
+  }
+}
+
+void werpGeldUit(int aantal50, int aantal20, int aantal10) {
+  for(int i = 0; i < aantal50; i++) {
+    Serial.println("briefje van 50 aan het printen.....");
+    digitalWrite(2, HIGH);
+    delay(200);
+    digitalWrite(2, LOW);
+    delay(200);
+
+    //TO-DO
+
+  }
+  delay(500);
+  for(int i = 0; i < aantal20; i++) {
+    Serial.println("briefje van 20 aan het printen.....");
+    digitalWrite(2, HIGH);
+    delay(200);
+    digitalWrite(2, LOW);
+    delay(200);
+
+    //TO-DO
+
+  }
+  delay(500);
+  for(int i = 0; i < aantal10; i++) {
+    Serial.println("briefje van 10 aan het printen.....");
+    digitalWrite(2, HIGH);
+    delay(200);
+    digitalWrite(2, LOW);
+    delay(200);
+
+    //TO-DO
+
+  }
+
+  Serial.println("klaar met het printen van geld:");
+  Serial.print("50: ");
+  Serial.println(aantal50);
+  Serial.print("20: ");
+  Serial.println(aantal20);
+  Serial.print("10: ");
+  Serial.println(aantal10);
+}
+
+void printUid() {
+  //  MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
+  //  if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI &&  
+  //    piccType != MFRC522::PICC_TYPE_MIFARE_1K &&
+  //    piccType != MFRC522::PICC_TYPE_MIFARE_4K) {
+  //    //Serial.println(F("Your tag is not of type MIFARE Classic."));
+  //    return;
+  //  }
+
+  // Store NUID into nuidPICC array
+  for (byte i = 0; i < 4; i++) {
+    nuidPICC[i] = rfid.uid.uidByte[i];
+  }
+
+  Serial.print("uid:");
+  for (byte i = 0; i < rfid.uid.size; i++) {
+    Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
+    Serial.print(rfid.uid.uidByte[i], HEX);
+  }
+  Serial.println(" ");
+  
+  // Halt PICC
+  rfid.PICC_HaltA();
+
+  // Stop encryption on PCD
+  rfid.PCD_StopCrypto1();
 }
