@@ -1,7 +1,6 @@
 import java.io.*; // IOException
 import java.util.*; // Scanner
 import java.util.concurrent.TimeUnit;
-
 import jssc.*;
 
 public class Serial {
@@ -54,23 +53,20 @@ public class Serial {
                                  SerialPort.STOPBITS_1,
                                  SerialPort.PARITY_NONE);
             
-            serielePoort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | 
-                                          SerialPort.FLOWCONTROL_RTSCTS_OUT);
-            
             serielePoort.addEventListener(new PortReader(), SerialPort.MASK_RXCHAR);
 
-            try {
-                TimeUnit.SECONDS.sleep(5);
-                serielePoort.writeInt(2);
-            } catch (Exception e) {
-                System.out.println("oeps");
-            }
+            TimeUnit.SECONDS.sleep(2);
+            int[] biljet = {1,2,3};
+            werpGeldUit(biljet);
+            TimeUnit.SECONDS.sleep(10);
+            serielePoort.writeString("dispense:1,1,1");
 
             System.out.println("Verbinding met de seriele poort " + geselecteerdePoort + " gemaakt.");
+            //serielePoort.closePort();
         }
-        catch (SerialPortException e) {
+        catch (Exception e) {
             System.out.println("Fout tijdens het verbinden met poort " + geselecteerdePoort + ": " + e);
-            throw e;
+            //throw e;
         }
     }
 

@@ -1,3 +1,5 @@
+package src;
+
 import java.io.*; // IOException
 import java.util.*; // Scanner
 import jssc.*;
@@ -56,7 +58,7 @@ public class demo {
         catch (SerialPortException ex) {
             System.out.println("Error in writing data to port: " + ex);
         }
- 
+
     }
     
     // receiving response from port

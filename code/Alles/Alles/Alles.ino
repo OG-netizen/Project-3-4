@@ -52,13 +52,14 @@ void setup(){
   rfid.PCD_Init();
   pinMode(2, OUTPUT);
   digitalWrite(2, LOW);
+  Serial.println("done");
 }
 
 
 
 void loop() {
-  int i = Serial.parseInt();
-  motordraai(i);
+  //int i = Serial.parseInt();
+  //motordraai(i);
   handleSerial();
   handleCard();
   handleKey();

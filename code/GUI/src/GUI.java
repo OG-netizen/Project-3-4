@@ -76,7 +76,7 @@ public class GUI extends JFrame implements ActionListener {
         logo.setBackground(variables.footerHeaderKleur);
 
         tekstPaneel.setLayout(new GridLayout(10, 1, venster.getWidth(), venster.getHeight()));
-        venster.add(tekstPaneel);
+        tekstPaneel.setBackground(variables.achtergrondKleur);
 
         onderkant.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, onderkantHoogte));
         onderkant.setBackground(variables.footerHeaderKleur);
@@ -100,6 +100,7 @@ public class GUI extends JFrame implements ActionListener {
         hoofdscherm();
 
         venster.add(plaatsKaart);
+        venster.add(tekstPaneel);
         logo.add(logoLabel);
 
         getContentPane().add(vensterLinks, BorderLayout.WEST);
