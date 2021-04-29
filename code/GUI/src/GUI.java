@@ -63,21 +63,24 @@ public class GUI extends JFrame implements ActionListener {
 
         venster.setFont(new Font("Calibri", Font.PLAIN, 50));
         venster.setAlignmentX(CENTER_ALIGNMENT);
+        venster.setBackground(variables.achtergrondKleur);
 
         vensterLinks.setLayout(new GridLayout(4 , 1, 50, 50));
         vensterLinks.setPreferredSize(new Dimension(knopBreedte, MAXIMIZED_VERT));
+        vensterLinks.setBackground(variables.achtergrondKleur);
 
         vensterRechts.setLayout(new GridLayout(4, 1, 50, 50));
         vensterRechts.setPreferredSize(new Dimension(knopBreedte, MAXIMIZED_VERT));
+        vensterRechts.setBackground(variables.achtergrondKleur);
 
         logo.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, logoHoogte));
-        logo.setBackground(Color.black);
+        logo.setBackground(variables.footerHeaderKleur);
 
         tekstPaneel.setLayout(new GridLayout(10, 1, venster.getWidth(), venster.getHeight()));
         venster.add(tekstPaneel);
 
         onderkant.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, onderkantHoogte));
-        onderkant.setBackground(Color.black);
+        onderkant.setBackground(variables.footerHeaderKleur);
 
         plaatsKaart.setIcon(plaatsKaartIcon);
         
@@ -86,7 +89,7 @@ public class GUI extends JFrame implements ActionListener {
         for(int i = 0; i < knoppen.length; i++) {
             knoppen[i] = new JButton(String.valueOf(i));
             knoppen[i].setFont(new Font("Calibri", Font.BOLD, 20));
-            knoppen[i].setBackground(Color.LIGHT_GRAY);
+            knoppen[i].setBackground(variables.knopKleur);
             if(i < 4) {
                 vensterLinks.add(knoppen[i]);
             } else {
@@ -105,6 +108,7 @@ public class GUI extends JFrame implements ActionListener {
         getContentPane().add(venster, BorderLayout.CENTER);
         getContentPane().add(logo, BorderLayout.NORTH);
         getContentPane().add(onderkant, BorderLayout.SOUTH);
+        getContentPane().setBackground(variables.achterAchtergrondKleur);
 
         tekst1.setFont(new Font("Calibri", Font.PLAIN, 40));
         tekst2.setFont(new Font("Calibri", Font.PLAIN, 40));
