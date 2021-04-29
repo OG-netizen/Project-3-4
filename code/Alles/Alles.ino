@@ -4,10 +4,10 @@
 #include "Adafruit_Thermal.h"
 #include "SoftwareSerial.h"
 #include <Stepper.h>
-#define TX_PIN 50 // BLAUWE WIRE   RX op printer
-#define RX_PIN 52 // GROENE WIRE   TX op printer
-#define SS_PIN 53 // ?
-#define RST_PIN 5 // ?
+#define TX_PIN 37 // BLAUWE WIRE   RX op printer
+#define RX_PIN 39 // GROENE WIRE   TX op printer
+#define SS_PIN 53 // RFID
+#define RST_PIN 5 // RFID
 #define ROW_NUM 4
 #define COLUMN_NUM 4
 
