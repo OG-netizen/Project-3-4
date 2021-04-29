@@ -24,7 +24,6 @@ public class GUI extends JFrame implements ActionListener {
     private int breedte = 600, hoogte = 800;
     private JButton[] knoppen = new JButton[8];
     private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100;
-    //final Font font = new Font("Arial", Font.BOLD, 20);
 
     private JPanel venster = new JPanel();
     private JPanel vensterLinks = new JPanel();
