@@ -10,7 +10,7 @@ public class Variables {
     public Color footerHeaderKleur = Color.BLACK;
     public Color achtergrondKleur = Color.WHITE;
     public Color knopKleur = Color.GRAY;
-    public Color achterAchtergrondKleur = Color.LIGHT_GRAY;
+    public Color achterAchtergrondKleur = Color.WHITE;
 
     public Variables() {
 
