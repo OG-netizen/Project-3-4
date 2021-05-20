@@ -12,6 +12,6 @@ public class App {
             System.out.println("Fout tijdens het aanmaken van de klasses: " + e);
             System.exit(0);
         }
-        gui.startGUI(serieleConnectie, SQLconnectie);
+        // gui.startGUI(serieleConnectie, SQLconnectie);
     }
 }
