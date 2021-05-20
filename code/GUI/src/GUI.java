@@ -33,8 +33,8 @@ public class GUI extends JFrame implements ActionListener {
     private JPanel onderkant = new JPanel();
     private JLabel plaatsKaart = new JLabel();
     private JLabel logoLabel = new JLabel();
-    private ImageIcon plaatsKaartIcon = new ImageIcon("code/GUI/Images/insert card.png");
-    private ImageIcon logoIcon = new ImageIcon("code/GUI/Images/logo_white_trans.png");
+    private ImageIcon plaatsKaartIcon = new ImageIcon("Images/insert card.png");
+    private ImageIcon logoIcon = new ImageIcon("Images/logo_white_trans.png");
 
     private ArrayList<String> code = new ArrayList<String>();
 
@@ -124,7 +124,7 @@ public class GUI extends JFrame implements ActionListener {
 
     }
 
-    private void hoofdscherm() {
+    public void hoofdscherm() {
         laatsteSchermen.clear();
         plaatsKaart.setVisible(true);
         tekst1.setVisible(false);
@@ -288,6 +288,34 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
+    public void geldUitwerpScherm() {
+        for(int i = 0; i < knoppen.length; i++) {
+            knoppen[i].setVisible(false);
+        }
+        tekst1.setVisible(true);
+        tekst2.setVisible(false);
+        tekst3.setVisible(false);
+        tekst4.setVisible(true);
+        codeTekst.setVisible(false);
+        codeTekst.setText("");
+
+        tekst1.setText("Uw geld wordt uitgeworpen");
+        tekst4.setText("overgebleven saldo: " + SQLconnectie.getDetails(huidigeUid)[0]);
+    }
+
+    public void printBonScherm() {
+        for(int i = 0; i < knoppen.length; i++) {
+            knoppen[i].setVisible(false);
+        }
+        tekst1.setVisible(true);
+        tekst2.setVisible(false);
+        tekst3.setVisible(false);
+        tekst4.setVisible(true);
+
+        tekst1.setText("Uw bon wordt geprint");
+        tekst4.setText("overgebleven saldo: " + SQLconnectie.getDetails(huidigeUid)[0]);
+    }
+
     public void ontvangenToets(String data) {
         String huidigeScherm = Variables.Hoofdscherm;
         if(laatsteSchermen.size() > 0) {
@@ -409,7 +437,20 @@ public class GUI extends JFrame implements ActionListener {
         int[] waardes = variables.getBiljetWaardes();
         int[] aantal = variables.getAantalBiljetten();
         int[] gebruikAantal = new int[waardes.length];
-        int geldAantal = (int) Math.round(Float.parseFloat(codeTekst.getText()) / 10) * 10;
+        String geldAantalString = codeTekst.getText();
+        if(geldAantalString == null) {
+            try {
+            tekst4.setForeground(Color.red);
+            TimeUnit.MILLISECONDS.sleep(250);
+            tekst4.setForeground(Color.black);
+            TimeUnit.MILLISECONDS.sleep(250);
+            tekst4.setForeground(Color.red);
+            } catch(InterruptedException e) {
+                System.out.println("er is iets misgegaan: " + e);
+            }
+
+        }
+        int geldAantal = (int) Math.round(Float.parseFloat(geldAantalString) / 10) * 10;
         System.out.println("bedrag te pinnen: " + geldAantal);
         for(int i = 0; i < waardes.length; i++) {
             gebruikAantal[i] = geldAantal / waardes[i];
@@ -420,8 +461,10 @@ public class GUI extends JFrame implements ActionListener {
             }
             System.out.println(waardes[i] + "\t" + gebruikAantal[i]);
         }
+        geldAantal = (int) Math.round(Float.parseFloat(geldAantalString) / 10) * 10;
         variables.gebruikBiljetten(gebruikAantal);
-        SerieleConnectie.werpGeldUit(gebruikAantal, geldAantal);
+        int donatieAantal = 0;
+        SerieleConnectie.werpGeldUit(gebruikAantal, geldAantal, donatieAantal);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -453,6 +496,7 @@ public class GUI extends JFrame implements ActionListener {
                 break;
             case Variables.PinGeldActie:
                 pinGeld();
+                geldUitwerpScherm();
                 break;
             default:
                 System.out.println("weet niet wat te doen! " + uitgevoerdeActie);

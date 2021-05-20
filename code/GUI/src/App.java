@@ -8,6 +8,7 @@ public class App {
         try {
             SQLconnectie = new SQLConnection();
             serieleConnectie = new Serial(gui);
+            gui.startGUI(serieleConnectie, SQLconnectie);
         } catch(Exception e) {
             System.out.println("Fout tijdens het aanmaken van de klasses: " + e);
             System.exit(0);

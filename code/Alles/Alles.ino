@@ -33,9 +33,9 @@ Keypad keypad = Keypad(makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_N
 
 // Motoren
 const int stepsPerRevolution = 2048;
-Stepper myStepper1 = Stepper(stepsPerRevolution, 26, 30, 28, 32); // Maak stepper opject aan | Pin 26 = IN1 | Pin 30 = IN3 | Pin 28 = IN2 | Pin 32 = IN4 |
-Stepper myStepper2 = Stepper(stepsPerRevolution, 34, 38, 36, 40); // Maak stepper opject aan | Pin 34 = IN1 | Pin 38 = IN3 | Pin 36 = IN2 | Pin 40 = IN4 |
-Stepper myStepper3 = Stepper(stepsPerRevolution, 23, 27, 25, 29); // Maak stepper opject aan | Pin 42 = IN1 | Pin 46 = IN3 | Pin 44 = IN2 | Pin 48 = IN4 |
+Stepper myStepper1 = Stepper(stepsPerRevolution, 26, 30, 28, 32); // Maak stepper opject aan | Pin 26 = IN1 | Pin 30 = IN3 | Pin 28 = IN2 | Pin 32 = IN4 |  -------50 eu
+Stepper myStepper2 = Stepper(stepsPerRevolution, 34, 38, 36, 40); // Maak stepper opject aan | Pin 34 = IN1 | Pin 38 = IN3 | Pin 36 = IN2 | Pin 40 = IN4 |  -------20 eu
+Stepper myStepper3 = Stepper(stepsPerRevolution, 23, 27, 25, 29); // Maak stepper opject aan | Pin 42 = IN1 | Pin 46 = IN3 | Pin 44 = IN2 | Pin 48 = IN4 |  -------10 eu
 
 //Themal Pinter
 SoftwareSerial mySerial(RX_PIN, TX_PIN); // Declare SoftwareSerial obj first
@@ -50,16 +50,12 @@ void setup(){
   myStepper3.setSpeed(15);
   SPI.begin();
   rfid.PCD_Init();
-  pinMode(2, OUTPUT);
-  digitalWrite(2, LOW);
-  Serial.println("done");
+  Serial.println("done with boot");
 }
 
 
 
 void loop() {
-  //int i = Serial.parseInt();
-  //motordraai(i);
   handleSerial();
   handleCard();
   handleKey();
@@ -154,23 +150,38 @@ void bonprint(int pinaantal, int donatieaantal) {
   printer.wake();       
   printer.setDefault(); 
   // ----------------------------------
+
+  Serial.print("bonGeprint: ");
+  Serial.print(pinaantal);
+  Serial.print(", ");
+  Serial.print(donatieaantal);
+  Serial.println(" ");
 }
 void motordraai(int motornr){
   if (motornr == 1) {
     myStepper1.step(stepsPerRevolution);
+    digitalWrite(26, LOW);
+    digitalWrite(28, LOW);
+    digitalWrite(30, LOW);
+    digitalWrite(32, LOW);
   }
   else if (motornr == 2) {
     myStepper2.step(stepsPerRevolution);
+    digitalWrite(34, LOW);
+    digitalWrite(36, LOW);
+    digitalWrite(38, LOW);
+    digitalWrite(40, LOW);
   }
   else {
-    //myStepper3.step(stepsPerRevolution);
+    myStepper3.step(stepsPerRevolution);
+    digitalWrite(23, LOW);
+    digitalWrite(25, LOW);
+    digitalWrite(27, LOW);
+    digitalWrite(29, LOW);
   }
 }
 void handleSerial() {
   while(Serial.available() > 0) {
-    digitalWrite(2, HIGH);
-    delay(1000);
-    digitalWrite(2, LOW);
     String recieved = Serial.readStringUntil(':');
     if(recieved == "dispense") {
       int aantal50 = Serial.readStringUntil(',').toInt();
@@ -180,8 +191,11 @@ void handleSerial() {
     } else if(recieved = "printBon") {
       int geldAantal = Serial.readStringUntil(',').toInt();
       int donatieAantal = Serial.readStringUntil(',').toInt();
+      Serial.print("aantal gepind: ");
+      Serial.println(geldAantal);
+      Serial.print("aantal gedoneerd: ");
+      Serial.println(donatieAantal);
       bonprint(geldAantal, donatieAantal);
-      Serial.println("bon is geprint");
     }
   }
 }
@@ -220,44 +234,26 @@ void handleKey() {
 void werpGeldUit(int aantal50, int aantal20, int aantal10) {
   for(int i = 0; i < aantal50; i++) {
     Serial.println("briefje van 50 aan het printen.....");
-    digitalWrite(2, HIGH);
-    delay(200);
-    digitalWrite(2, LOW);
-    delay(200);
-
-    //TO-DO
-
+    motordraai(1);
   }
   delay(500);
   for(int i = 0; i < aantal20; i++) {
     Serial.println("briefje van 20 aan het printen.....");
-    digitalWrite(2, HIGH);
-    delay(200);
-    digitalWrite(2, LOW);
-    delay(200);
-
-    //TO-DO
-
+    motordraai(2);
   }
   delay(500);
   for(int i = 0; i < aantal10; i++) {
     Serial.println("briefje van 10 aan het printen.....");
-    digitalWrite(2, HIGH);
-    delay(200);
-    digitalWrite(2, LOW);
-    delay(200);
-
-    //TO-DO
-
+    motordraai(3);
   }
 
-  Serial.println("klaar met het printen van geld:");
-  Serial.print("50: ");
-  Serial.println(aantal50);
-  Serial.print("20: ");
-  Serial.println(aantal20);
-  Serial.print("10: ");
-  Serial.println(aantal10);
+  Serial.print("geldUitgeworpen: 50,");
+  Serial.print(aantal50);
+  Serial.print("20,");
+  Serial.print(aantal20);
+  Serial.print("10,");
+  Serial.print(aantal10);
+  Serial.println(" ");
 }
 
 void printUid() {

@@ -6,6 +6,7 @@ import jssc.*;
 public class Serial {
     private static SerialPort serielePoort;
     private static GUI gui;
+    public static boolean booted = false;
 
     public Serial(GUI g) throws SerialPortException{
         gui = g;
@@ -55,11 +56,12 @@ public class Serial {
             
             serielePoort.addEventListener(new PortReader(), SerialPort.MASK_RXCHAR);
 
-            TimeUnit.SECONDS.sleep(2);
-            int[] biljet = {1,2,3};
-            werpGeldUit(biljet);
-            TimeUnit.SECONDS.sleep(10);
-            serielePoort.writeString("dispense:1,1,1");
+            //TimeUnit.SECONDS.sleep(2);
+            //int[] biljet = {1,2,3};
+            //werpGeldUit(biljet, 100, 10);
+            while(!booted) {
+                TimeUnit.MILLISECONDS.sleep(100);
+            }
 
             System.out.println("Verbinding met de seriele poort " + geselecteerdePoort + " gemaakt.");
             //serielePoort.closePort();
@@ -100,24 +102,26 @@ public class Serial {
                   
                     String ontvangenData = serielePoort.readString(event.getEventValue());
                     System.out.println(ontvangenData);
+                    booted = true;
                     //System.out.println("Received response from port: " + ontvangenData);
                     String[] ontvangenDataGesplit = ontvangenData.split(" ");
-                    boolean kaartVerwijderd = false;
                     for(int i = 0; i < ontvangenDataGesplit.length; i++) {
                         if(ontvangenDataGesplit[i].contains("removed_card")) {
-                            kaartVerwijderd = true;
+                            gui.kaartVerwijderd();
                         }
                     }
                     if(ontvangenDataGesplit[0].equals("key:")) {
                         gui.ontvangenToets(ontvangenDataGesplit[1]);
-                    } else if(kaartVerwijderd) {
-                        gui.kaartVerwijderd();
                     } else if(ontvangenDataGesplit[0].equals("uid:")) {
                         String uidString = "";
                         for(int i = 1; i < ontvangenDataGesplit.length - 1; i++) {
                             uidString += ontvangenDataGesplit[i];
                         }
                         gui.uidInGebruik(uidString);
+                    } else if(ontvangenDataGesplit[0].contains("geldUitgeworpen:")) {
+                        gui.printBonScherm();
+                    } else if(ontvangenDataGesplit[0].contains("bonGeprint:")) {
+                        gui.hoofdscherm();
                     }
                 }
                 catch (SerialPortException e) {
