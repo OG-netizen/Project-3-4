@@ -70,17 +70,21 @@ public class Serial {
         }
     }
 
-    public void werpGeldUit(int[] aantalBiljetten) {
-        String command = "dispense:";
+    public void werpGeldUit(int[] aantalBiljetten, int geldAantal, int donatieAantal) {
+        String geldCommando = "dispense:";
+        String bonCommando = "printBon:" + geldAantal + "," + donatieAantal;
         for(int i = 0; i < aantalBiljetten.length; i++) {
-            command += aantalBiljetten[i];
+            geldCommando += aantalBiljetten[i];
             if(i < aantalBiljetten.length - 1) {
-                command += ",";
+                geldCommando += ",";
             }
         }
+
         try {
-            System.out.println(command);
-            serielePoort.writeString(command);
+            System.out.println(geldCommando);
+            serielePoort.writeString(geldCommando);
+            System.out.println(bonCommando);
+            serielePoort.writeString(bonCommando);
         } catch (SerialPortException e) {
             System.out.println("Er ging iets mis tijdens het schrijven naar de compoort: " + e);
         }

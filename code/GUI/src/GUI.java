@@ -199,7 +199,7 @@ public class GUI extends JFrame implements ActionListener {
         if(huidigeTaal == Variables.Engels){
             knoppen[1].setText("pin 10");
             knoppen[3].setText("change language");
-            knoppen[4].setText("pin 20");
+            knoppen[4].setText("pin 70");
             knoppen[5].setText("enter amount");
             knoppen[7].setText("cancel");
         } else if(huidigeTaal == Variables.Nederlands){
@@ -421,7 +421,7 @@ public class GUI extends JFrame implements ActionListener {
             System.out.println(waardes[i] + "\t" + gebruikAantal[i]);
         }
         variables.gebruikBiljetten(gebruikAantal);
-        SerieleConnectie.werpGeldUit(gebruikAantal);
+        SerieleConnectie.werpGeldUit(gebruikAantal, geldAantal);
     }
 
     public void actionPerformed(ActionEvent e) {

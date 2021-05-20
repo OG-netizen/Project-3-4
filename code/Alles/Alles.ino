@@ -177,8 +177,12 @@ void handleSerial() {
       int aantal20 = Serial.readStringUntil(',').toInt();
       int aantal10 = Serial.readStringUntil(',').toInt();
       werpGeldUit(aantal50, aantal20, aantal10);
+    } else if(recieved = "printBon") {
+      int geldAantal = Serial.readStringUntil(',').toInt();
+      int donatieAantal = Serial.readStringUntil(',').toInt();
+      bonprint(geldAantal, donatieAantal);
+      Serial.println("bon is geprint");
     }
-    Serial.println(recieved);
   }
 }
 
