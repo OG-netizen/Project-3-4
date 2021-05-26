@@ -1,7 +1,7 @@
 /*---------------
 commands in: 
   - dispense:<aantal 50>,<aantal 20>,<aantal 10>  --- geef aan dat de machine geld moet uitwerpen en welke hoeveelheden van de verschillende briefjes
-  - printBon:<aantal gepint>,<aantal genoneerd>   --- geef aan dat de machine een bon moet printen en welke hoeveelheden er op moeten staan
+  - printBon:<aantal gepind>,<aantal genoneerd>   --- geef aan dat de machine een bon moet printen en welke hoeveelheden er op moeten staan
 commands uit:
   - key:<toets uit keypad>      --- geeft aan dat er een toets is aangeslagen en geeft dit door
   - uid:<key van rfid kaart>    --- geeft aan dat er een uid is gelezen en geeft dit door
