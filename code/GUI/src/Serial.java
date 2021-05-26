@@ -72,9 +72,8 @@ public class Serial {
         }
     }
 
-    public void werpGeldUit(int[] aantalBiljetten, int geldAantal, int donatieAantal) {
+    public void werpGeldUit(int[] aantalBiljetten) {
         String geldCommando = "dispense:";
-        String bonCommando = "printBon:" + geldAantal + "," + donatieAantal;
         for(int i = 0; i < aantalBiljetten.length; i++) {
             geldCommando += aantalBiljetten[i];
             if(i < aantalBiljetten.length - 1) {
@@ -85,6 +84,14 @@ public class Serial {
         try {
             System.out.println(geldCommando);
             serielePoort.writeString(geldCommando);
+        } catch (SerialPortException e){
+            System.out.println("Er ging iets mis tijdens het schrijven naar de compoort: " + e);
+        }
+    }
+
+    public void printBon(int geldAantal, int donatieAantal) {
+        String bonCommando = "printBon:" + geldAantal + "," + donatieAantal;
+        try {
             System.out.println(bonCommando);
             serielePoort.writeString(bonCommando);
         } catch (SerialPortException e) {

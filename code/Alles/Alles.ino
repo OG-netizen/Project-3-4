@@ -1,3 +1,15 @@
+/*---------------
+commands in: 
+  - dispense:<aantal 50>,<aantal 20>,<aantal 10>  --- geef aan dat de machine geld moet uitwerpen en welke hoeveelheden van de verschillende briefjes
+  - printBon:<aantal gepint>,<aantal genoneerd>   --- geef aan dat de machine een bon moet printen en welke hoeveelheden er op moeten staan
+commands uit:
+  - key:<toets uit keypad>      --- geeft aan dat er een toets is aangeslagen en geeft dit door
+  - uid:<key van rfid kaart>    --- geeft aan dat er een uid is gelezen en geeft dit door
+  - "removed card"              --- geeft aan dat een kaart is verwijderd
+  - "done with boot"            --- geeft aan dat het geboot is, doet de gui niks mee, naast dat het herkent dat het een seriele input heef ontvangen
+  - geldUitgeworopen:<aantal 50>,<aantal 20>,<aantal 10>  --- geeft aan dat de machine klaar is met het uitwerpen van geld en de hoeveelheden hiervan
+--------------*/
+
 #include <SPI.h>
 #include <MFRC522.h>
 #include <Keypad.h>
@@ -87,7 +99,7 @@ void bonprint(int pinaantal, int donatieaantal) {
   printer.setLineHeight(64);
   printer.justify('L');
   printer.setSize('S');
-  printer.print(F("Aantal gepint               "));
+  printer.print(F("Aantal gepind               "));
   printer.boldOn();
   printer.setSize('S');
   printer.println(pinaantal);
@@ -151,9 +163,9 @@ void bonprint(int pinaantal, int donatieaantal) {
   printer.setDefault(); 
   // ----------------------------------
 
-  Serial.print("bonGeprint: ");
+  Serial.print("bonGeprint:");
   Serial.print(pinaantal);
-  Serial.print(", ");
+  Serial.print(",");
   Serial.print(donatieaantal);
   Serial.println(" ");
 }
@@ -247,11 +259,11 @@ void werpGeldUit(int aantal50, int aantal20, int aantal10) {
     motordraai(3);
   }
 
-  Serial.print("geldUitgeworpen: 50,");
+  Serial.print("geldUitgeworpen:");
   Serial.print(aantal50);
-  Serial.print("20,");
+  Serial.print(",");
   Serial.print(aantal20);
-  Serial.print("10,");
+  Serial.print(",");
   Serial.print(aantal10);
   Serial.println(" ");
 }

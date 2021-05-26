@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /*
-    na pas inserten -- meteen inloggen
-    na inloggen -- saldo, pinScherm, snelkeuze 70eu, 
 
-    altijd veranderTaalScherm kunnen veranderen en kunnen afbreken
-
+    TO - DO
+    - doneerscherm en aantal doorgeven aan seriele poort
+    - saldo aanpassen na transactie
+    - checken op fouten en bugs
 
 */
 
@@ -127,125 +127,120 @@ public class GUI extends JFrame implements ActionListener {
     public void hoofdscherm() {
         laatsteSchermen.clear();
         plaatsKaart.setVisible(true);
-        tekst1.setVisible(false);
-        tekst2.setVisible(false);
-        tekst3.setVisible(false);
-        tekst4.setVisible(false);
-        codeTekst.setVisible(false);
+        resetKnopEnTekst();
         if(huidigeTaal == Variables.Engels) {
-            knoppen[0].setText("draw money");
             knoppen[3].setText("change language");
             knoppen[7].setText("exit");
         } else if(huidigeTaal == Variables.Nederlands) {
-            knoppen[0].setText("pinScherm");
             knoppen[3].setText("verander taal");
             knoppen[7].setText("afsluiten");
         }
-        knoppen[0].setActionCommand(Variables.PinActie);
         knoppen[3].setActionCommand(Variables.TaalActie);
         knoppen[7].setActionCommand(Variables.AfsluitActie);;
-
-        knoppen[0].setVisible(true);
-        knoppen[1].setVisible(false);
-        knoppen[2].setVisible(false);
         knoppen[3].setVisible(true);
-        knoppen[4].setVisible(false);
-        knoppen[5].setVisible(false);
-        knoppen[6].setVisible(false);
         knoppen[7].setVisible(true);
     }
 
     private void inlogScherm() {
+        resetKnopEnTekst();
         laatsteSchermen.add(Variables.Inlogscherm);
-        for(int i = 0; i < knoppen.length; i++) {
-            knoppen[i].setVisible(false);
-        }
-
         plaatsKaart.setVisible(false);
         String[] details = SQLconnectie.getDetails(huidigeUid);
         if(huidigeTaal == Variables.Engels) {
+            knoppen[3].setText("change language");
+            knoppen[7].setText("cancel");
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Balance: " + details[0]);
             tekst3.setText("insert pin");
-            knoppen[3].setText("change language");
-            knoppen[7].setText("cancel");
         } else if(huidigeTaal == Variables.Nederlands) {
+            knoppen[3].setText("verander taal");
+            knoppen[7].setText("afbreken");
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Saldo: " + details[0]);
             tekst3.setText("voer uw pincode in");
-            knoppen[3].setText("verander taal");
-            knoppen[7].setText("afbreken");
         }
-        knoppen[3].setVisible(true);
-        knoppen[7].setVisible(true);
         knoppen[3].setActionCommand(Variables.TaalActie);
         knoppen[7].setActionCommand(Variables.TerugActie);
+        knoppen[3].setVisible(true);
+        knoppen[7].setVisible(true);
 
+        tekst1.setVisible(true);
+        tekst2.setVisible(true);
+        tekst3.setVisible(true);
         if(SQLconnectie.isBlocked(huidigeUid)) {
             tekst4.setText("deze kaart is geblokkeerd");
             tekst4.setVisible(true);
         }
-        tekst1.setVisible(true);
-        tekst2.setVisible(true);
-        tekst3.setVisible(true);
     }
 
     private void pinScherm() {
+        resetKnopEnTekst();
         laatsteSchermen.add(Variables.Pinscherm);
-        tekst1.setVisible(true);
-        tekst2.setVisible(true);
-        tekst3.setVisible(false);
-        tekst4.setVisible(true);
+        String[] details = SQLconnectie.getDetails(huidigeUid);
         if(huidigeTaal == Variables.Engels){
             knoppen[1].setText("pin 10");
             knoppen[3].setText("change language");
             knoppen[4].setText("pin 70");
             knoppen[5].setText("enter amount");
             knoppen[7].setText("cancel");
+            tekst1.setText("Iban: " + huidigeUid);
+            tekst2.setText("Balance: " + details[0]);
         } else if(huidigeTaal == Variables.Nederlands){
             knoppen[1].setText("pin 10");
             knoppen[3].setText("verander taal");
             knoppen[4].setText("pin 20");
             knoppen[5].setText("bedrag invoeren");
             knoppen[7].setText("afbreken");
+            tekst1.setText("Iban: " + huidigeUid);
+            tekst2.setText("Saldo: " + details[0]);
         }
         knoppen[3].setActionCommand(Variables.TaalActie);
         knoppen[5].setActionCommand(Variables.BedragInvoerActie);
         knoppen[7].setActionCommand(Variables.TerugActie);
 
-        knoppen[0].setVisible(false);
         knoppen[1].setVisible(true);
-        knoppen[2].setVisible(false);
         knoppen[3].setVisible(true);
-        knoppen[4].setVisible(false);
+        knoppen[4].setVisible(true);
         knoppen[5].setVisible(true);
-        knoppen[6].setVisible(false);
         knoppen[7].setVisible(true);
+
+        tekst1.setVisible(true);
+        tekst2.setVisible(true);
     }
 
     private void bedragInvulScherm() {
+        resetKnopEnTekst();
         laatsteSchermen.add(Variables.InvulScherm);
-        for(int i = 0; i < knoppen.length; i++) {
-            knoppen[i].setVisible(false);
+        String[] details = SQLconnectie.getDetails(huidigeUid);
+        if(huidigeTaal == Variables.Engels) {
+            knoppen[3].setText("change language");
+            knoppen[5].setText("done");
+            knoppen[7].setText("cancel");
+            tekst1.setText("Iban: " + huidigeUid);
+            tekst2.setText("Balance: " + details[0]);
+        } else if(huidigeTaal == Variables.Nederlands) {
+            knoppen[3].setText("verander taal");
+            knoppen[5].setText("gereed");
+            knoppen[7].setText("afbreken");
+            tekst1.setText("Iban: " + huidigeUid);
+            tekst2.setText("Saldo: " + details[0]);
         }
-        knoppen[5].setText("gereed");
-        knoppen[3].setVisible(true);
-        knoppen[5].setVisible(true);
-        knoppen[7].setVisible(true);
         knoppen[3].setActionCommand(Variables.TaalActie);
         knoppen[5].setActionCommand(Variables.PinGeldActie);
         knoppen[7].setActionCommand(Variables.TerugActie);
+        knoppen[3].setVisible(true);
+        knoppen[5].setVisible(true);
+        knoppen[7].setVisible(true);
+        tekst1.setVisible(true);
+        tekst2.setVisible(true);
         tekst4.setForeground(Color.black);
         tekst4.setText("voer uw gewenste bedrag in");
         tekst4.setVisible(true);
     }
 
     private void veranderTaalScherm() {
+        resetKnopEnTekst();
         laatsteSchermen.add(Variables.Taalscherm);
-        tekst1.setVisible(false);
-        tekst2.setVisible(false);
-        tekst3.setVisible(false);
-        tekst4.setVisible(false);
 
         knoppen[1].setText("Nederlands");
         knoppen[5].setText("English");
@@ -259,61 +254,64 @@ public class GUI extends JFrame implements ActionListener {
         }
         knoppen[7].setActionCommand(Variables.TerugActie);
 
-        knoppen[0].setVisible(false);
         knoppen[1].setVisible(true);
-        knoppen[2].setVisible(false);
-        knoppen[3].setVisible(false);
-        knoppen[4].setVisible(false);
         knoppen[5].setVisible(true);
-        knoppen[6].setVisible(false);
         knoppen[7].setVisible(true);
     }
 
     private void kaartVerwijderdScherm() {
-        laatsteSchermen.add(Variables.KaartVerwijderdScherm);
-        tekst1.setVisible(false);
-        tekst2.setVisible(false);
-        tekst3.setVisible(false);
-        tekst4.setVisible(false);
-
-        for(int i = 0; i < knoppen.length; i++) {
-            knoppen[i].setVisible(false);
+        if(laatsteSchermen.size() <= 1) {
+            tekst1.setText("U bent uitgelogd");
+            tekst1.setVisible(true);
+            try {
+                TimeUnit.SECONDS.sleep(3);
+                tekst1.setText(null);
+                tekst1.setVisible(false);
+            } catch (InterruptedException e) {
+                System.out.println("Er ging iets mis tijdens het wachten in het hoofdscherm: " + e);
+            }
+            return;
         }
+        resetKnopEnTekst();
+        laatsteSchermen.add(Variables.KaartVerwijderdScherm);
+        tekst3.setText("U bent uitgelogd");
+        tekst3.setVisible(true);
+        tekst4.setText("U wordt doorgestuurd naar het startscherm");
+        tekst4.setVisible(true);
+
         try {
             TimeUnit.SECONDS.sleep(5);
         } catch (InterruptedException e) {
-
+            System.out.println("er ging iets mis tijdens het wachten op het hoofdscherm: "  + e);
         } finally {
             hoofdscherm();
         }
     }
 
     public void geldUitwerpScherm() {
-        for(int i = 0; i < knoppen.length; i++) {
-            knoppen[i].setVisible(false);
-        }
-        tekst1.setVisible(true);
-        tekst2.setVisible(false);
-        tekst3.setVisible(false);
-        tekst4.setVisible(true);
-        codeTekst.setVisible(false);
-        codeTekst.setText("");
+        String codeTekstString = codeTekst.getText();
+        resetKnopEnTekst();
 
         tekst1.setText("Uw geld wordt uitgeworpen");
         tekst4.setText("overgebleven saldo: " + SQLconnectie.getDetails(huidigeUid)[0]);
+        codeTekst.setText(codeTekstString);
+        tekst1.setVisible(true);
+        tekst4.setVisible(true);
     }
 
     public void printBonScherm() {
-        for(int i = 0; i < knoppen.length; i++) {
-            knoppen[i].setVisible(false);
+        try {
+            int geldAantal = (int) Math.round(Float.parseFloat(codeTekst.getText()) / 10) * 10;
+            SerieleConnectie.printBon(geldAantal, 0);
+        } catch (NumberFormatException e) {
+            System.out.println("Er ging iets mis met het verwerken van het aantal: " + e);
         }
-        tekst1.setVisible(true);
-        tekst2.setVisible(false);
-        tekst3.setVisible(false);
-        tekst4.setVisible(true);
+        resetKnopEnTekst();
 
         tekst1.setText("Uw bon wordt geprint");
         tekst4.setText("overgebleven saldo: " + SQLconnectie.getDetails(huidigeUid)[0]);
+        tekst1.setVisible(true);
+        tekst4.setVisible(true);
     }
 
     public void ontvangenToets(String data) {
@@ -394,7 +392,6 @@ public class GUI extends JFrame implements ActionListener {
 
     public void kaartVerwijderd() {
         code.clear();
-        codeTekst.setVisible(false);
         huidigeUid = null;
         kaartVerwijderdScherm();
     }
@@ -438,7 +435,7 @@ public class GUI extends JFrame implements ActionListener {
         int[] aantal = variables.getAantalBiljetten();
         int[] gebruikAantal = new int[waardes.length];
         String geldAantalString = codeTekst.getText();
-        if(geldAantalString == null) {
+        if(geldAantalString == null || geldAantalString == "") {
             try {
             tekst4.setForeground(Color.red);
             TimeUnit.MILLISECONDS.sleep(250);
@@ -448,9 +445,14 @@ public class GUI extends JFrame implements ActionListener {
             } catch(InterruptedException e) {
                 System.out.println("er is iets misgegaan: " + e);
             }
-
+            return;
         }
-        int geldAantal = (int) Math.round(Float.parseFloat(geldAantalString) / 10) * 10;
+        int geldAantal = 0;
+        try {
+            geldAantal = (int) Math.round(Float.parseFloat(geldAantalString) / 10) * 10;
+        } catch (NumberFormatException e) {
+            System.out.println("Er ging iets mis met het verwerken van het aantal" + e);
+        }
         System.out.println("bedrag te pinnen: " + geldAantal);
         for(int i = 0; i < waardes.length; i++) {
             gebruikAantal[i] = geldAantal / waardes[i];
@@ -463,8 +465,32 @@ public class GUI extends JFrame implements ActionListener {
         }
         geldAantal = (int) Math.round(Float.parseFloat(geldAantalString) / 10) * 10;
         variables.gebruikBiljetten(gebruikAantal);
-        int donatieAantal = 0;
-        SerieleConnectie.werpGeldUit(gebruikAantal, geldAantal, donatieAantal);
+
+        SerieleConnectie.werpGeldUit(gebruikAantal);
+        geldUitwerpScherm();
+    }
+
+    private void resetKnopEnTekst() {
+        for(int i = 0; i < knoppen.length; i++) {
+            knoppen[i].setText(null);
+            knoppen[i].setVisible(false);
+        }
+
+        tekst1.setText(null);
+        tekst1.setVisible(false);
+        tekst1.setForeground(Color.black);
+        tekst2.setText(null);
+        tekst2.setVisible(false);
+        tekst2.setForeground(Color.black);
+        tekst3.setText(null);
+        tekst3.setVisible(false);
+        tekst3.setForeground(Color.black);
+        tekst4.setText(null);
+        tekst4.setVisible(false);
+        tekst4.setForeground(Color.black);
+        codeTekst.setText("");
+        codeTekst.setVisible(false);
+        codeTekst.setForeground(Color.black);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -496,7 +522,6 @@ public class GUI extends JFrame implements ActionListener {
                 break;
             case Variables.PinGeldActie:
                 pinGeld();
-                geldUitwerpScherm();
                 break;
             default:
                 System.out.println("weet niet wat te doen! " + uitgevoerdeActie);
