@@ -97,8 +97,6 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[i].addActionListener(this);
         }
 
-        hoofdscherm();
-
         venster.add(plaatsKaart);
         venster.add(tekstPaneel);
         logo.add(logoLabel);
@@ -114,7 +112,6 @@ public class GUI extends JFrame implements ActionListener {
         tekst2.setFont(new Font("Calibri", Font.PLAIN, 40));
         tekst3.setFont(new Font("Calibri", Font.PLAIN, 40));
         tekst4.setFont(new Font("Calibri", Font.BOLD, 35));
-        tekst4.setForeground(Color.red);
         codeTekst.setFont(new Font("Calibri", Font.BOLD, 40));
         tekstPaneel.add(tekst1);
         tekstPaneel.add(tekst2);
@@ -122,18 +119,19 @@ public class GUI extends JFrame implements ActionListener {
         tekstPaneel.add(tekst4);
         tekstPaneel.add(codeTekst);
 
+        hoofdscherm();
     }
 
     public void hoofdscherm() {
         laatsteSchermen.clear();
-        plaatsKaart.setVisible(true);
         resetKnopEnTekst();
+        plaatsKaart.setVisible(true);
         if(huidigeTaal == Variables.Engels) {
-            knoppen[3].setText("change language");
-            knoppen[7].setText("exit");
+            knoppen[3].setText("Change language");
+            knoppen[7].setText("Exit");
         } else if(huidigeTaal == Variables.Nederlands) {
-            knoppen[3].setText("verander taal");
-            knoppen[7].setText("afsluiten");
+            knoppen[3].setText("Verander taal");
+            knoppen[7].setText("Afsluiten");
         }
         knoppen[3].setActionCommand(Variables.TaalActie);
         knoppen[7].setActionCommand(Variables.AfsluitActie);;
@@ -147,14 +145,14 @@ public class GUI extends JFrame implements ActionListener {
         plaatsKaart.setVisible(false);
         String[] details = SQLconnectie.getDetails(huidigeUid);
         if(huidigeTaal == Variables.Engels) {
-            knoppen[3].setText("change language");
-            knoppen[7].setText("cancel");
+            knoppen[3].setText("Change language");
+            knoppen[7].setText("Cancel");
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Balance: " + details[0]);
             tekst3.setText("insert pin");
         } else if(huidigeTaal == Variables.Nederlands) {
-            knoppen[3].setText("verander taal");
-            knoppen[7].setText("afbreken");
+            knoppen[3].setText("Verander taal");
+            knoppen[7].setText("Afbreken");
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Saldo: " + details[0]);
             tekst3.setText("voer uw pincode in");
@@ -168,8 +166,13 @@ public class GUI extends JFrame implements ActionListener {
         tekst2.setVisible(true);
         tekst3.setVisible(true);
         if(SQLconnectie.isBlocked(huidigeUid)) {
-            tekst4.setText("deze kaart is geblokkeerd");
+            tekst4.setForeground(Color.red);
             tekst4.setVisible(true);
+            if(huidigeTaal == Variables.Engels) {
+                tekst4.setText("This card is blocked");
+            } else if(huidigeTaal == Variables.Nederlands) {
+                tekst4.setText("Deze kaart is geblokkeerd");
+            }
         }
     }
 
@@ -178,19 +181,19 @@ public class GUI extends JFrame implements ActionListener {
         laatsteSchermen.add(Variables.Pinscherm);
         String[] details = SQLconnectie.getDetails(huidigeUid);
         if(huidigeTaal == Variables.Engels){
-            knoppen[1].setText("pin 10");
-            knoppen[3].setText("change language");
-            knoppen[4].setText("pin 70");
-            knoppen[5].setText("enter amount");
-            knoppen[7].setText("cancel");
+            knoppen[1].setText("Pin 10");
+            knoppen[3].setText("Change language");
+            knoppen[4].setText("Pin 70");
+            knoppen[5].setText("Enter amount");
+            knoppen[7].setText("Cancel");
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Balance: " + details[0]);
         } else if(huidigeTaal == Variables.Nederlands){
-            knoppen[1].setText("pin 10");
-            knoppen[3].setText("verander taal");
-            knoppen[4].setText("pin 20");
-            knoppen[5].setText("bedrag invoeren");
-            knoppen[7].setText("afbreken");
+            knoppen[1].setText("Pin 10");
+            knoppen[3].setText("Verander taal");
+            knoppen[4].setText("Pin 70");
+            knoppen[5].setText("Bedrag invoeren");
+            knoppen[7].setText("Afbreken");
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Saldo: " + details[0]);
         }
@@ -213,17 +216,19 @@ public class GUI extends JFrame implements ActionListener {
         laatsteSchermen.add(Variables.InvulScherm);
         String[] details = SQLconnectie.getDetails(huidigeUid);
         if(huidigeTaal == Variables.Engels) {
-            knoppen[3].setText("change language");
-            knoppen[5].setText("done");
-            knoppen[7].setText("cancel");
+            knoppen[3].setText("Change language");
+            knoppen[5].setText("Done");
+            knoppen[7].setText("Cancel");
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Balance: " + details[0]);
+            tekst4.setText("Enter the desired amount");
         } else if(huidigeTaal == Variables.Nederlands) {
-            knoppen[3].setText("verander taal");
-            knoppen[5].setText("gereed");
-            knoppen[7].setText("afbreken");
+            knoppen[3].setText("Verander taal");
+            knoppen[5].setText("Gereed");
+            knoppen[7].setText("Afbreken");
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Saldo: " + details[0]);
+            tekst4.setText("Voer uw gewenste bedrag in");
         }
         knoppen[3].setActionCommand(Variables.TaalActie);
         knoppen[5].setActionCommand(Variables.PinGeldActie);
@@ -234,7 +239,6 @@ public class GUI extends JFrame implements ActionListener {
         tekst1.setVisible(true);
         tekst2.setVisible(true);
         tekst4.setForeground(Color.black);
-        tekst4.setText("voer uw gewenste bedrag in");
         tekst4.setVisible(true);
     }
 
@@ -244,14 +248,13 @@ public class GUI extends JFrame implements ActionListener {
 
         knoppen[1].setText("Nederlands");
         knoppen[5].setText("English");
+        if(huidigeTaal == Variables.Engels) {
+            knoppen[7].setText("Back");
+        } else if(huidigeTaal == Variables.Nederlands) {
+            knoppen[7].setText("Terug");
+        }
         knoppen[1].setActionCommand(Variables.TaalNederlandsActie);
         knoppen[5].setActionCommand(Variables.TaalEngelsActie);
-
-        if(huidigeTaal == Variables.Engels) {
-            knoppen[7].setText("back");
-        } else if(huidigeTaal == Variables.Nederlands) {
-            knoppen[7].setText("terug");
-        }
         knoppen[7].setActionCommand(Variables.TerugActie);
 
         knoppen[1].setVisible(true);
@@ -260,8 +263,12 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void kaartVerwijderdScherm() {
-        if(laatsteSchermen.size() <= 1) {
-            tekst1.setText("U bent uitgelogd");
+        if(laatsteSchermen.size() < 1) {
+            if(huidigeTaal == Variables.Engels) {
+                tekst1.setText("U are logged out");
+            } else if(huidigeTaal == Variables.Nederlands) {
+                tekst1.setText("U bent uitgelogd");
+            }
             tekst1.setVisible(true);
             try {
                 TimeUnit.SECONDS.sleep(3);
@@ -274,9 +281,14 @@ public class GUI extends JFrame implements ActionListener {
         }
         resetKnopEnTekst();
         laatsteSchermen.add(Variables.KaartVerwijderdScherm);
-        tekst3.setText("U bent uitgelogd");
+        if(huidigeTaal == Variables.Engels) {
+            tekst3.setText("U are logged out");
+            tekst4.setText("U are being redirected to the main screen");
+        } else if(huidigeTaal == Variables.Nederlands) {
+            tekst3.setText("U bent uitgelogd");
+            tekst4.setText("U wordt doorgestuurd naar het startscherm");
+        }
         tekst3.setVisible(true);
-        tekst4.setText("U wordt doorgestuurd naar het startscherm");
         tekst4.setVisible(true);
 
         try {
@@ -292,8 +304,13 @@ public class GUI extends JFrame implements ActionListener {
         String codeTekstString = codeTekst.getText();
         resetKnopEnTekst();
 
-        tekst1.setText("Uw geld wordt uitgeworpen");
-        tekst4.setText("overgebleven saldo: " + SQLconnectie.getDetails(huidigeUid)[0]);
+        if(huidigeTaal == Variables.Engels) {
+            tekst1.setText("Ur money is being dispensed");
+            tekst4.setText("Remaining balance: " + SQLconnectie.getDetails(huidigeUid)[0]);
+        } else if(huidigeTaal == Variables.Nederlands) {
+            tekst1.setText("Uw geld wordt uitgeworpen");
+            tekst4.setText("Overgebleven saldo: " + SQLconnectie.getDetails(huidigeUid)[0]);
+        }
         codeTekst.setText(codeTekstString);
         tekst1.setVisible(true);
         tekst4.setVisible(true);
@@ -308,8 +325,14 @@ public class GUI extends JFrame implements ActionListener {
         }
         resetKnopEnTekst();
 
-        tekst1.setText("Uw bon wordt geprint");
-        tekst4.setText("overgebleven saldo: " + SQLconnectie.getDetails(huidigeUid)[0]);
+        if(huidigeTaal == Variables.Engels) {
+            tekst1.setText("Ur ticket is being dispensed");
+            tekst4.setText("Remaining balance: " + SQLconnectie.getDetails(huidigeUid)[0]);
+        } else if(huidigeTaal == Variables.Nederlands) {
+            tekst1.setText("Uw bon wordt geprint");
+            tekst4.setText("Overgebleven saldo: " + SQLconnectie.getDetails(huidigeUid)[0]);
+        }
+
         tekst1.setVisible(true);
         tekst4.setVisible(true);
     }
@@ -331,9 +354,17 @@ public class GUI extends JFrame implements ActionListener {
                     int geldAantal = Integer.parseInt(codeTekst.getText());
                     if(geldAantal > variables.getMaxAantalGeld() || geldAantal > Integer.parseInt(SQLconnectie.getDetails(huidigeUid)[0])) {
                         codeTekst.setText(laatsteAantal);
-                        tekst4.setText("het aantal dat u heeft ingevoerd is te veel");
+                        if(huidigeTaal == Variables.Engels) {
+                            tekst4.setText("The entered amount is too much");
+                        } else if(huidigeTaal == Variables.Nederlands) {
+                            tekst4.setText("Het aantal dat u heeft ingevoerd is te veel");
+                        }
+
                         tekst4.setForeground(Color.red);
                         tekst4.setVisible(true);
+                    } else {
+                        tekst4.setForeground(Color.black);
+                        tekst4.setVisible(false);
                     }
                 }
             } else if(data.contains("C")) {
@@ -347,19 +378,35 @@ public class GUI extends JFrame implements ActionListener {
                     pinScherm();
                     code.clear();
                     tekst4.setForeground(Color.green);
-                    tekst4.setText("succesvol ingelogd");
+                    if(huidigeTaal == Variables.Engels) {
+                        tekst4.setText("Succesfully logged in");
+                    } else if(huidigeTaal == Variables.Nederlands) {
+                        tekst4.setText("Succesvol ingelogd");
+                    }
+                    
                 } else {
                     tekst4.setForeground(Color.red);
                     int resterendePogingen = 3 - SQLconnectie.aantalPogingen(huidigeUid) - 1;
                     SQLconnectie.setAantalPogingen(huidigeUid, 3 - resterendePogingen);
                     System.out.println("Nog " + resterendePogingen + " pogingen");
-                    if(resterendePogingen == 2) {
-                        tekst4.setText("Nog 2 resterende pogingen"); 
-                    }else if(resterendePogingen == 1) {
-                        tekst4.setText("nog 1 resterende poging");
-                    }else if(resterendePogingen <= 0) {
-                        SQLconnectie.blokkeerKaart(huidigeUid, true);
-                        tekst4.setText("geen pogingen meer over. Uw kaart is geblokkeerd");
+                    if(huidigeTaal == Variables.Engels) {
+                        if(resterendePogingen == 2) {
+                            tekst4.setText("2 Remaining attempts"); 
+                        }else if(resterendePogingen == 1) {
+                            tekst4.setText("1 Remaining attempt");
+                        }else if(resterendePogingen <= 0) {
+                            SQLconnectie.blokkeerKaart(huidigeUid, true);
+                            tekst4.setText("No more attempts left. Ur card has been blocked");
+                        }
+                    } else if(huidigeTaal == Variables.Nederlands) {
+                        if(resterendePogingen == 2) {
+                            tekst4.setText("Nog 2 resterende pogingen"); 
+                        }else if(resterendePogingen == 1) {
+                            tekst4.setText("Nog 1 resterende poging");
+                        }else if(resterendePogingen <= 0) {
+                            SQLconnectie.blokkeerKaart(huidigeUid, true);
+                            tekst4.setText("Geen pogingen meer over. Uw kaart is geblokkeerd");
+                        }
                     }
                     code.clear();
                 }
@@ -467,6 +514,7 @@ public class GUI extends JFrame implements ActionListener {
         variables.gebruikBiljetten(gebruikAantal);
 
         SerieleConnectie.werpGeldUit(gebruikAantal);
+        SQLconnectie.setSaldo(huidigeUid, Integer.parseInt(SQLconnectie.getDetails(huidigeUid)[0]) - geldAantal);
         geldUitwerpScherm();
     }
 

@@ -103,4 +103,14 @@ public class SQLConnection {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
         }
     }
+
+    public void setSaldo(String uid, int aantal) {
+        try {
+            Statement stmt = connectie.createStatement();
+            String statement = "update accounts set Balance = " + aantal + " where Debitcard_id = '" + uid + "';";
+            stmt.executeUpdate(statement);
+        } catch(SQLException e) {
+            System.out.println("Fout tijdens het uitvoeren van een wuery op de SQL server: " + e);
+        }
+    }
 }

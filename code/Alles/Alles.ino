@@ -220,7 +220,7 @@ void handleCard() {
     if(newCard) {
       printUid();
       newCard = false;
-      delay(500);
+      delay(1000);
     }
     count = 0;
   } else {
@@ -228,6 +228,7 @@ void handleCard() {
     if(count == 2) {
       newCard = true;
       Serial.println("removed_card ");
+      delay(1000);
     } else if(count > 2) {
       count = 3;
     }

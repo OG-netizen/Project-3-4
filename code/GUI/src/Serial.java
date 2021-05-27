@@ -56,19 +56,14 @@ public class Serial {
             
             serielePoort.addEventListener(new PortReader(), SerialPort.MASK_RXCHAR);
 
-            //TimeUnit.SECONDS.sleep(2);
-            //int[] biljet = {1,2,3};
-            //werpGeldUit(biljet, 100, 10);
             while(!booted) {
                 TimeUnit.MILLISECONDS.sleep(100);
             }
 
             System.out.println("Verbinding met de seriele poort " + geselecteerdePoort + " gemaakt.");
-            //serielePoort.closePort();
         }
         catch (Exception e) {
             System.out.println("Fout tijdens het verbinden met poort " + geselecteerdePoort + ": " + e);
-            //throw e;
         }
     }
 
