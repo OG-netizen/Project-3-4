@@ -1,7 +1,7 @@
 create table Debitcard(
-Debitcard_id VARCHAR(255) primary key not null,
-Iban VARCHAR(255) not null,
-Pincode INT not null,
-Attemps INT not null,
-Blocked VARCHAR(255)
+Debitcard_id VARCHAR(8) primary key not null,
+Iban VARCHAR(16),
+Pincode VARCHAR(4),
+Attempts INT,
+Blocked BIT(1)
 );
