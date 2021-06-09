@@ -4,16 +4,16 @@ import java.util.concurrent.TimeUnit;
 import jssc.*;
 
 public class Serial {
-    private static SerialPort serielePoort;
-    private static GUI gui;
-    public static boolean booted = false;
+    private static SerialPort serielePoort; // variabel om connectie te maken met serial port
+    private static GUI gui; // variabel gui
+    public static boolean booted = false; // variabel booted om te kijken of er een serial port is aangesloten
 
     public Serial(GUI g) throws SerialPortException{
         gui = g;
         startConnectie();
     }
 
-    private void startConnectie() throws SerialPortException{
+    private void startConnectie() throws SerialPortException{ // functie om connectie te starten 
         String[] beschikbarePoorten = SerialPortList.getPortNames();
         
         if (beschikbarePoorten.length == 0) {
@@ -28,7 +28,7 @@ public class Serial {
             return;
         }
         
-        System.out.println("Beschikbare com-poorten:");
+        System.out.println("Beschikbare com-poorten:"); 
         for (int i = 0; i < beschikbarePoorten.length; i++){
             System.out.println(beschikbarePoorten[i]);
         }
@@ -67,7 +67,7 @@ public class Serial {
         }
     }
 
-    public void werpGeldUit(int[] aantalBiljetten) {
+    public void werpGeldUit(int[] aantalBiljetten) { //functie om geld uit te werpen 
         String geldCommando = "dispense:";
         for(int i = 0; i < aantalBiljetten.length; i++) {
             geldCommando += aantalBiljetten[i];
@@ -84,7 +84,7 @@ public class Serial {
         }
     }
 
-    public void printBon(int geldAantal, int donatieAantal) {
+    public void printBon(int geldAantal, int donatieAantal) { // fucntie om bon te printen 
         String bonCommando = "printBon:" + geldAantal + "," + donatieAantal;
         try {
             System.out.println(bonCommando);
@@ -95,7 +95,7 @@ public class Serial {
     }
     
     // receiving response from port
-    public static class PortReader implements SerialPortEventListener {
+    public static class PortReader implements SerialPortEventListener { // functie om de port te luisteren
 
         @Override
         public void serialEvent(SerialPortEvent event) {

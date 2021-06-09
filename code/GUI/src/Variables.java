@@ -1,17 +1,17 @@
 import java.awt.Color;
 
-public class Variables {
-    public static final String 
+public class Variables { // variabel klass om alle waardevol variabel te opslaan voor de gui 
+    public static final String  // taal variabels
         Nederlands = "Nederlands", 
         Engels = "Engels";
-    public static final String 
+    public static final String  // variabels van schermen
         Hoofdscherm = "hoofd", 
         Inlogscherm = "Inlog", 
         Pinscherm = "Pin", 
         Taalscherm = "Taal", 
         KaartVerwijderdScherm = "kaartVerwijderd", 
         InvulScherm = "invulScherm";
-    public static final String 
+    public static final String // variabels van actie van de knoppen
         hoofdschermActie = "hoofdschermActie", 
         InlogActie = "inlogActie", 
         PinActie = "pinActie", 
@@ -27,11 +27,13 @@ public class Variables {
         GeenActie = "geenActie", 
         SnelPin10Actie = "pin10", 
         SnelPin70Actie = "pin70";
-    private int[] aantalBiljetten = {50, 50, 50};
-    private int[] biljetWaardes = {50, 20, 10};
+    private int[] aantalBiljetten = {50, 50, 50}; // array van aantalbiljetten
+    private int[] biljetWaardes = {50, 20, 10}; // array van biljetwaardes, er zijn drie biljetwaardes
 
-    public Color footerHeaderKleur = Color.BLACK;
-    public Color achtergrondKleur = Color.WHITE;
+
+    //kleur van verschillende aspecten van de GUI
+    public Color footerHeaderKleur = Color.BLACK; 
+    public Color achtergrondKleur = Color.WHITE; 
     public Color knopKleur = Color.GRAY;
     public Color achterAchtergrondKleur = Color.WHITE;
 
@@ -39,7 +41,7 @@ public class Variables {
 
     }
 
-    public Variables(int[] biljetwaardes, int[] aantalBiljetten) {
+    public Variables(int[] biljetwaardes, int[] aantalBiljetten) { // functie om te checken of waarde van de biljetten overeenkomen met de aantal biljetten
         if(biljetwaardes.length != aantalBiljetten.length) {
             System.out.println("De waardes van de biljetten komen niet overeen met de aantallen");
             System.exit(0);
@@ -49,15 +51,15 @@ public class Variables {
         }
     }
 
-    public int[] getAantalBiljetten() {
+    public int[] getAantalBiljetten() { // return de aantal biljetten 
         return aantalBiljetten;
     }
 
-    public int[] getBiljetWaardes() {
+    public int[] getBiljetWaardes() { // return de biljet waardes
         return biljetWaardes;
     }
 
-    public int getMaxAantalGeld() {
+    public int getMaxAantalGeld() { // return de maximaal geld die de atm kan werpen 
         int output = 0;
         for(int i = 0; i < aantalBiljetten.length; i++) {
             output += aantalBiljetten[i] * biljetWaardes[i];
@@ -65,7 +67,7 @@ public class Variables {
         return output;
     }
 
-    public void gebruikBiljetten(int[] aantalBiljetten) {
+    public void gebruikBiljetten(int[] aantalBiljetten) { //functie om welke biljetten te gebruiken 
         for(int i = 0; i < this.aantalBiljetten.length; i++) {
             this.aantalBiljetten[i] -= aantalBiljetten[i];
             if(this.aantalBiljetten[i] < 0) {

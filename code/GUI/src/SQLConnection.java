@@ -7,12 +7,10 @@ public class SQLConnection {
         startConnection();
     }
 
-    public void startConnection() throws Exception{
-        // String url = "jdbc:mysql://127.0.0.1:3306/bank";
-        // String gebruiker = "root";
-        // String wachtwoord = "0000";
-        String url = "jdbc:mysql://sql11.freesqldatabase.com:3306/sql11416191";
-        String gebruiker = "sql11416191";
+    public void startConnection() throws Exception{ // functie om connecte te maken met de database
+        
+        String url = "jdbc:mysql://sql11.freesqldatabase.com:3306/sql11416191"; // onze url voor het connectie met database 
+        String gebruiker = "sql11416191"; 
         String wachtwoord = "uGIUwBp9CN";
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -24,10 +22,10 @@ public class SQLConnection {
         }
     }
 
-    public String getCode(String uid) {
+    public String getCode(String uid) { // functie om de pincode te krijgen van een klant
         try {
-            Statement stmt = connectie.createStatement();
-            String statement = "select * from Debitcard where Debitcard_id = '" + uid + "';";
+            Statement stmt = connectie.createStatement(); 
+            String statement = "select * from Debitcard where Debitcard_id = '" + uid + "';"; // execute de sql statement
             ResultSet resultaat = stmt.executeQuery(statement);
             resultaat.next();
             if(resultaat.getBoolean(5) == true) {
@@ -41,7 +39,7 @@ public class SQLConnection {
         return null;
     }
 
-    public String[] getDetails(String uid) {
+    public String[] getDetails(String uid) { // functie om persoonlijk informatie te krijgen van een klant 
         String[] result = {"0"};
         try {
             Statement stmt = connectie.createStatement();
@@ -55,7 +53,7 @@ public class SQLConnection {
         return result;
     }
 
-    public void blokkeerKaart(String uid, boolean block) {
+    public void blokkeerKaart(String uid, boolean block) { // functie om kaart te blokkeren
         try {
             Statement stmt = connectie.createStatement();
             String statement = "";
@@ -71,7 +69,7 @@ public class SQLConnection {
         }
     }
 
-    public boolean isBlocked(String uid) {
+    public boolean isBlocked(String uid) { // functie om te checken of een kaart is geblocked
         try {
             Statement stmt = connectie.createStatement();
             String statement = "select * from Debitcard where Debitcard_id = '" + uid + "';";
@@ -84,7 +82,7 @@ public class SQLConnection {
         return true;
     }
 
-    public int aantalPogingen(String uid) {
+    public int aantalPogingen(String uid) { // functie om te checken hoeveel pogingen een klant heeft
         try {
             Statement stmt = connectie.createStatement();
             String statement = "select * from Debitcard where Debitcard_id = '" + uid + "';";
@@ -97,7 +95,7 @@ public class SQLConnection {
         return 3;
     }
 
-    public void setAantalPogingen(String uid, int aantal) {
+    public void setAantalPogingen(String uid, int aantal) { // functie om de aantal poging van een klant te wijzigen 
         try {
             Statement stmt = connectie.createStatement();
             String statement = "update Debitcard set Attemps = " + aantal + " where Debitcard_id = '" + uid + "';";
@@ -107,7 +105,7 @@ public class SQLConnection {
         }
     }
 
-    public void setSaldo(String uid, int aantal) {
+    public void setSaldo(String uid, int aantal) { // functie om de saldo te veranderen
         try {
             Statement stmt = connectie.createStatement();
             String statement = "update Accounts set Balance = " + aantal + " where Debitcard_id = '" + uid + "';";

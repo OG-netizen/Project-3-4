@@ -14,38 +14,37 @@ import java.util.concurrent.TimeUnit;
 */
 
 public class GUI extends JFrame implements ActionListener {
-    Variables variables = new Variables();
-    private String huidigeTaal = Variables.Nederlands, huidigeUid;
-    private ArrayList<String> laatsteSchermen = new ArrayList<String>();
-    private Serial SerieleConnectie;
-    private SQLConnection SQLconnectie;
 
+    Variables variables = new Variables(); // instance van de klass variables
+    private String huidigeTaal = Variables.Nederlands, huidigeUid; // variabel om de huidige taal te opslagen
+    private ArrayList<String> laatsteSchermen = new ArrayList<String>();  // een arraylist om de laatse scherm te onthouden
+    private ArrayList<String> code = new ArrayList<String>(); // arraylist om van codes
+    private Serial SerieleConnectie; // variabel om de serial port te lezen 
+    private SQLConnection SQLconnectie; // variabel om connectie te kunnen maken met datase
+   
+    private int breedte = 600, hoogte = 800; // scherm grootte
+    private JButton[] knoppen = new JButton[8]; // 8 knoppen wordt geïnitialiseerd
+    private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100; // hoogte van onderkant,logo en breedte van de knop wordt bepaald
 
-    private int breedte = 600, hoogte = 800;
-    private JButton[] knoppen = new JButton[8];
-    private int logoHoogte = 125, knopBreedte = 300, onderkantHoogte = 100;
+    private JPanel venster = new JPanel(); // midden venster
+    private JPanel vensterLinks = new JPanel(); // recht venster
+    private JPanel vensterRechts = new JPanel(); // links venster
+    private JPanel logo = new JPanel(); // logo variabel 
+    private JPanel tekstPaneel = new JPanel(); // tekstpaneel variabel 
+    private JPanel onderkant = new JPanel();  // onderkant variabel
+    private JLabel plaatsKaart = new JLabel(); // plaatskaart variabel 
+    private JLabel logoLabel = new JLabel(); // logoLabel variabel
+    private ImageIcon plaatsKaartIcon = new ImageIcon("Images/insert card.png"); // foto logo 
+    private ImageIcon logoIcon = new ImageIcon("Images/logo_white_trans_sfw.png."); // foto logo 
 
-    private JPanel venster = new JPanel();
-    private JPanel vensterLinks = new JPanel();
-    private JPanel vensterRechts = new JPanel();
-    private JPanel logo = new JPanel();
-    private JPanel tekstPaneel = new JPanel();
-    private JPanel onderkant = new JPanel();
-    private JLabel plaatsKaart = new JLabel();
-    private JLabel logoLabel = new JLabel();
-    private ImageIcon plaatsKaartIcon = new ImageIcon("Images/insert card.png");
-    private ImageIcon logoIcon = new ImageIcon("Images/logo_white_trans_sfw.png.");
-
-    private ArrayList<String> code = new ArrayList<String>();
-
-    JLabel tekst1 = new JLabel("", SwingConstants.CENTER);
+    JLabel tekst1 = new JLabel("", SwingConstants.CENTER); // variabel van tekst gemaakt in het midden van gui
     JLabel tekst2 = new JLabel("", SwingConstants.CENTER);
     JLabel tekst3 = new JLabel("", SwingConstants.CENTER);
     JLabel tekst4 = new JLabel("", SwingConstants.CENTER);
-    JLabel codeTekst = new JLabel("", SwingConstants.CENTER);
+    JLabel codeTekst = new JLabel("", SwingConstants.CENTER); // variabel tekst voor de code die in het midden van de GUI schijnt
 
-    public void startGUI(Serial s, SQLConnection c) {
-        SerieleConnectie = s;
+    public void startGUI(Serial s, SQLConnection c) { // method de gui te starten 
+        SerieleConnectie = s; 
         SQLconnectie = c;
         knoppen = new JButton[8];
         setSize(breedte, hoogte);
@@ -56,13 +55,13 @@ public class GUI extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    private void createGUI() {
+    private void createGUI() { //method om de layout van de gui te maken 
         setDefaultCloseOperation(EXIT_ON_CLOSE);        
         getContentPane().setLayout(new BorderLayout(50, 50));
 
-        venster.setFont(new Font("Calibri", Font.PLAIN, 50));
-        venster.setAlignmentX(CENTER_ALIGNMENT);
-        venster.setBackground(variables.achtergrondKleur);
+        venster.setFont(new Font("Calibri", Font.PLAIN, 50)); // de font wordt bepaald
+        venster.setAlignmentX(CENTER_ALIGNMENT); // de uitlijning van de venster            
+        venster.setBackground(variables.achtergrondKleur); // kleur van de venster, in de variables klass kun je zien welke kleur dit is
 
         vensterLinks.setLayout(new GridLayout(4 , 1, 50, 50));
         vensterLinks.setPreferredSize(new Dimension(knopBreedte, MAXIMIZED_VERT));
@@ -72,38 +71,38 @@ public class GUI extends JFrame implements ActionListener {
         vensterRechts.setPreferredSize(new Dimension(knopBreedte, MAXIMIZED_VERT));
         vensterRechts.setBackground(variables.achtergrondKleur);
 
-        logo.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, logoHoogte));
-        logo.setBackground(variables.footerHeaderKleur);
+        logo.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, logoHoogte)); // size van de logo wordt bepaald
+        logo.setBackground(variables.footerHeaderKleur); // achtergond kleur van de logo 
 
-        tekstPaneel.setLayout(new GridLayout(10, 1, venster.getWidth(), venster.getHeight()));
-        tekstPaneel.setBackground(variables.achtergrondKleur);
+        tekstPaneel.setLayout(new GridLayout(10, 1, venster.getWidth(), venster.getHeight())); // tekst paneel layout wordt bepaa,d
+        tekstPaneel.setBackground(variables.achtergrondKleur); // kleur van de tekspaneel achtergrond
 
-        onderkant.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, onderkantHoogte));
+        onderkant.setPreferredSize(new Dimension(MAXIMIZED_HORIZ - knopBreedte * 2, onderkantHoogte)); 
         onderkant.setBackground(variables.footerHeaderKleur);
 
-        plaatsKaart.setIcon(plaatsKaartIcon);
+        plaatsKaart.setIcon(plaatsKaartIcon); // icon foto 
         
-        logoLabel.setIcon(logoIcon);
+        logoLabel.setIcon(logoIcon); 
 
-        for(int i = 0; i < knoppen.length; i++) {
+        for(int i = 0; i < knoppen.length; i++) { // for loop om 8 knoppen en hun kenmerken te maken 
             knoppen[i] = new JButton(String.valueOf(i));
             knoppen[i].setFont(new Font("Calibri", Font.BOLD, 20));
             knoppen[i].setBackground(variables.knopKleur);
             if(i < 4) {
-                vensterLinks.add(knoppen[i]);
+                vensterLinks.add(knoppen[i]); // 4 knoppen naar de links en 4 knoppen naar recht
             } else {
                 vensterRechts.add(knoppen[i]);
             }
             knoppen[i].addActionListener(this);
         }
 
-        venster.add(plaatsKaart);
+        venster.add(plaatsKaart); 
         venster.add(tekstPaneel);
         logo.add(logoLabel);
 
-        getContentPane().add(vensterLinks, BorderLayout.WEST);
-        getContentPane().add(vensterRechts, BorderLayout.EAST);
-        getContentPane().add(venster, BorderLayout.CENTER);
+        getContentPane().add(vensterLinks, BorderLayout.WEST); // venster links gaat naar west
+        getContentPane().add(vensterRechts, BorderLayout.EAST);// venster recht gaat naar east
+        getContentPane().add(venster, BorderLayout.CENTER); 
         getContentPane().add(logo, BorderLayout.NORTH);
         getContentPane().add(onderkant, BorderLayout.SOUTH);
         getContentPane().setBackground(variables.achterAchtergrondKleur);
@@ -122,7 +121,7 @@ public class GUI extends JFrame implements ActionListener {
         hoofdscherm();
     }
 
-    public void hoofdscherm() {
+    public void hoofdscherm() { // hoofdscherm functie bevat de layout van de hoofdscherm
         laatsteSchermen.clear();
         resetKnopEnTekst();
         plaatsKaart.setVisible(true);
@@ -141,7 +140,7 @@ public class GUI extends JFrame implements ActionListener {
         keypadOpKnoppen();
     }
 
-    private void inlogScherm() {
+    private void inlogScherm() { // inlog scherm functie bevat de layout van de inlog scherm
         resetKnopEnTekst();
         laatsteSchermen.add(Variables.Inlogscherm);
         plaatsKaart.setVisible(false);
@@ -180,7 +179,7 @@ public class GUI extends JFrame implements ActionListener {
         keypadOpKnoppen();
     }
 
-    private void pinScherm() {
+    private void pinScherm() { // pinscherm functie bevat de layout van de pinscherm
         resetKnopEnTekst();
         laatsteSchermen.add(Variables.Pinscherm);
         String[] details = SQLconnectie.getDetails(huidigeUid);
@@ -219,7 +218,7 @@ public class GUI extends JFrame implements ActionListener {
         keypadOpKnoppen();
     }
 
-    private void bedragInvulScherm() {
+    private void bedragInvulScherm() { // bedraginvulscherm fucntie bevat de layout van de bedraginvulscherm
         resetKnopEnTekst();
         laatsteSchermen.add(Variables.InvulScherm);
         String[] details = SQLconnectie.getDetails(huidigeUid);
@@ -252,7 +251,7 @@ public class GUI extends JFrame implements ActionListener {
         keypadOpKnoppen();
     }
 
-    private void veranderTaalScherm() {
+    private void veranderTaalScherm() { // veranderTaalScherm fucntie bevat de layout van de veranderTaalScherm
         resetKnopEnTekst();
         laatsteSchermen.add(Variables.Taalscherm);
 
@@ -274,7 +273,7 @@ public class GUI extends JFrame implements ActionListener {
         keypadOpKnoppen();
     }
 
-    private void kaartVerwijderdScherm() {
+    private void kaartVerwijderdScherm() { // veranderTaalScherm fucntie bevat de layout van de veranderTaalScherm
         if(laatsteSchermen.size() < 1) {
             if(huidigeTaal == Variables.Engels) {
                 tekst1.setText("U are logged out");
@@ -314,7 +313,7 @@ public class GUI extends JFrame implements ActionListener {
         keypadOpKnoppen();
     }
 
-    public void geldUitwerpScherm() {
+    public void geldUitwerpScherm() { // geldUitwerpScherm fucntie bevat de layout van de geldUitwerpScherm
         String codeTekstString = codeTekst.getText();
         resetKnopEnTekst();
 
@@ -332,7 +331,7 @@ public class GUI extends JFrame implements ActionListener {
         keypadOpKnoppen();
     }
 
-    public void printBonScherm() {
+    public void printBonScherm() { // printBonScherm fucntie bevat de layout van de printBonScherm
         try {
             int geldAantal = (int) Math.round(Float.parseFloat(codeTekst.getText()) / 10) * 10;
             SerieleConnectie.printBon(geldAantal, 0);
@@ -355,7 +354,7 @@ public class GUI extends JFrame implements ActionListener {
         keypadOpKnoppen();
     }
 
-    public void ontvangenToets(String data) {
+    public void ontvangenToets(String data) { // functie om de data uit de keypad te onthouden 
         String huidigScherm = Variables.Hoofdscherm;
         if(laatsteSchermen.size() > 0) {
             huidigScherm = laatsteSchermen.get(laatsteSchermen.size() - 1);
@@ -370,8 +369,8 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    public void invulschermKeypad(String data) {
-        if(!(data.contains("A") || 
+    public void invulschermKeypad(String data) { // functie voor het invullen en behandelen van de pincode
+        if(!(data.contains("A") || // als je nummer heeft getoets dan wordt het gepakt anders niet
             data.contains("B") || 
             data.contains("C") || 
             data.contains("D") || 
@@ -405,7 +404,7 @@ public class GUI extends JFrame implements ActionListener {
         keypadKnoppen(data);
     }
 
-    public void inlogschermKeypad(String data) {
+    public void inlogschermKeypad(String data) { // functie voor het inlogschermkeypad
         String gemaskerdeCode = "";
         if(data.contains("D")) {
             if(checkCode()) {
@@ -459,7 +458,7 @@ public class GUI extends JFrame implements ActionListener {
         keypadKnoppen(data);
     }
 
-    public void keypadKnoppen(String data) {
+    public void keypadKnoppen(String data) { // functie voor het keypad knoppen 
         if(data.contains("1")){
             knopGedrukt(knoppen[0].getActionCommand());
         } else if(data.contains("4")){
@@ -482,7 +481,7 @@ public class GUI extends JFrame implements ActionListener {
 
     }
 
-    private boolean checkCode() {
+    private boolean checkCode() { // functie om te bepalen of de code correct is
         String checkCode = SQLconnectie.getCode(huidigeUid);
         String newCode = String.join("", code);
         if(newCode.equals(checkCode)) {
@@ -494,18 +493,18 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    public void kaartVerwijderd() {
+    public void kaartVerwijderd() { //funcite als het kaart is verwijderd
         code.clear();
         huidigeUid = null;
         kaartVerwijderdScherm();
     }
 
-    public void uidInGebruik(String uid) {
+    public void uidInGebruik(String uid) { // funcite als het RFID een uid detecteert
         huidigeUid = uid;
         inlogScherm();
     }
 
-    private void laatsteScherm() {
+    private void laatsteScherm() { // functie om te bepalen welke scherm is het laatst
         System.out.println(laatsteSchermen);
         String laatsteScherm;
         if(laatsteSchermen.size() > 1) {
@@ -534,7 +533,7 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    private void pinGeld() {
+    private void pinGeld() { // funcite om geld te pinnen 
         int[] waardes = variables.getBiljetWaardes();
         int[] aantal = variables.getAantalBiljetten();
         int[] gebruikAantal = new int[waardes.length];
@@ -560,7 +559,7 @@ public class GUI extends JFrame implements ActionListener {
             System.out.println("Er ging iets mis met het verwerken van het aantal" + e);
         }
         System.out.println("bedrag te pinnen: " + geldAantal);
-        for(int i = 0; i < waardes.length; i++) {
+        for(int i = 0; i < waardes.length; i++) { // for loop te bepalen van groot naar klein de biljet waardes
             gebruikAantal[i] = geldAantal / waardes[i];
             geldAantal %= waardes[i];
             if(gebruikAantal[i] > aantal[i]) {
@@ -576,7 +575,7 @@ public class GUI extends JFrame implements ActionListener {
         geldUitwerpScherm();
     }
 
-    private void resetKnopEnTekst() {
+    private void resetKnopEnTekst() { // functie voor het maken reset knop en tekst
         for(int i = 0; i < knoppen.length; i++) {
             knoppen[i].setText(null);
             knoppen[i].setVisible(false);
@@ -600,7 +599,7 @@ public class GUI extends JFrame implements ActionListener {
         codeTekst.setForeground(Color.black);
     }
 
-    private void keypadOpKnoppen() {
+    private void keypadOpKnoppen() { 
         String[] keypadKnoppen = {"1", "4", "7", "*", "A", "B", "C", "#"};
         for(int i = 0; i < knoppen.length; i++) {
             if(knoppen[i].isVisible()) {
@@ -609,7 +608,7 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) { //functie "action listener" het luister naar de keypad die wordt gedrukt
         String uitgevoerdeActie = e.getActionCommand();
         knopGedrukt(uitgevoerdeActie);
         // switch (uitgevoerdeActie) {
@@ -647,7 +646,7 @@ public class GUI extends JFrame implements ActionListener {
         System.out.println("knop: " + uitgevoerdeActie);
     }
 
-    private void knopGedrukt(String action) {
+    private void knopGedrukt(String action) { // functie om te bepalen wat te doen als keypad knop werd gedrukt
         switch (action) {
             case Variables.AfsluitActie:
                 System.exit(0);
