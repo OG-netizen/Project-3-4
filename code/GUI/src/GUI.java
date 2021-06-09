@@ -34,7 +34,7 @@ public class GUI extends JFrame implements ActionListener {
     private JLabel plaatsKaart = new JLabel();
     private JLabel logoLabel = new JLabel();
     private ImageIcon plaatsKaartIcon = new ImageIcon("Images/insert card.png");
-    private ImageIcon logoIcon = new ImageIcon("Images/logo_white_trans.png");
+    private ImageIcon logoIcon = new ImageIcon("Images/logo_white_trans_sfw.png.");
 
     private ArrayList<String> code = new ArrayList<String>();
 
@@ -137,6 +137,8 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[7].setActionCommand(Variables.AfsluitActie);;
         knoppen[3].setVisible(true);
         knoppen[7].setVisible(true);
+
+        keypadOpKnoppen();
     }
 
     private void inlogScherm() {
@@ -174,6 +176,8 @@ public class GUI extends JFrame implements ActionListener {
                 tekst4.setText("Deze kaart is geblokkeerd");
             }
         }
+
+        keypadOpKnoppen();
     }
 
     private void pinScherm() {
@@ -181,7 +185,7 @@ public class GUI extends JFrame implements ActionListener {
         laatsteSchermen.add(Variables.Pinscherm);
         String[] details = SQLconnectie.getDetails(huidigeUid);
         if(huidigeTaal == Variables.Engels){
-            knoppen[1].setText("Pin 10");
+            knoppen[0].setText("Pin 10");
             knoppen[3].setText("Change language");
             knoppen[4].setText("Pin 70");
             knoppen[5].setText("Enter amount");
@@ -189,7 +193,7 @@ public class GUI extends JFrame implements ActionListener {
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Balance: " + details[0]);
         } else if(huidigeTaal == Variables.Nederlands){
-            knoppen[1].setText("Pin 10");
+            knoppen[0].setText("Pin 10");
             knoppen[3].setText("Verander taal");
             knoppen[4].setText("Pin 70");
             knoppen[5].setText("Bedrag invoeren");
@@ -197,11 +201,13 @@ public class GUI extends JFrame implements ActionListener {
             tekst1.setText("Iban: " + huidigeUid);
             tekst2.setText("Saldo: " + details[0]);
         }
+        knoppen[0].setActionCommand(Variables.SnelPin10Actie);
         knoppen[3].setActionCommand(Variables.TaalActie);
+        knoppen[4].setActionCommand(Variables.SnelPin70Actie);
         knoppen[5].setActionCommand(Variables.BedragInvoerActie);
         knoppen[7].setActionCommand(Variables.TerugActie);
 
-        knoppen[1].setVisible(true);
+        knoppen[0].setVisible(true);
         knoppen[3].setVisible(true);
         knoppen[4].setVisible(true);
         knoppen[5].setVisible(true);
@@ -209,6 +215,8 @@ public class GUI extends JFrame implements ActionListener {
 
         tekst1.setVisible(true);
         tekst2.setVisible(true);
+
+        keypadOpKnoppen();
     }
 
     private void bedragInvulScherm() {
@@ -240,6 +248,8 @@ public class GUI extends JFrame implements ActionListener {
         tekst2.setVisible(true);
         tekst4.setForeground(Color.black);
         tekst4.setVisible(true);
+
+        keypadOpKnoppen();
     }
 
     private void veranderTaalScherm() {
@@ -260,6 +270,8 @@ public class GUI extends JFrame implements ActionListener {
         knoppen[1].setVisible(true);
         knoppen[5].setVisible(true);
         knoppen[7].setVisible(true);
+
+        keypadOpKnoppen();
     }
 
     private void kaartVerwijderdScherm() {
@@ -298,6 +310,8 @@ public class GUI extends JFrame implements ActionListener {
         } finally {
             hoofdscherm();
         }
+
+        keypadOpKnoppen();
     }
 
     public void geldUitwerpScherm() {
@@ -314,6 +328,8 @@ public class GUI extends JFrame implements ActionListener {
         codeTekst.setText(codeTekstString);
         tekst1.setVisible(true);
         tekst4.setVisible(true);
+
+        keypadOpKnoppen();
     }
 
     public void printBonScherm() {
@@ -335,94 +351,135 @@ public class GUI extends JFrame implements ActionListener {
 
         tekst1.setVisible(true);
         tekst4.setVisible(true);
+
+        keypadOpKnoppen();
     }
 
     public void ontvangenToets(String data) {
-        String huidigeScherm = Variables.Hoofdscherm;
+        String huidigScherm = Variables.Hoofdscherm;
         if(laatsteSchermen.size() > 0) {
-            huidigeScherm = laatsteSchermen.get(laatsteSchermen.size() - 1);
+            huidigScherm = laatsteSchermen.get(laatsteSchermen.size() - 1);
         }
 
-        if(huidigeUid == null || SQLconnectie.isBlocked(huidigeUid)) {
-            return;
+        if(huidigScherm == Variables.InvulScherm) {
+            invulschermKeypad(data);
+        } else if(huidigScherm == Variables.Inlogscherm) {
+            inlogschermKeypad(data);
+        } else {
+            keypadKnoppen(data);
         }
-        if(huidigeScherm == Variables.InvulScherm) {
-            if(!data.contains("A") && !data.contains("B") && !data.contains("C") && !data.contains("D")) {
-                if(!(data.contains("0") && codeTekst.getText().length() == 0)) {
-                    String laatsteAantal = codeTekst.getText();
-                    codeTekst.setText(codeTekst.getText() + data);
-                    int geldAantal = Integer.parseInt(codeTekst.getText());
-                    if(geldAantal > variables.getMaxAantalGeld() || geldAantal > Integer.parseInt(SQLconnectie.getDetails(huidigeUid)[0])) {
-                        codeTekst.setText(laatsteAantal);
-                        if(huidigeTaal == Variables.Engels) {
-                            tekst4.setText("The entered amount is too much");
-                        } else if(huidigeTaal == Variables.Nederlands) {
-                            tekst4.setText("Het aantal dat u heeft ingevoerd is te veel");
-                        }
+    }
 
-                        tekst4.setForeground(Color.red);
-                        tekst4.setVisible(true);
-                    } else {
-                        tekst4.setForeground(Color.black);
-                        tekst4.setVisible(false);
+    public void invulschermKeypad(String data) {
+        if(!(data.contains("A") || 
+            data.contains("B") || 
+            data.contains("C") || 
+            data.contains("D") || 
+            data.contains("*") || 
+            data.contains("#"))
+            ) {
+            if(!(codeTekst.getText().length() == 0 && data.contains("0"))) {
+                String laatsteAantal = codeTekst.getText();
+                codeTekst.setText(laatsteAantal + data);
+                int nieuwAantal = Integer.parseInt(codeTekst.getText());
+                if( nieuwAantal > variables.getMaxAantalGeld() || 
+                    nieuwAantal > Integer.parseInt(SQLconnectie.getDetails(huidigeUid)[0])
+                    ) {
+                    codeTekst.setText(laatsteAantal);
+                    if(huidigeTaal == Variables.Engels) {
+                        tekst4.setText("The entered amount is too much");
+                    } else if(huidigeTaal == Variables.Nederlands) {
+                        tekst4.setText("Het aantal dat u heeft ingevoerd is te veel");
                     }
+                    tekst4.setForeground(Color.red);
+                    tekst4.setVisible(true);
+                } else {
+                    tekst4.setForeground(Color.black);
+                    tekst4.setVisible(false);
                 }
             } else if(data.contains("C")) {
                 codeTekst.setText("");
             }
-        } else if(huidigeScherm == Variables.Inlogscherm) {
-            String gemaskerdeCode = "";
-            if(data.contains("D")) {
-                if(checkCode()) {
-                    SQLconnectie.setAantalPogingen(huidigeUid, 0);
-                    pinScherm();
-                    code.clear();
-                    tekst4.setForeground(Color.green);
-                    if(huidigeTaal == Variables.Engels) {
-                        tekst4.setText("Succesfully logged in");
-                    } else if(huidigeTaal == Variables.Nederlands) {
-                        tekst4.setText("Succesvol ingelogd");
-                    }
-                    
-                } else {
-                    tekst4.setForeground(Color.red);
-                    int resterendePogingen = 3 - SQLconnectie.aantalPogingen(huidigeUid) - 1;
-                    SQLconnectie.setAantalPogingen(huidigeUid, 3 - resterendePogingen);
-                    System.out.println("Nog " + resterendePogingen + " pogingen");
-                    if(huidigeTaal == Variables.Engels) {
-                        if(resterendePogingen == 2) {
-                            tekst4.setText("2 Remaining attempts"); 
-                        }else if(resterendePogingen == 1) {
-                            tekst4.setText("1 Remaining attempt");
-                        }else if(resterendePogingen <= 0) {
-                            SQLconnectie.blokkeerKaart(huidigeUid, true);
-                            tekst4.setText("No more attempts left. Ur card has been blocked");
-                        }
-                    } else if(huidigeTaal == Variables.Nederlands) {
-                        if(resterendePogingen == 2) {
-                            tekst4.setText("Nog 2 resterende pogingen"); 
-                        }else if(resterendePogingen == 1) {
-                            tekst4.setText("Nog 1 resterende poging");
-                        }else if(resterendePogingen <= 0) {
-                            SQLconnectie.blokkeerKaart(huidigeUid, true);
-                            tekst4.setText("Geen pogingen meer over. Uw kaart is geblokkeerd");
-                        }
-                    }
-                    code.clear();
-                }
-                tekst4.setVisible(true);
-            } else if(data.contains("C")) {
-                code.clear();
-            } else if(code.size() < 6) {
-                code.add(data);
-            }
-
-            for(int i = 0; i < code.size(); i++) {
-                gemaskerdeCode += "*";
-            }
-            codeTekst.setText(gemaskerdeCode);
         }
         codeTekst.setVisible(true);
+        keypadKnoppen(data);
+    }
+
+    public void inlogschermKeypad(String data) {
+        String gemaskerdeCode = "";
+        if(data.contains("D")) {
+            if(checkCode()) {
+                SQLconnectie.setAantalPogingen(huidigeUid, 0);
+                code.clear();
+                pinScherm();
+                tekst4.setForeground(Color.green);
+                if(huidigeTaal == Variables.Engels) {
+                    tekst4.setText("Succesfully logged in");
+                } else if(huidigeTaal == Variables.Nederlands) {
+                    tekst4.setText("Succesvol ingelogd");
+                }
+            } else {
+                tekst4.setForeground(Color.red);
+                int resterendePogingen = 3 - SQLconnectie.aantalPogingen(huidigeUid) - 1;
+                SQLconnectie.setAantalPogingen(huidigeUid, 3 - resterendePogingen);
+                //System.out.println("Nog " + resterendePogingen + " pogingen");
+                if(huidigeTaal == Variables.Engels) {
+                    if(resterendePogingen == 2) {
+                        tekst4.setText("2 Remaining attempts"); 
+                    }else if(resterendePogingen == 1) {
+                        tekst4.setText("1 Remaining attempt");
+                    }else if(resterendePogingen <= 0) {
+                        SQLconnectie.blokkeerKaart(huidigeUid, true);
+                        tekst4.setText("No more attempts left. Ur card has been blocked");
+                    }
+                } else if(huidigeTaal == Variables.Nederlands) {
+                    if(resterendePogingen == 2) {
+                        tekst4.setText("Nog 2 resterende pogingen"); 
+                    }else if(resterendePogingen == 1) {
+                        tekst4.setText("Nog 1 resterende poging");
+                    }else if(resterendePogingen <= 0) {
+                        SQLconnectie.blokkeerKaart(huidigeUid, true);
+                        tekst4.setText("Geen pogingen meer over. Uw kaart is geblokkeerd");
+                    }
+                }
+                code.clear();
+            }
+            tekst4.setVisible(true);
+        } else if(data.contains("C")) {
+            code.clear();
+        } else if(code.size() < 6) {
+            code.add(data);
+        }
+
+        for(int i = 0; i < code.size(); i++) {
+            gemaskerdeCode += "*";
+        }
+        codeTekst.setText(gemaskerdeCode);
+        codeTekst.setVisible(true);
+        keypadKnoppen(data);
+    }
+
+    public void keypadKnoppen(String data) {
+        if(data.contains("1")){
+            knopGedrukt(knoppen[0].getActionCommand());
+        } else if(data.contains("4")){
+            knopGedrukt(knoppen[1].getActionCommand());
+        } else if(data.contains("7")){
+            knopGedrukt(knoppen[2].getActionCommand());
+        } else if(data.contains("*")){
+            knopGedrukt(knoppen[3].getActionCommand());
+        } else if(data.contains("A")){
+            knopGedrukt(knoppen[4].getActionCommand());
+        } else if(data.contains("B")){
+            knopGedrukt(knoppen[5].getActionCommand());
+        } else if(data.contains("C")){
+            knopGedrukt(knoppen[6].getActionCommand());
+        } else if(data.contains("#")){
+            knopGedrukt(knoppen[7].getActionCommand());
+        } else {
+            System.out.println("ongeldige knop.");
+        }
+
     }
 
     private boolean checkCode() {
@@ -495,8 +552,10 @@ public class GUI extends JFrame implements ActionListener {
             return;
         }
         int geldAantal = 0;
+        int geldConstant = 0;
         try {
             geldAantal = (int) Math.round(Float.parseFloat(geldAantalString) / 10) * 10;
+            geldConstant = geldAantal;
         } catch (NumberFormatException e) {
             System.out.println("Er ging iets mis met het verwerken van het aantal" + e);
         }
@@ -510,11 +569,10 @@ public class GUI extends JFrame implements ActionListener {
             }
             System.out.println(waardes[i] + "\t" + gebruikAantal[i]);
         }
-        geldAantal = (int) Math.round(Float.parseFloat(geldAantalString) / 10) * 10;
         variables.gebruikBiljetten(gebruikAantal);
-
         SerieleConnectie.werpGeldUit(gebruikAantal);
-        SQLconnectie.setSaldo(huidigeUid, Integer.parseInt(SQLconnectie.getDetails(huidigeUid)[0]) - geldAantal);
+        System.out.println("bedrag gepint: " + geldConstant);
+        SQLconnectie.setSaldo(huidigeUid, Integer.parseInt(SQLconnectie.getDetails(huidigeUid)[0]) - geldConstant);
         geldUitwerpScherm();
     }
 
@@ -522,6 +580,7 @@ public class GUI extends JFrame implements ActionListener {
         for(int i = 0; i < knoppen.length; i++) {
             knoppen[i].setText(null);
             knoppen[i].setVisible(false);
+            knoppen[i].setActionCommand(Variables.GeenActie);
         }
 
         tekst1.setText(null);
@@ -541,10 +600,55 @@ public class GUI extends JFrame implements ActionListener {
         codeTekst.setForeground(Color.black);
     }
 
+    private void keypadOpKnoppen() {
+        String[] keypadKnoppen = {"1", "4", "7", "*", "A", "B", "C", "#"};
+        for(int i = 0; i < knoppen.length; i++) {
+            if(knoppen[i].isVisible()) {
+                knoppen[i].setText(knoppen[i].getText() + " (" + keypadKnoppen[i] + ")");
+            }
+        }
+    }
+
     public void actionPerformed(ActionEvent e) {
         String uitgevoerdeActie = e.getActionCommand();
+        knopGedrukt(uitgevoerdeActie);
+        // switch (uitgevoerdeActie) {
+        //     case Variables.AfsluitActie:
+        //         System.exit(0);
+        //         break;
+        //     case Variables.PinActie:
+        //         pinScherm();
+        //         break;
+        //     case Variables.TaalActie:
+        //         veranderTaalScherm();
+        //         break;
+        //     case Variables.TaalEngelsActie:
+        //         huidigeTaal = Variables.Engels;
+        //         laatsteScherm();
+        //         break;
+        //     case Variables.TaalNederlandsActie:
+        //         huidigeTaal = Variables.Nederlands;
+        //         laatsteScherm();
+        //         break;
+        //     case Variables.BedragInvoerActie:
+        //         bedragInvulScherm();
+        //         break;
+        //     case Variables.TerugActie:
+        //         laatsteScherm();
+        //         break;
+        //     case Variables.PinGeldActie:
+        //         pinGeld();
+        //         break;
+        //     default:
+        //         System.out.println("weet niet wat te doen! " + uitgevoerdeActie);
+        //         break;
+        //}
 
-        switch (uitgevoerdeActie) {
+        System.out.println("knop: " + uitgevoerdeActie);
+    }
+
+    private void knopGedrukt(String action) {
+        switch (action) {
             case Variables.AfsluitActie:
                 System.exit(0);
                 break;
@@ -571,11 +675,17 @@ public class GUI extends JFrame implements ActionListener {
             case Variables.PinGeldActie:
                 pinGeld();
                 break;
+            case Variables.SnelPin10Actie:
+                codeTekst.setText("10");
+                pinGeld();
+                break;
+            case Variables.SnelPin70Actie:
+                codeTekst.setText("70");
+                pinGeld();
+                break;
             default:
-                System.out.println("weet niet wat te doen! " + uitgevoerdeActie);
+                System.out.println("weet niet wat te doen! " + action);
                 break;
         }
-
-        System.out.println("knop: " + uitgevoerdeActie);
     }
 }

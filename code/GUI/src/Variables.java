@@ -1,9 +1,32 @@
 import java.awt.Color;
 
 public class Variables {
-    public static final String Nederlands = "Nederlands", Engels = "Engels";
-    public static final String Hoofdscherm = "hoofd", Inlogscherm = "Inlog", Pinscherm = "Pin", Taalscherm = "Taal", KaartVerwijderdScherm = "kaartVerwijderd", InvulScherm = "invulScherm";
-    public static final String hoofdschermActie = "hoofdschermActie", InlogActie = "inlogActie", PinActie = "pinActie", TaalActie = "taalActie", KaartVerwijderdActie = "kaartVerwijderdActie", TerugActie = "terugActie", AfsluitActie = "afsluitActie", TaalEngelsActie = "taalEngelsActie", TaalNederlandsActie = "taalNederlandsActie", BedragInvoerActie = "bedragInvoerActie", PinGeldActie = "pinGeldActie",GereedActie = "gereedActie";
+    public static final String 
+        Nederlands = "Nederlands", 
+        Engels = "Engels";
+    public static final String 
+        Hoofdscherm = "hoofd", 
+        Inlogscherm = "Inlog", 
+        Pinscherm = "Pin", 
+        Taalscherm = "Taal", 
+        KaartVerwijderdScherm = "kaartVerwijderd", 
+        InvulScherm = "invulScherm";
+    public static final String 
+        hoofdschermActie = "hoofdschermActie", 
+        InlogActie = "inlogActie", 
+        PinActie = "pinActie", 
+        TaalActie = "taalActie", 
+        KaartVerwijderdActie = "kaartVerwijderdActie", 
+        TerugActie = "terugActie", 
+        AfsluitActie = "afsluitActie", 
+        TaalEngelsActie = "taalEngelsActie", 
+        TaalNederlandsActie = "taalNederlandsActie", 
+        BedragInvoerActie = "bedragInvoerActie", 
+        PinGeldActie = "pinGeldActie", 
+        GereedActie = "gereedActie", 
+        GeenActie = "geenActie", 
+        SnelPin10Actie = "pin10", 
+        SnelPin70Actie = "pin70";
     private int[] aantalBiljetten = {50, 50, 50};
     private int[] biljetWaardes = {50, 20, 10};
 

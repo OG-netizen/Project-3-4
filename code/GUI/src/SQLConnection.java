@@ -8,9 +8,12 @@ public class SQLConnection {
     }
 
     public void startConnection() throws Exception{
-        String url = "jdbc:mysql://127.0.0.1:3306/bank";
-        String gebruiker = "root";
-        String wachtwoord = "0000";
+        // String url = "jdbc:mysql://127.0.0.1:3306/bank";
+        // String gebruiker = "root";
+        // String wachtwoord = "0000";
+        String url = "jdbc:mysql://sql11.freesqldatabase.com:3306/sql11416191";
+        String gebruiker = "sql11416191";
+        String wachtwoord = "uGIUwBp9CN";
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             connectie = DriverManager.getConnection(url, gebruiker, wachtwoord);
@@ -24,13 +27,13 @@ public class SQLConnection {
     public String getCode(String uid) {
         try {
             Statement stmt = connectie.createStatement();
-            String statement = "select * from debitcard where debitcard_id = '" + uid + "';";
+            String statement = "select * from Debitcard where Debitcard_id = '" + uid + "';";
             ResultSet resultaat = stmt.executeQuery(statement);
             resultaat.next();
-            if(resultaat.getBoolean(4) == true) {
+            if(resultaat.getBoolean(5) == true) {
                 return "geblokkeerd!";
             } else {
-                return resultaat.getString(2);
+                return resultaat.getString(3);
             }
         } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
@@ -42,7 +45,7 @@ public class SQLConnection {
         String[] result = {"0"};
         try {
             Statement stmt = connectie.createStatement();
-            String statement = "select * from accounts where Debitcard_id = '" + uid + "'";
+            String statement = "select * from Accounts where Debitcard_id = '" + uid + "'";
             ResultSet resultaat = stmt.executeQuery(statement);
             resultaat.next();
             result[0] = String.valueOf(resultaat.getInt(5));
@@ -57,9 +60,9 @@ public class SQLConnection {
             Statement stmt = connectie.createStatement();
             String statement = "";
             if(block) {
-                statement = "update debitcard set Blocked = true where debitcard_id = '" + uid + "';";
+                statement = "update Debitcard set Blocked = true where Debitcard_id = '" + uid + "';";
             } else {
-                statement = "update debitcard set Blocked = false where debitcard_id = '" + uid + "';";
+                statement = "update Debitcard set Blocked = false where Debitcard_id = '" + uid + "';";
             }
             stmt.executeUpdate(statement);
             setAantalPogingen(uid, 0);
@@ -71,10 +74,10 @@ public class SQLConnection {
     public boolean isBlocked(String uid) {
         try {
             Statement stmt = connectie.createStatement();
-            String statement = "select * from debitcard where debitcard_id = '" + uid + "';";
+            String statement = "select * from Debitcard where Debitcard_id = '" + uid + "';";
             ResultSet resultaat = stmt.executeQuery(statement);
             resultaat.next();
-            return resultaat.getBoolean(4);
+            return resultaat.getBoolean(5);
         } catch (SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
         }
@@ -84,7 +87,7 @@ public class SQLConnection {
     public int aantalPogingen(String uid) {
         try {
             Statement stmt = connectie.createStatement();
-            String statement = "select * from debitcard where debitcard_id = '" + uid + "';";
+            String statement = "select * from Debitcard where Debitcard_id = '" + uid + "';";
             ResultSet resultaat = stmt.executeQuery(statement);
             resultaat.next();
             return resultaat.getInt(3);
@@ -97,7 +100,7 @@ public class SQLConnection {
     public void setAantalPogingen(String uid, int aantal) {
         try {
             Statement stmt = connectie.createStatement();
-            String statement = "update debitcard set Attemps = " + aantal + " where Debitcard_id = '" + uid + "';";
+            String statement = "update Debitcard set Attemps = " + aantal + " where Debitcard_id = '" + uid + "';";
             stmt.executeUpdate(statement);
         } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
@@ -107,7 +110,7 @@ public class SQLConnection {
     public void setSaldo(String uid, int aantal) {
         try {
             Statement stmt = connectie.createStatement();
-            String statement = "update accounts set Balance = " + aantal + " where Debitcard_id = '" + uid + "';";
+            String statement = "update Accounts set Balance = " + aantal + " where Debitcard_id = '" + uid + "';";
             stmt.executeUpdate(statement);
         } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een wuery op de SQL server: " + e);
