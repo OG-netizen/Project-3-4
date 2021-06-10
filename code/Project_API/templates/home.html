@@ -5,15 +5,20 @@
     <title>Home</title>
 </head>
 <body bgcolor="cyan">
-<br>
-<h1 align="center">Welkom {{name}} !</h1>
-<h3 align="left"> Balans: </h3>
+
+   <form align = "right" action="/form_logout" method="post">
+    <input type="submit" value="Logout">
+    </form>
+
+<h1 align="center">Welcome {{name}} !</h1>
+<h3 align="center"> Balans: </h3>
 
 {% for k in content %}
 
-     <p align="left" >{{ k[0] }}</p>
+     <p align="center" >{{ k[0] }}</p>
 
 {% endfor %}
+
 
 
 </body>
