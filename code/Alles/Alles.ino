@@ -171,7 +171,7 @@ void bonprint(int pinaantal, String Time) {
   Serial.print("bonGeprint:");
   Serial.print(pinaantal);
   Serial.print(",");
-  Serial.print(donatieaantal);
+  Serial.print(Time);
   Serial.println(" ");
 }
 void motordraai(int motornr){
@@ -207,12 +207,12 @@ void handleSerial() {
       werpGeldUit(aantal50, aantal20, aantal10);
     } else if(recieved = "printBon") {
       int geldAantal = Serial.readStringUntil(',').toInt();
-      int donatieAantal = Serial.readStringUntil(',').toInt();
+      String Time = Serial.readStringUntil(',');
       Serial.print("aantal gepind: ");
       Serial.println(geldAantal);
       Serial.print("aantal gedoneerd: ");
-      Serial.println(donatieAantal);
-      bonprint(geldAantal, donatieAantal);
+      Serial.println(Time);
+      bonprint(geldAantal, Time);
     }
   }
 }
