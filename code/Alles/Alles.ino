@@ -73,8 +73,8 @@ void loop() {
   handleKey();
 }
 
-void bonprint(int pinaantal, int donatieaantal) {
-  int totaalpin = pinaantal+donatieaantal;
+void bonprint(int pinaantal, String Time) {
+  int totaalpin = pinaantal;
 
   mySerial.begin(9600);  // Begin resial voor printer
   printer.begin();        // Begin printer
@@ -107,14 +107,14 @@ void bonprint(int pinaantal, int donatieaantal) {
   // ----------------------------------
 
   // Print donatie aantal
-  printer.setLineHeight(32);
-  printer.justify('L');
-  printer.setSize('S');
-  printer.print(F("Donatie                     "));
-  printer.boldOn();
-  printer.setSize('S');
-  printer.println(donatieaantal);
-  printer.boldOff();
+  // printer.setLineHeight(32);
+  // printer.justify('L');
+  // printer.setSize('S');
+  // printer.print(F("Donatie                     "));
+  // printer.boldOn();
+  // printer.setSize('S');
+  // printer.println(donatieaantal);
+  // printer.boldOff();
   // ----------------------------------
 
   // Print totaal aantal
@@ -145,8 +145,13 @@ void bonprint(int pinaantal, int donatieaantal) {
   printer.setLineHeight(48);
   printer.justify('C');
   printer.setSize('S');
-  printer.println("fakeATM");
+  printer.println("fakeATM - Niger");
   // ----------------------------------
+
+  printer.setLineHeight(32);
+  printer.justify('C');
+  printer.setSize('S');
+  printer.println(Time);
 
   // laat wat plek onderaan zodat de bon makkelijk uitneembaar is zonder dat er worden vergaan
    printer.setLineHeight(256);
