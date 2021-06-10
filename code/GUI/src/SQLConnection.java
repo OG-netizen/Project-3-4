@@ -1,4 +1,3 @@
-import java.lang.Thread.State;
 import java.sql.*;
 
 public class SQLConnection {
@@ -10,9 +9,13 @@ public class SQLConnection {
 
     public void startConnection() throws Exception{ // functie om connecte te maken met de database
         
-        String url = "jdbc:mysql://sql11.freesqldatabase.com:3306/sql11416191"; // onze url voor het connectie met database 
-        String gebruiker = "sql11416191"; 
-        String wachtwoord = "uGIUwBp9CN";
+        // String url = "jdbc:mysql://sql11.freesqldatabase.com:3306/sql11416191"; // onze url voor het connectie met database 
+        // String gebruiker = "sql11416191"; 
+        // String wachtwoord = "uGIUwBp9CN";
+
+        String url = "jdbc:mysql://145.24.222.250:8002/fake";
+        String gebruiker = "primary";
+        String wachtwoord = "Jia123!";
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             connectie = DriverManager.getConnection(url, gebruiker, wachtwoord);
