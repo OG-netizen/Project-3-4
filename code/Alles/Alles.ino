@@ -183,7 +183,7 @@ void motordraai(int motornr){
     digitalWrite(32, LOW);
   }
   else if (motornr == 2) {
-    myStepper2.step(-stepsPerRevolution);
+    myStepper2.step(stepsPerRevolution);
     digitalWrite(34, LOW);
     digitalWrite(36, LOW);
     digitalWrite(38, LOW);

@@ -27,7 +27,7 @@ public class Variables { // variabel klass om alle waardevol variabel te opslaan
         GeenActie = "geenActie", 
         SnelPin10Actie = "pin10", 
         SnelPin70Actie = "pin70";
-    private int[] aantalBiljetten = {50, 50, 50}; // array van aantalbiljetten
+    private int[] aantalBiljetten = {5, 4, 5}; // array van aantalbiljetten
     private int[] biljetWaardes = {50, 20, 10}; // array van biljetwaardes, er zijn drie biljetwaardes
 
 
