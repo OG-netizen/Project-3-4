@@ -1,3 +1,4 @@
+import java.lang.Thread.State;
 import java.sql.*;
 
 public class SQLConnection {
@@ -40,13 +41,18 @@ public class SQLConnection {
     }
 
     public String[] getDetails(String uid) { // functie om persoonlijk informatie te krijgen van een klant 
-        String[] result = {"0"};
+        String[] result = {"0","a"};
         try {
             Statement stmt = connectie.createStatement();
-            String statement = "select * from Accounts where Debitcard_id = '" + uid + "'";
+            String statement = "select * from Accounts where Debitcard_id = '" + uid + "';";
             ResultSet resultaat = stmt.executeQuery(statement);
             resultaat.next();
             result[0] = String.valueOf(resultaat.getInt(5));
+            Statement stmt2 = connectie.createStatement();
+            String statement2 = "select * from Debitcard where Debitcard_id = '" + uid + "';";
+            ResultSet resultaat2 = stmt2.executeQuery(statement2);
+            resultaat2.next();
+            result[1] = String.valueOf(resultaat2.getString(2));
         } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
         }
@@ -88,7 +94,7 @@ public class SQLConnection {
             String statement = "select * from Debitcard where Debitcard_id = '" + uid + "';";
             ResultSet resultaat = stmt.executeQuery(statement);
             resultaat.next();
-            return resultaat.getInt(3);
+            return resultaat.getInt(4);
         } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);
         }
@@ -98,7 +104,7 @@ public class SQLConnection {
     public void setAantalPogingen(String uid, int aantal) { // functie om de aantal poging van een klant te wijzigen 
         try {
             Statement stmt = connectie.createStatement();
-            String statement = "update Debitcard set Attemps = " + aantal + " where Debitcard_id = '" + uid + "';";
+            String statement = "update Debitcard set Attempts = " + aantal + " where Debitcard_id = '" + uid + "';";
             stmt.executeUpdate(statement);
         } catch(SQLException e) {
             System.out.println("Fout tijdens het uitvoeren van een query op de SQL server: " + e);

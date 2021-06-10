@@ -148,13 +148,13 @@ public class GUI extends JFrame implements ActionListener {
         if(huidigeTaal == Variables.Engels) {
             knoppen[3].setText("Change language");
             knoppen[7].setText("Cancel");
-            tekst1.setText("Iban: " + huidigeUid);
+            tekst1.setText("Iban: " + details[1]);
             tekst2.setText("Balance: " + details[0]);
             tekst3.setText("insert pin");
         } else if(huidigeTaal == Variables.Nederlands) {
             knoppen[3].setText("Verander taal");
             knoppen[7].setText("Afbreken");
-            tekst1.setText("Iban: " + huidigeUid);
+            tekst1.setText("Iban: " + details[1]);
             tekst2.setText("Saldo: " + details[0]);
             tekst3.setText("voer uw pincode in");
         }
@@ -189,7 +189,7 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[4].setText("Pin 70");
             knoppen[5].setText("Enter amount");
             knoppen[7].setText("Cancel");
-            tekst1.setText("Iban: " + huidigeUid);
+            tekst1.setText("Iban: " + details[1]);
             tekst2.setText("Balance: " + details[0]);
         } else if(huidigeTaal == Variables.Nederlands){
             knoppen[0].setText("Pin 10");
@@ -197,7 +197,7 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[4].setText("Pin 70");
             knoppen[5].setText("Bedrag invoeren");
             knoppen[7].setText("Afbreken");
-            tekst1.setText("Iban: " + huidigeUid);
+            tekst1.setText("Iban: " + details[1]);
             tekst2.setText("Saldo: " + details[0]);
         }
         knoppen[0].setActionCommand(Variables.SnelPin10Actie);
@@ -226,14 +226,14 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[3].setText("Change language");
             knoppen[5].setText("Done");
             knoppen[7].setText("Cancel");
-            tekst1.setText("Iban: " + huidigeUid);
+            tekst1.setText("Iban: " + details[1]);
             tekst2.setText("Balance: " + details[0]);
             tekst4.setText("Enter the desired amount");
         } else if(huidigeTaal == Variables.Nederlands) {
             knoppen[3].setText("Verander taal");
             knoppen[5].setText("Gereed");
             knoppen[7].setText("Afbreken");
-            tekst1.setText("Iban: " + huidigeUid);
+            tekst1.setText("Iban: " + details[1]);
             tekst2.setText("Saldo: " + details[0]);
             tekst4.setText("Voer uw gewenste bedrag in");
         }
@@ -419,24 +419,24 @@ public class GUI extends JFrame implements ActionListener {
                 }
             } else {
                 tekst4.setForeground(Color.red);
-                int resterendePogingen = 3 - SQLconnectie.aantalPogingen(huidigeUid) - 1;
-                SQLconnectie.setAantalPogingen(huidigeUid, 3 - resterendePogingen);
-                //System.out.println("Nog " + resterendePogingen + " pogingen");
+                int pogingen = SQLconnectie.aantalPogingen(huidigeUid) + 1;
+                SQLconnectie.setAantalPogingen(huidigeUid, pogingen);
+                System.out.println("pogingen: " + pogingen);
                 if(huidigeTaal == Variables.Engels) {
-                    if(resterendePogingen == 2) {
+                    if(pogingen == 1) {
                         tekst4.setText("2 Remaining attempts"); 
-                    }else if(resterendePogingen == 1) {
+                    }else if(pogingen == 2) {
                         tekst4.setText("1 Remaining attempt");
-                    }else if(resterendePogingen <= 0) {
+                    }else if(pogingen >= 3) {
                         SQLconnectie.blokkeerKaart(huidigeUid, true);
                         tekst4.setText("No more attempts left. Ur card has been blocked");
                     }
                 } else if(huidigeTaal == Variables.Nederlands) {
-                    if(resterendePogingen == 2) {
+                    if(pogingen == 1) {
                         tekst4.setText("Nog 2 resterende pogingen"); 
-                    }else if(resterendePogingen == 1) {
+                    }else if(pogingen == 2) {
                         tekst4.setText("Nog 1 resterende poging");
-                    }else if(resterendePogingen <= 0) {
+                    }else if(pogingen >= 3) {
                         SQLconnectie.blokkeerKaart(huidigeUid, true);
                         tekst4.setText("Geen pogingen meer over. Uw kaart is geblokkeerd");
                     }
