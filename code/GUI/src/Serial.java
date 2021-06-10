@@ -2,6 +2,8 @@ import java.io.*; // IOException
 import java.util.*; // Scanner
 import java.util.concurrent.TimeUnit;
 import jssc.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Serial {
     private static SerialPort serielePoort; // variabel om connectie te maken met serial port
@@ -85,7 +87,9 @@ public class Serial {
     }
 
     public void printBon(int geldAantal, int donatieAantal) { // fucntie om bon te printen 
-        String bonCommando = "printBon:" + geldAantal + "," + donatieAantal;
+        //String bonCommando = "printBon:" + geldAantal + "," + donatieAantal;
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        String bonCommando = "printBon:" + geldAantal + "," + dateTime;
         try {
             System.out.println(bonCommando);
             serielePoort.writeString(bonCommando);

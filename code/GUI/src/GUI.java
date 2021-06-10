@@ -35,7 +35,7 @@ public class GUI extends JFrame implements ActionListener {
     private JLabel plaatsKaart = new JLabel(); // plaatskaart variabel 
     private JLabel logoLabel = new JLabel(); // logoLabel variabel
     private ImageIcon plaatsKaartIcon = new ImageIcon("Images/insert card.png"); // foto logo 
-    private ImageIcon logoIcon = new ImageIcon("Images/logo_white_trans_sfw.png."); // foto logo 
+    private ImageIcon logoIcon = new ImageIcon("Images/logo_white_trans.png."); // foto logo 
 
     JLabel tekst1 = new JLabel("", SwingConstants.CENTER); // variabel van tekst gemaakt in het midden van gui
     JLabel tekst2 = new JLabel("", SwingConstants.CENTER);
