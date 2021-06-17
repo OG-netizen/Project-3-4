@@ -148,14 +148,14 @@ public class GUI extends JFrame implements ActionListener {
         if(huidigeTaal == Variables.Engels) {
             knoppen[3].setText("Change language");
             knoppen[7].setText("Cancel");
-            tekst1.setText("Iban: " + details[1]);
-            tekst2.setText("Balance: " + details[0]);
+            //tekst1.setText("Iban: " + details[1]);
+            //tekst2.setText("Balance: " + details[0]);
             tekst3.setText("insert pin");
         } else if(huidigeTaal == Variables.Nederlands) {
             knoppen[3].setText("Verander taal");
             knoppen[7].setText("Afbreken");
-            tekst1.setText("Iban: " + details[1]);
-            tekst2.setText("Saldo: " + details[0]);
+            //tekst1.setText("Iban: " + details[1]);
+            //tekst2.setText("Saldo: " + details[0]);
             tekst3.setText("voer uw pincode in");
         }
         knoppen[3].setActionCommand(Variables.TaalActie);
@@ -189,7 +189,7 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[4].setText("Pin 70");
             knoppen[5].setText("Enter amount");
             knoppen[7].setText("Cancel");
-            tekst1.setText("Iban: " + details[1]);
+            //tekst1.setText("Iban: " + details[1]);
             tekst2.setText("Balance: " + details[0]);
         } else if(huidigeTaal == Variables.Nederlands){
             knoppen[0].setText("Pin 10");
@@ -197,7 +197,7 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[4].setText("Pin 70");
             knoppen[5].setText("Bedrag invoeren");
             knoppen[7].setText("Afbreken");
-            tekst1.setText("Iban: " + details[1]);
+            //tekst1.setText("Iban: " + details[1]);
             tekst2.setText("Saldo: " + details[0]);
         }
         knoppen[0].setActionCommand(Variables.SnelPin10Actie);
@@ -226,14 +226,14 @@ public class GUI extends JFrame implements ActionListener {
             knoppen[3].setText("Change language");
             knoppen[5].setText("Done");
             knoppen[7].setText("Cancel");
-            tekst1.setText("Iban: " + details[1]);
+            //tekst1.setText("Iban: " + details[1]);
             tekst2.setText("Balance: " + details[0]);
             tekst4.setText("Enter the desired amount");
         } else if(huidigeTaal == Variables.Nederlands) {
             knoppen[3].setText("Verander taal");
             knoppen[5].setText("Gereed");
             knoppen[7].setText("Afbreken");
-            tekst1.setText("Iban: " + details[1]);
+            //tekst1.setText("Iban: " + details[1]);
             tekst2.setText("Saldo: " + details[0]);
             tekst4.setText("Voer uw gewenste bedrag in");
         }
@@ -538,13 +538,21 @@ public class GUI extends JFrame implements ActionListener {
         int[] aantal = variables.getAantalBiljetten();
         int[] gebruikAantal = new int[waardes.length];
         String geldAantalString = codeTekst.getText();
-        if(geldAantalString == null || geldAantalString == "") {
+        if( geldAantalString == null || 
+            geldAantalString == "" || 
+            Float.parseFloat(geldAantalString) > Float.parseFloat(SQLconnectie.getDetails(huidigeUid)[0]) ||
+            Float.parseFloat(geldAantalString) > variables.getMaxAantalGeld()) {
             try {
-            tekst4.setForeground(Color.red);
-            TimeUnit.MILLISECONDS.sleep(250);
-            tekst4.setForeground(Color.black);
-            TimeUnit.MILLISECONDS.sleep(250);
-            tekst4.setForeground(Color.red);
+                if(huidigeTaal == Variables.Engels) {
+                    tekst4.setText("The selected amount is too much");
+                } else if(huidigeTaal == Variables.Nederlands) {
+                    tekst4.setText("Het aantal dat u heeft geselecteerd is te veel");
+                }
+                tekst4.setForeground(Color.red);
+                TimeUnit.MILLISECONDS.sleep(250);
+                tekst4.setForeground(Color.black);
+                TimeUnit.MILLISECONDS.sleep(250);
+                tekst4.setForeground(Color.red);
             } catch(InterruptedException e) {
                 System.out.println("er is iets misgegaan: " + e);
             }
