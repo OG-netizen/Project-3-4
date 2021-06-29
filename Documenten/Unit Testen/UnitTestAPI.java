@@ -22,7 +22,7 @@ public class UnitTestAPI {
 	
 	@Test 
 	public static void TestcheckIfRegistered(String IBAN) throws IOException{
-		HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/database/" ).openConnection();
+		HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/checkIfRegistered" ).openConnection();
 		connection.setRequestMethod("POST");     
 		String statement = "select * from debitcard where debitcard_id = '" + IBAN + "';";       
 		connection.setDoOutput(true);
@@ -48,7 +48,7 @@ public class UnitTestAPI {
 	
 	
 	public static void TestLogin(String IBAN, String pincode) throws IOException{
-		HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/database/" ).openConnection();
+		HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/login" ).openConnection();
 		connection.setRequestMethod("POST");     
 		String statement = "select * from debitcard where iban = '" + IBAN + "';";       
 		connection.setDoOutput(true);
@@ -73,7 +73,7 @@ public class UnitTestAPI {
 	}
 		
 		public static void TestcheckAttempts(String IBAN) throws IOException{
-			HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/database/" ).openConnection();
+			HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/checkAttempts" ).openConnection();
 			connection.setRequestMethod("POST");     
 			String statement = "select * from debitcard where iban = '" + IBAN + "';";       
 			connection.setDoOutput(true);
@@ -95,7 +95,7 @@ public class UnitTestAPI {
 	
 			
 			public static void TestcheckBalance(String IBAN) throws IOException{
-				HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/database/" ).openConnection();
+				HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/checkBalance" ).openConnection();
 				connection.setRequestMethod("POST");     
 				String statement = "select * from debitcard where iban = '" + IBAN + "';";       
 				connection.setDoOutput(true);
@@ -119,7 +119,7 @@ public class UnitTestAPI {
 			}
 				
 				public static void TestWithdraw(String IBAN, Double amount) throws IOException{
-					HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/database/" ).openConnection();
+					HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/withdraw" ).openConnection();
 					connection.setRequestMethod("POST");     
 					String statement = "UPDATE  Account SET balans"+ amount +" from where iban = '" + IBAN + "';";       
 					connection.setDoOutput(true);
@@ -145,7 +145,7 @@ public class UnitTestAPI {
 				
 					
 					public static void TestLogout(String IBAN) throws IOException{
-						HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/database/" ).openConnection();
+						HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/logout" ).openConnection();
 						connection.setRequestMethod("POST");     
 						String statement = "select * from debitcard where iban = '" + IBAN + "';";        
 						connection.setDoOutput(true);
@@ -166,7 +166,7 @@ public class UnitTestAPI {
 					}
 					
 					public static void TestcheckLoggedIn(String IBAN) throws IOException{
-						HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/database/" ).openConnection();
+						HttpURLConnection connection = (HttpURLConnection) new URL("http://145.24.222.156:5000/checkedLoggeIn" ).openConnection();
 						connection.setRequestMethod("POST");     
 						String statement = "select * from debitcard where iban = '" + IBAN + "';";        
 						connection.setDoOutput(true);
